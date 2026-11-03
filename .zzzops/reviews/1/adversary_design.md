@@ -1,5 +1,5 @@
 # Adversary re-review
 
-No material findings in the changed design. The new capture contract requires a point-in-time snapshot or reliable observation or serialization from before enumeration through sealing. It requires detection of edit-and-revert, additions and renames, event overflow and lost coverage, and rejects a capture when coherence cannot be established. The added adversarial tests exercise those cases and prohibit claiming a valid target after observation fails.
+No material adversarial findings in the changed design. The new command requires explicit endpoints, resolves them once, emits failure rather than a misleading valid report when capture fails, and keeps stdout distinct from diagnostics. The report contract rejects unsupported or contradictory states and requires a full fallback for unbounded gaps. Schema data and scope identifiers are not executable shell input. The report does not itself assert that tests passed.
 
-The implementation must demonstrate that its selected observation or serialization mechanism actually covers every relevant root and edit source; best-effort watcher behavior and before-and-after hashes do not satisfy this contract.
+Implementation review should verify strict parsing of adversarial refs and paths, and that malformed or novel report fields never narrow a consumer's selection.

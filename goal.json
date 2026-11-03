@@ -62,10 +62,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-03T22:18:15Z",
+      "finished_at": "2026-11-03T22:20:51Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -74,18 +74,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-2",
+      "holder": "codex:root/g2-design-3",
       "input_fp": "v1:sha256:265dab9999beb1f090c4aea689706aad9fabcd350e54752e691502bc6e77ac55",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
-          "commit": "892b8c4cf27c200644ad527c7deac489e4d35eb8",
+          "blob": "587b3aefbb393df4fc16c0231df9e56f8754ee5c",
+          "commit": "2b6fc5138808e11cb33a9362586851eb1482f9d0",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "summary": "Design a deterministic helper and Trail-code adapter that validate exact snapshot identity, conservatively map runner targets, preserve full workflows, and issue versioned JSON receipts only for complete successful verification. Use this repository’s existing Node/tsx test runner as the first real integration, broadening or failing where selection or mutation protection cannot be proven."
+        "responses": {
+          "adversary_design:1:1": "fixed: Defined a checkout-external, user-owned private store, symlink and replacement-resistant provenance checks, full fallback on untrusted evidence, receipt-chain validation and explicit same-user trust limits; added adversarial tests."
+        },
+        "summary": "Define a user-owned, private repository-scoped receipt store outside untrusted checkouts; reject forged, unsafe or imported records and fail closed when provenance is uncertain. The trust boundary explicitly excludes malicious processes running as the same user."
       },
-      "reason": "retry",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

@@ -108,7 +108,20 @@
     "design": {
       "attempt": 2,
       "correction_runs": 1,
-      "findings": [],
+      "findings": [
+        {
+          "id": "design:reopen:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:72bc2fff1eef83d8311a57a1149b459307e7efbfcc6d857a6df31a53ec47cf77",
+          "text": "Test design requires an observable analyzer invocation and schema contract to avoid inventing public interfaces.",
+          "upheld": false
+        }
+      ],
       "finished_at": "2026-11-03T22:12:51Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",

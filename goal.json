@@ -106,23 +106,23 @@
       "status": "done"
     },
     "design": {
-      "attempt": 2,
-      "correction_runs": 1,
-      "findings": [
-        {
-          "id": "design:reopen:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "open",
-          "target": "design",
-          "target_attempt": 2,
-          "target_fp": "v1:sha256:72bc2fff1eef83d8311a57a1149b459307e7efbfcc6d857a6df31a53ec47cf77",
-          "text": "Test design requires an observable analyzer invocation and schema contract to avoid inventing public interfaces.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-03T22:12:51Z",
+      "attempt": 3,
+      "blocked": {
+        "category": "decision",
+        "options": [
+          "Q1: Add `trail impact --from <commit> --to <commit|worktree> --json` as a separate command, with a versioned schema 1 report and no model use.",
+          "Q1: Extend `trail blast` with an explicit `--conservative` mode and required `--from`/`--to`, while leaving existing blast behavior unchanged.",
+          "Q1: Expose a library API only for now; defer a supported public CLI."
+        ],
+        "question": "owner question: Q1: Which public analyzer invocation should adapters and tests use for conservative exact-endpoint impact? The current blast command has different merge-base and navigation semantics.",
+        "reason": "owner question: Q1: Which public analyzer invocation should adapters and tests use for conservative exact-endpoint impact? The current blast command has different merge-base and navigation semantics.",
+        "recommendation": "Q1: Add the separate `trail impact` command. It gives adapters and tests an unambiguous interface and avoids confusing the existing blast navigation contract with conservative output. The v1 report will use the required fields already specified in docs/test-impact/design.md.",
+        "repeats": 1,
+        "waiting_for": "human"
+      },
+      "correction_runs": 2,
+      "findings": [],
+      "finished_at": "2026-11-03T22:21:48Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -131,22 +131,12 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/design-correction-1",
+      "holder": "codex:root/g1-design-3",
       "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
-      "ok": true,
-      "output": {
-        "doc": {
-          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
-          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197",
-          "path": ".zzzops/reviews/1/design.md"
-        },
-        "responses": {
-          "review_design:1:1": "fixed: Specify point-in-time capture or continuous reliable observation/serialization across enumeration, reads and sealing, with retry or failure on mutations or observation loss; add direct concurrency and failure tests."
-        },
-        "summary": "Require a coherent worktree capture spanning enumeration, reads and sealing, with invalidation on relevant mutations or observation loss. Test concurrent edits, additions, renames, edit-and-revert and lost observation so synthetic snapshots cannot validate a target."
-      },
+      "ok": false,
+      "output": null,
       "reason": "reopened",
-      "status": "done"
+      "status": "blocked"
     },
     "filter_design": {
       "attempt": 2,

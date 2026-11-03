@@ -136,26 +136,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:25:18Z",
+      "finished_at": "2026-11-03T22:36:08Z",
       "fp_parts": {
         "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:fe929643285ea990de0598421dd205d190fb4efcc0b039aa449da83badab4c99",
-          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690",
-          "review": "v1:sha256:6ec1ec477452877f22f58a1043882f595b904ad3b14b795ab8e5306e20d7b764",
+          "adversary": "v1:sha256:2c71fe088850553c629b3433e4199063e53571d58a85631b717985f40901eaf9",
+          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
+          "review": "v1:sha256:aa9de18c190ac32879a327771f9958eb27d3a4751de9ba0222c8601272a6b0cd",
           "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-filter-3",
-      "input_fp": "v1:sha256:3d9a110b6d472c9bb31ce52a500708ae474371b8d80bd719a0e09181a25ab6d0",
+      "holder": "codex:root/g1-filter-4",
+      "input_fp": "v1:sha256:94189691bb9510b79a4ff03374e91899e696687bd0893b5b9d8ec3e1f40587ad",
       "ok": true,
       "output": {
-        "summary": "Both independent reviews approve the revised analyzer interface and report contract. There are no open findings or notes to filter.",
+        "summary": "Both reviews approve the internal capture and cache testing boundary. There are no open findings or notes to filter.",
         "verdicts": {}
       },
       "reason": "stale",

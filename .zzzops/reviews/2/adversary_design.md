@@ -1,7 +1,5 @@
-# Adversary review
+# Adversary re-review
 
-## Receipt provenance
+The prior finding is resolved. The revised design moves local receipts to a private, user-owned state root outside the checkout, rejects untrusted or copied records and unsafe ownership, permissions, symlinks, non-regular paths and replacement races, validates the entire predecessor chain, and falls back when provenance cannot be established. Its stated trust boundary expressly excludes malicious processes and tests running as the same local user. The verification plan includes forged tracked receipts and unsafe paths.
 
-The design does not establish a trust boundary for the repository-scoped receipt store. A checkout can contain attacker-supplied, schema-valid JSON that claims successful full verification for a known commit and public configuration identities. Merely describing the directory as uncommitted or checking a record's fields does not establish that the helper created it after a successful run. If that record is loaded as a valid A baseline, a later sparse or empty run can create a passing B receipt while required tests never ran.
-
-Require a local receipt store that cannot be populated through versioned/untrusted checkout inputs, including a rule for symlinks and replacement of the store. Define what local identity and permissions are trusted, reject tracked/imported records and unsafe or unverifiable store locations, and use full fallback when provenance is unavailable. Test a forged tracked JSON record, a symlinked store and unsafe or replaced store. This does not claim protection against a malicious user with the same local authority; it prevents repository-controlled data being mistaken for locally generated verification evidence.
+The additional analyzer integration contract validates report identity and contradictory fallback states, and requires one protected worktree identity from capture to execution. No new material adversarial findings.

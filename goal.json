@@ -100,30 +100,14 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 3,
-      "correction_runs": 2,
-      "findings": [
-        {
-          "id": "review_design:2:1",
-          "impact": "Valid commands using symbolic refs may be rejected or encourage weakening endpoint identity validation.",
-          "lens": "truth",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 4,
-          "target_fp": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401",
-          "text": "The helper invokes the analyzer using resolved immutable commit IDs, but says its comparison must match the requested endpoints. G1 defines comparison.requested as the literal analyzer argument, so a user-provided symbolic ref such as main becomes a SHA in the analyzer report; comparing those literal values would reject a valid run. Define validation against the exact analyzer arguments and once-resolved commit/tree identities while retaining the user's original arguments separately in the execution report; test symbolic and moving refs.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-03T22:29:04Z",
+      "attempt": 4,
+      "correction_runs": 3,
+      "findings": [],
+      "finished_at": "2026-11-03T22:37:41Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:2b5a8c741eef968f76e36bad86fed2114e2bf42a",
+          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "lenses": [
@@ -152,25 +136,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:91371c0b8972111c6a16c75d9fde9e776a4e75062edc5baeccb221e95bf2120a"
+        "subject": "v1:sha256:8424e0e4facd4f5fb65145192b4360fb95de89689cc85bfad8b3956fe72b4dc3"
       },
-      "holder": "codex:root/g2-review-3",
-      "input_fp": "v1:sha256:0093fbc57749c4aa3b3994e64b24a9ee84f9b0e6ffb01081cf67929c429d633f",
+      "holder": "codex:root/g2-review-4",
+      "input_fp": "v1:sha256:a59e853e9825b01519bcfbd0c2f326780958934abd0e1b78813c7469708aaef5",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "b495a5445c09bfffa59a4337bf343f24fa5fad73",
-          "commit": "e813142efd9aa06539b0b81532c6acc4fcff1927",
+          "blob": "27a717a097aab6d26cdbb5175e131ff8355bad1a",
+          "commit": "3a76f3df307aac8216fea964d4f3cc89ca41f17f",
           "path": ".zzzops/reviews/2/review_design.md"
         },
-        "summary": "Pinned analyzer arguments and original user references are correctly distinguished."
+        "summary": "G2 test seam alignment preserves production identity and capture boundaries."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
-          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a"
+          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
+          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5"
         }
       },
       "status": "done"

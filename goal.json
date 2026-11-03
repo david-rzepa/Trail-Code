@@ -11,6 +11,56 @@
   },
   "priority": "P2",
   "records": {
+    "adversary_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "adversary_design:1:1",
+          "impact": "A repository being inspected could redirect the setup agent into disclosing secrets or configuring unsound test selection.",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c",
+          "text": "Setup reads untrusted README, manifest, CI, script and config text into an agent, but the design only limits silently running arbitrary new scripts and does not say that embedded instructions are data without authority. A malicious repository can instruct the setup agent to reveal credentials, execute an existing exfiltration command or weaken test selection under the guise of required validation. Define the trust boundary and instruction precedence for all inspected content, require independent user/task authorization for commands and sensitive writes, and test injected exfiltration, execution and selection changes alongside legitimate applicable project instructions.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:32:48Z",
+      "fp_parts": {
+        "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
+        "inputs": {
+          "doc": "v1:blob:5c8432108076e24419b0b8d85bad8728201db45f",
+          "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
+        },
+        "policy": {},
+        "subject": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c"
+      },
+      "holder": "codex:root/g3-adversary-1",
+      "input_fp": "v1:sha256:f5f3c985fbbe93171b905b9bebfe1381b09c48363385ae38e4bd67b6c9a1ff14",
+      "ok": true,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "4829ba0ac9dcba187b3992c9af9921421b0ae023",
+          "commit": "7b499d5b2edf3784848296ca8268d00e2ecb017f",
+          "path": ".zzzops/reviews/3/adversary_design.md"
+        },
+        "summary": "Protect setup against instructions embedded in untrusted repository content."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
+          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1"
+        }
+      },
+      "status": "done"
+    },
     "design": {
       "attempt": 1,
       "correction_runs": 0,

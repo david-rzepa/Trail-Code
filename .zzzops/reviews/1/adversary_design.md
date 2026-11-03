@@ -1,5 +1,3 @@
 # Adversary re-review
 
-No material adversarial findings in the changed design. The new command requires explicit endpoints, resolves them once, emits failure rather than a misleading valid report when capture fails, and keeps stdout distinct from diagnostics. The report contract rejects unsupported or contradictory states and requires a full fallback for unbounded gaps. Schema data and scope identifiers are not executable shell input. The report does not itself assert that tests passed.
-
-Implementation review should verify strict parsing of adversarial refs and paths, and that malformed or novel report fields never narrow a consumer's selection.
+No material adversarial findings in the added testing seam. Injection is limited to a non-exported internal boundary with production wiring selecting the real backend and no environment or CLI switch. The tests force capture mutations, observer loss and cache failures to be handled conservatively; a real-backend integration check avoids treating fake behavior as evidence of production protection.

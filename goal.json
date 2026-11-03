@@ -159,30 +159,14 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 2,
-      "correction_runs": 1,
-      "findings": [
-        {
-          "id": "review_design:1:1",
-          "impact": "A later run could falsely validate a synthetic or incomplete target while omitting changes that existed during capture.",
-          "lens": "concurrency",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 1,
-          "target_fp": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e",
-          "text": "The design protects inputs during execution but leaves enumeration and capture unprotected. A file read early can change, or a relevant file can appear after enumeration, producing a fingerprint for a mixed or incomplete tree that never represented the requested worktree. Specify point-in-time capture or reliable observation/serialization of enumeration and reads with invalidation/retry on mutation or lost observation, and test concurrent file changes, additions and edit-and-revert during capture.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-03T22:13:56Z",
+      "attempt": 3,
+      "correction_runs": 2,
+      "findings": [],
+      "finished_at": "2026-11-03T22:24:38Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:582a07c3d6fa4ef7df570010346bdadafea14eaa",
+          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690",
           "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
         },
         "lenses": [
@@ -211,25 +195,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:03bbeac8092f182d2e066f89025c3e17252e1073ea1b8e52c6312df77290dd46"
+        "subject": "v1:sha256:0d261feee0840a72e8b9aff620492233f2e04fbb6371f0991e990bf3a65fd84f"
       },
-      "holder": "codex:root/review-design-2",
-      "input_fp": "v1:sha256:92c735329b082a2b3314f5b3b16305666f663a85624b39c9444599697d6bcdaa",
+      "holder": "codex:root/g1-review-3",
+      "input_fp": "v1:sha256:d3f4cef4adeb639be828fd3a85c1a3177ad90c543bf5ab6968dbf66133e8a386",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "43cfad537dc29001361b8be83da5d85bf0b9c40e",
-          "commit": "1d0fc9037d61b68ff7829af2cf0e3114304306cc",
+          "blob": "e936fca25980cc097521900019e04bb01e1f6936",
+          "commit": "3a5a7762e63ac72b82010b640615e44484b0c755",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Coherent capture and observation-loss handling address the prior finding."
+        "summary": "Owner-approved analyzer interface preserves conservative fallback and coherent capture."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
-          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197"
+          "blob": "659387a7758750e6e09ac6e3cc010b36dfd17690",
+          "commit": "e1320eb8c7b00d9951de6652d70af54a7ace6fe1"
         }
       },
       "status": "done"

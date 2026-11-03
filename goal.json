@@ -106,30 +106,10 @@
       "status": "done"
     },
     "design": {
-      "answer": {
-        "decided_at": "2026-11-03T22:23:03Z",
-        "decided_by": "Dave",
-        "quote": "Ok that looks good",
-        "text": "Add a separate trail impact --from <commit> --to <commit|worktree> --json command with versioned schema 1 and no model use."
-      },
-      "attempt": 3,
-      "blocked": {
-        "category": "decision",
-        "instructions": "The human answered: Add a separate trail impact --from <commit> --to <commit|worktree> --json command with versioned schema 1 and no model use.",
-        "options": [
-          "Q1: Add `trail impact --from <commit> --to <commit|worktree> --json` as a separate command, with a versioned schema 1 report and no model use.",
-          "Q1: Extend `trail blast` with an explicit `--conservative` mode and required `--from`/`--to`, while leaving existing blast behavior unchanged.",
-          "Q1: Expose a library API only for now; defer a supported public CLI."
-        ],
-        "question": "owner question: Q1: Which public analyzer invocation should adapters and tests use for conservative exact-endpoint impact? The current blast command has different merge-base and navigation semantics.",
-        "reason": "owner question: Q1: Which public analyzer invocation should adapters and tests use for conservative exact-endpoint impact? The current blast command has different merge-base and navigation semantics.",
-        "recommendation": "Q1: Add the separate `trail impact` command. It gives adapters and tests an unambiguous interface and avoids confusing the existing blast navigation contract with conservative output. The v1 report will use the required fields already specified in docs/test-impact/design.md.",
-        "repeats": 1,
-        "waiting_for": "agent"
-      },
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:21:48Z",
+      "finished_at": "2026-11-03T22:23:53Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -138,12 +118,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-design-3",
+      "holder": "codex:root/g1-design-4",
       "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
-      "ok": false,
-      "output": null,
-      "reason": "reopened",
-      "status": "blocked"
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "659387a7758750e6e09ac6e3cc010b36dfd17690",
+          "commit": "e1320eb8c7b00d9951de6652d70af54a7ace6fe1",
+          "path": ".zzzops/reviews/1/design.md"
+        },
+        "summary": "Define the owner-approved trail impact command and a concrete versioned JSON report for exact endpoint analysis. Document observable failure, incomplete-analysis and fallback behavior, and test the contract through subprocess fixtures."
+      },
+      "reason": "retry",
+      "status": "done"
     },
     "filter_design": {
       "attempt": 2,

@@ -62,10 +62,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:26:23Z",
+      "finished_at": "2026-11-03T22:28:25Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -74,18 +74,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-4",
+      "holder": "codex:root/g2-design-5",
       "input_fp": "v1:sha256:5c0e0429590e3bd127d0ef1691122cad95d1ebd706ebbd7f42e476c61e56c675",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "d9404751ae1aa1507b395f44529c07e182ac09e2",
-          "commit": "bd339cf9240700262acbac14833ab9530c51d23e",
+          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
+          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "summary": "Bind deterministic planning and the representative Trail-code adapter to the approved trail impact command and v1 report, validating analyzer status and provenance before any exclusions. Require one continuously protected snapshot identity for worktree analysis and execution, and preserve trusted JSON receipt handling."
+        "responses": {
+          "review_design:2:1": "fixed: Validate analyzer literal requested fields against the pinned argv supplied to it, validate commit/tree identity against the once-resolved target, preserve original user arguments separately, and test symbolic refs including branch movement."
+        },
+        "summary": "Clarify that analyzer-requested endpoints match its immutable argv while the final execution report separately preserves user-supplied symbolic refs and their once-resolved identities. Add symbolic and moving-ref coverage."
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

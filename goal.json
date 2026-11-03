@@ -293,10 +293,23 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 3,
-      "correction_runs": 1,
-      "findings": [],
-      "finished_at": "2026-11-03T22:29:42Z",
+      "attempt": 4,
+      "correction_runs": 2,
+      "findings": [
+        {
+          "id": "test_design:4:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 4,
+          "target_fp": "v1:sha256:0d261feee0840a72e8b9aff620492233f2e04fbb6371f0991e990bf3a65fd84f",
+          "text": "The approved design requires deterministic tests for capture-time edits, additions/renames, edit-and-revert, watcher overflow/loss and failed or incompatible conservative cache refresh, but exposes no way to synchronize observation/capture phases or inject observer and cache faults. An uncontrolled subprocess race cannot prove the event happened during capture or exercise loss deterministically, and a snapshot-based implementation can legitimately succeed despite concurrent mutation. Define a testable capture/cache seam or observable instrumentation that supports both allowed capture strategies and failure injection without extending the public CLI; also specify how tests can assert coherent capture success or explicit unavailability.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:33:48Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -308,7 +321,7 @@
       "frozen": [
         "test/conservative-impact-contract.test.ts"
       ],
-      "holder": "codex:root/g1-test-design-3",
+      "holder": "codex:root/g1-test-design-4",
       "input_fp": "v1:sha256:7e0f7ef9c5c7d3e86a28310185796b1724847df21b8c81f8b021e9dca48d8406",
       "ok": true,
       "output": {
@@ -318,30 +331,35 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 9497,
-              "id_or_scope": "test/conservative-impact-contract.test.ts (11 tests, node test runner total)",
-              "observation": "failing: all 11 tests reached the actual CLI and the pre-implementation command was unknown"
+              "duration_ms": 12487,
+              "id_or_scope": "test/conservative-impact-contract.test.ts (14 tests, node test runner total)",
+              "observation": "failing: all 14 tests exercised the CLI and failed because impact is not implemented; navigation fixture completed a real upstream graph build"
             }
           ],
-          "checkpoint": "f8835c54bc375b3a526003953b9863dedb4a237b",
+          "checkpoint": "3f2607f999c1049a99eec37de659f56515689ba5",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 9572,
+              "duration_ms": 12553,
               "exit": 1
             }
           ],
-          "summary": "Red baseline: 11 tests exercise temporary Git repositories and the real CLI; all fail because the impact command is not implemented. The test runner duration is reported separately from the measured process wall time.",
-          "total_ms": 9572
+          "summary": "Red baseline, with wall-clock command timing and runner-reported suite duration.",
+          "total_ms": 12553
+        },
+        "responses": {
+          "review_tests:1:1": "disputed: The observable CLI contract has no way to synchronize tests to enumeration, reads, sealing, observer overflow or failure; racing filesystem writes is not deterministic and valid snapshot implementations need not observe changes. The stable-worktree test correctly allows explicit failure when coherent capture is unavailable as the approved design requires. I raised a design finding to define deterministic test controls for both genuine snapshots and watched capture.",
+          "review_tests:1:2": "disputed: Added tests for stale snapshot identities, unavailable target after a warm cache, and a real navigation graph build in a different mode. Deterministically forcing conservative refresh or write failure requires a defined cache/fault injection seam, which the current approved design lacks; I raised a design finding.",
+          "review_tests:1:3": "fixed: Unbounded global lookup now requires a to-revision unbounded gap, incomplete status, and a full-profile fallback."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "d08a1f290512bb368f14785571546f3863de119f",
-          "commit": "f8835c54bc375b3a526003953b9863dedb4a237b",
-          "tree": "01c49495dc2e12d68ec1374bc6cc7a890811db16"
+          "change": "477cda18bf2792295f4b1926eeb680bc159b15f9",
+          "commit": "3f2607f999c1049a99eec37de659f56515689ba5",
+          "tree": "75e0e07ebc6861dc3052a823b2f4863e37224e47"
         }
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     }
   },

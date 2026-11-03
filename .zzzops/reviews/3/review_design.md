@@ -1,0 +1,3 @@
+# Review of setup and maintenance skill design
+
+The design retains the original full command and gates, validates discovery and selector reliability, delegates correctness to the pinned helper, handles unknown mappings with broad fallback or a configuration gap, and makes normal execution independent of the skill. It respects generated and unowned content, detects maintenance conflicts, avoids untrusted writes and unintended automatic installation, and tests package assets in a fresh distribution and representative repository. Intent, simplicity, truth, adversary, concurrency, rollout and experience passes found no material issue.

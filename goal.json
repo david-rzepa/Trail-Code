@@ -123,8 +123,8 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [
         {
           "id": "review_design:2:1",
@@ -134,7 +134,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "design",
           "target_attempt": 4,
           "target_fp": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401",
@@ -142,11 +142,11 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-03T22:27:16Z",
+      "finished_at": "2026-11-03T22:29:04Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:d9404751ae1aa1507b395f44529c07e182ac09e2",
+          "doc": "v1:blob:2b5a8c741eef968f76e36bad86fed2114e2bf42a",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "lenses": [
@@ -175,25 +175,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401"
+        "subject": "v1:sha256:91371c0b8972111c6a16c75d9fde9e776a4e75062edc5baeccb221e95bf2120a"
       },
-      "holder": "codex:root/g2-review-2",
-      "input_fp": "v1:sha256:ad5080dd2c588c81b894162b40986b38f6494786e115f86eeade7821eb999877",
+      "holder": "codex:root/g2-review-3",
+      "input_fp": "v1:sha256:0093fbc57749c4aa3b3994e64b24a9ee84f9b0e6ffb01081cf67929c429d633f",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "9f15044357a44edfc9bf9487a72092131ded7f0a",
-          "commit": "1a2c0c1a75d53da2540cbd6f00d20fcffe252c53",
+          "blob": "b495a5445c09bfffa59a4337bf343f24fa5fad73",
+          "commit": "e813142efd9aa06539b0b81532c6acc4fcff1927",
           "path": ".zzzops/reviews/2/review_design.md"
         },
-        "summary": "Clarify validation of symbolic endpoints after resolving and passing immutable IDs."
+        "summary": "Pinned analyzer arguments and original user references are correctly distinguished."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "d9404751ae1aa1507b395f44529c07e182ac09e2",
-          "commit": "bd339cf9240700262acbac14833ab9530c51d23e"
+          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
+          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a"
         }
       },
       "status": "done"

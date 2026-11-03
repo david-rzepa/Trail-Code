@@ -62,33 +62,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:20:51Z",
+      "finished_at": "2026-11-03T22:26:23Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:89e36b3cc1b913b5c3afb10d2b085a644b1248e3efe814bfe0cf56a988b6727e",
+          "dep_designs": "v1:sha256:d0b911f6aca693d61bf9f9fd926d26866faf4067561b09d8ef461b406a23de93",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-3",
-      "input_fp": "v1:sha256:265dab9999beb1f090c4aea689706aad9fabcd350e54752e691502bc6e77ac55",
+      "holder": "codex:root/g2-design-4",
+      "input_fp": "v1:sha256:5c0e0429590e3bd127d0ef1691122cad95d1ebd706ebbd7f42e476c61e56c675",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "587b3aefbb393df4fc16c0231df9e56f8754ee5c",
-          "commit": "2b6fc5138808e11cb33a9362586851eb1482f9d0",
+          "blob": "d9404751ae1aa1507b395f44529c07e182ac09e2",
+          "commit": "bd339cf9240700262acbac14833ab9530c51d23e",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "responses": {
-          "adversary_design:1:1": "fixed: Defined a checkout-external, user-owned private store, symlink and replacement-resistant provenance checks, full fallback on untrusted evidence, receipt-chain validation and explicit same-user trust limits; added adversarial tests."
-        },
-        "summary": "Define a user-owned, private repository-scoped receipt store outside untrusted checkouts; reject forged, unsafe or imported records and fail closed when provenance is uncertain. The trust boundary explicitly excludes malicious processes running as the same user."
+        "summary": "Bind deterministic planning and the representative Trail-code adapter to the approved trail impact command and v1 report, validating analyzer status and provenance before any exclusions. Require one continuously protected snapshot identity for worktree analysis and execution, and preserve trusted JSON receipt handling."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

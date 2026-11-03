@@ -10,7 +10,41 @@
     "issue": null
   },
   "priority": "P2",
-  "records": {},
+  "records": {
+    "design": {
+      "attempt": 1,
+      "blocked": {
+        "category": "decision",
+        "options": [
+          "Q1: Versioned JSON receipt files in a local, uncommitted repository-scoped store.",
+          "Q1: A versioned SQLite database in a local, uncommitted repository-scoped store.",
+          "Q1: Another storage format or location; specify."
+        ],
+        "question": "owner question: Q1: What durable storage format should the first local verification receipts use? This affects records that persist across runs and future upgrades.",
+        "reason": "owner question: Q1: What durable storage format should the first local verification receipts use? This affects records that persist across runs and future upgrades.",
+        "recommendation": "Q1: Use versioned JSON receipt files: they are inspectable, require no database dependency, and can be atomically created; reject corrupt or incompatible records rather than reusing them.",
+        "repeats": 1,
+        "waiting_for": "human"
+      },
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:16:13Z",
+      "fp_parts": {
+        "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
+        "inputs": {
+          "dep_designs": "v1:sha256:89e36b3cc1b913b5c3afb10d2b085a644b1248e3efe814bfe0cf56a988b6727e",
+          "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g2-design-1",
+      "input_fp": "v1:sha256:265dab9999beb1f090c4aea689706aad9fabcd350e54752e691502bc6e77ac55",
+      "ok": false,
+      "output": null,
+      "reason": "new",
+      "status": "blocked"
+    }
+  },
   "release": 1,
   "schema": 1,
   "skip": {},

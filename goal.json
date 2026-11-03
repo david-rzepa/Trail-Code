@@ -10,7 +10,35 @@
     "issue": null
   },
   "priority": "P2",
-  "records": {},
+  "records": {
+    "design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:31:47Z",
+      "fp_parts": {
+        "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
+        "inputs": {
+          "dep_designs": "v1:sha256:b89bf65dccf9e69e6c5a086563c2ebaffae553c02520fe3c683e9d8c18bae41d",
+          "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g3-design-1",
+      "input_fp": "v1:sha256:68b20bc78d38bea5e48853e91489337bb5e6a4b4809fe5099c076f6fcac9b52b",
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
+          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1",
+          "path": ".zzzops/reviews/3/design.md"
+        },
+        "summary": "Create an explicitly invoked setup and maintenance skill that generates a minimal adapter, version-pinned helper configuration and documented explicit endpoint command while preserving original full workflows and failing closed on uncertainty. Validate packaging, selector parity, safe fallback and non-destructive incremental maintenance against Trail-code and controlled repositories."
+      },
+      "reason": "new",
+      "status": "done"
+    }
+  },
   "release": 1,
   "schema": 1,
   "skip": {},

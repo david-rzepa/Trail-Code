@@ -11,6 +11,56 @@
   },
   "priority": "P2",
   "records": {
+    "adversary_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "adversary_design:1:1",
+          "impact": "An attacker or accidentally committed receipt can make the tool claim full verification while required tests never ran.",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:85f65796d449bba2dd6051e71904f544d5866b2e97fd206f6e7195798c891e92",
+          "text": "The repository-scoped receipt store has no specified provenance or trust boundary. An untrusted checkout can supply a schema-valid forged receipt for a known commit and configuration, causing unaffected tests to be skipped and a new passing receipt to be recorded although the baseline never ran. Require a local store outside versioned/untrusted checkout control, validate its ownership and path (including symlinks/replacement), reject tracked/imported or otherwise untrusted records, and fall back to full verification when provenance cannot be established; test forged tracked receipts and unsafe or symlinked stores. Define the local trust assumption without promising protection against the same local user.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:19:21Z",
+      "fp_parts": {
+        "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
+        "inputs": {
+          "doc": "v1:blob:8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
+          "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
+        },
+        "policy": {},
+        "subject": "v1:sha256:85f65796d449bba2dd6051e71904f544d5866b2e97fd206f6e7195798c891e92"
+      },
+      "holder": "codex:root/g2-adversary-1",
+      "input_fp": "v1:sha256:67b6215814d0a315e0e662760c3d80c23a6d3f03698c0e4e62c25da7beaf3c3f",
+      "ok": true,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "b55e8959ddad35ad3e8f2d1ba3ebef7263df6ab4",
+          "commit": "7601df9c8c9a53e2d9c3c5e3f9a63fed46eca783",
+          "path": ".zzzops/reviews/2/adversary_design.md"
+        },
+        "summary": "Define and enforce the trust boundary for locally generated receipts before using them to skip tests."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
+          "commit": "892b8c4cf27c200644ad527c7deac489e4d35eb8"
+        }
+      },
+      "status": "done"
+    },
     "design": {
       "attempt": 2,
       "correction_runs": 1,

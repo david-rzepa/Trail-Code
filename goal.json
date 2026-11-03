@@ -89,34 +89,34 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:20:00Z",
+      "finished_at": "2026-11-03T22:27:48Z",
       "fp_parts": {
         "candidates": [
           [
-            "adversary_design:1:1",
+            "review_design:2:1",
             true
           ]
         ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:8a785da3a5b8441acd9a4b5ff6f296586d1f223ca42feb97714859de44d077c9",
-          "doc": "v1:blob:8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
-          "review": "v1:sha256:06f3145b50276688c03e7fbb7f0af8e6d789699a85f9f56f83df4122b5e84ebb",
+          "adversary": "v1:sha256:3544a6fa0377429ecec005ae1905b5714e863ddfffabd9434cfd9c4a60135d5a",
+          "doc": "v1:blob:d9404751ae1aa1507b395f44529c07e182ac09e2",
+          "review": "v1:sha256:1c23b06363dad2a059d225c2f7c4dfef748bda89e7659dbdb8a96a95b5801b07",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-filter-1",
-      "input_fp": "v1:sha256:81bff21dcda8cb1f9f6c34c122977410e45f372d5f18b31a703aebe6a82c7d17",
+      "holder": "codex:root/g2-filter-2",
+      "input_fp": "v1:sha256:8e1f9af9e9cef38ebf525da06bb768e8ff05dab7468aed60dc9e4716165441dd",
       "ok": true,
       "output": {
-        "summary": "The design review approved; the adversarial review found one material gap in the provenance and trust boundary of local verification receipts. This finding reopens the design. No non-material notes require verdicts.",
+        "summary": "The adversarial review resolved the receipt provenance finding; the design review raised one material finding about matching resolved endpoint identities to analyzer inputs. This finding reopens design. No non-material notes require verdicts.",
         "verdicts": {}
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "review_design": {

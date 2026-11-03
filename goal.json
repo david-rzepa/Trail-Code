@@ -47,33 +47,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-03T22:28:25Z",
+      "finished_at": "2026-11-03T22:37:05Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:d0b911f6aca693d61bf9f9fd926d26866faf4067561b09d8ef461b406a23de93",
+          "dep_designs": "v1:sha256:051987f5aa2ee79a2a0a69ec02a26e20c4e83c1302b42e8ce2942047982a1c5d",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-5",
-      "input_fp": "v1:sha256:5c0e0429590e3bd127d0ef1691122cad95d1ebd706ebbd7f42e476c61e56c675",
+      "holder": "codex:root/g2-design-6",
+      "input_fp": "v1:sha256:9b73b91fe9ae7e3fe6538bfe63b9e282814ed92a757957ce648aa5dbc6fe65d4",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
-          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a",
+          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
+          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "responses": {
-          "review_design:2:1": "fixed: Validate analyzer literal requested fields against the pinned argv supplied to it, validate commit/tree identity against the once-resolved target, preserve original user arguments separately, and test symbolic refs including branch movement."
-        },
-        "summary": "Clarify that analyzer-requested endpoints match its immutable argv while the final execution report separately preserves user-supplied symbolic refs and their once-resolved identities. Add symbolic and moving-ref coverage."
+        "summary": "Align adapter design with G1’s internal-only capture and cache test seam while preserving the approved analyzer contract, exact endpoint handling and receipt trust boundary."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

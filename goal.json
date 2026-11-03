@@ -62,10 +62,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:31:47Z",
+      "finished_at": "2026-11-03T22:34:03Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -74,18 +74,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-design-1",
+      "holder": "codex:root/g3-design-2",
       "input_fp": "v1:sha256:68b20bc78d38bea5e48853e91489337bb5e6a4b4809fe5099c076f6fcac9b52b",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
-          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1",
+          "blob": "4443223963187891e1da29f75fc941efee295377",
+          "commit": "8bb097aa2fd849a2106b3368f54ae30b9c56caf0",
           "path": ".zzzops/reviews/3/design.md"
         },
-        "summary": "Create an explicitly invoked setup and maintenance skill that generates a minimal adapter, version-pinned helper configuration and documented explicit endpoint command while preserving original full workflows and failing closed on uncertainty. Validate packaging, selector parity, safe fallback and non-destructive incremental maintenance against Trail-code and controlled repositories."
+        "responses": {
+          "adversary_design:1:1": "fixed: added explicit lower-trust repository-data boundaries, command and sensitive-write authorization checks, and injection tests including legitimate project instructions."
+        },
+        "summary": "Protect setup from instructions embedded in repository data and require separately established authority for validation commands and sensitive writes, while honoring applicable project instructions within the host instruction hierarchy. Exercise credential exfiltration, unauthorized execution and test-omission injections in controlled fixtures."
       },
-      "reason": "new",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

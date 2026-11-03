@@ -12,9 +12,16 @@
   "priority": "P2",
   "records": {
     "design": {
+      "answer": {
+        "decided_at": "2026-11-03T22:17:10Z",
+        "decided_by": "Dave",
+        "quote": "Versioned JSON files (recommended)",
+        "text": "Use versioned JSON files for local verification receipts."
+      },
       "attempt": 1,
       "blocked": {
         "category": "decision",
+        "instructions": "The human answered: Use versioned JSON files for local verification receipts.",
         "options": [
           "Q1: Versioned JSON receipt files in a local, uncommitted repository-scoped store.",
           "Q1: A versioned SQLite database in a local, uncommitted repository-scoped store.",
@@ -24,7 +31,7 @@
         "reason": "owner question: Q1: What durable storage format should the first local verification receipts use? This affects records that persist across runs and future upgrades.",
         "recommendation": "Q1: Use versioned JSON receipt files: they are inspectable, require no database dependency, and can be atomically created; reject corrupt or incompatible records rather than reusing them.",
         "repeats": 1,
-        "waiting_for": "human"
+        "waiting_for": "agent"
       },
       "correction_runs": 0,
       "findings": [],

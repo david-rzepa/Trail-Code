@@ -74,26 +74,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:29:44Z",
+      "finished_at": "2026-11-03T22:38:22Z",
       "fp_parts": {
         "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:658a250dcb3eed606eff650d25111a081b0b43674b527cd39d27cf65c6faad9c",
-          "doc": "v1:blob:2b5a8c741eef968f76e36bad86fed2114e2bf42a",
-          "review": "v1:sha256:6548b105ec02ca6f1f267d10548866102276ef7345042f0814c1e1d128a19003",
+          "adversary": "v1:sha256:19eb99ffe1b1e121c4fed31d598962a9a878d08f5812d276b72221235fd90155",
+          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
+          "review": "v1:sha256:5d30258caa6bfc47ee999118e4983b3751047c5e43516c124ffa6c173c9852bf",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-filter-3",
-      "input_fp": "v1:sha256:b07b4866353ed2d826cffd2107893271e7c20ba5d7bba497067a06e0ed95b71e",
+      "holder": "codex:root/g2-filter-4",
+      "input_fp": "v1:sha256:ee6da8cea38e55bd2dfecd762a02bc13775683ca86a6d29299209107c13b2971",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve the clarified distinction between user references and immutable analyzer arguments; the prior findings are resolved. No open findings or notes require verdicts.",
+        "summary": "Both reviews approve alignment with the dependency test seam and preservation of production identity and receipt trust boundaries. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

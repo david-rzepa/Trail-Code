@@ -218,6 +218,80 @@
       },
       "status": "done"
     },
+    "review_tests": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "review_tests:1:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 3,
+          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
+          "text": "The static worktree case allows unconditional capture failure and never exercises concurrent edits, additions/renames, edit-and-revert, or observer loss/overflow during enumeration, reads, and sealing. An incoherent snapshot could be reported as valid while all tests pass. Add deterministic tests asserting retry or failure without a valid capture for these cases, and exercise the supported successful capture path.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:2",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 3,
+          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
+          "text": "The cold/warm test runs twice on the same snapshots and does not exercise stale or incompatible caches or refresh failures. An analyzer that reuses a stale or navigation-mode graph can pass and omit impact. Prime caches, change snapshot or identity/mode and simulate failed refresh, then require fresh results or explicit incomplete fallback, never stale successful output.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:3",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 3,
+          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
+          "text": "The dynamic behavior assertion accepts any dependency reason on the changed file even if the dynamic target and its dependents are omitted. An unsound gap-free analysis can pass. Require a justified modeled relationship covering candidate targets or an explicit gap with appropriate fallback (full profile for unbounded global lookup), and test status/gap/fallback consistency.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:31:10Z",
+      "fp_parts": {
+        "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
+        "inputs": {
+          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690",
+          "tests": "v1:sha256:7670cfd45c54d86c85fbab5e62ab20afa8d38256f30bfa3d55c2c739478f03e6"
+        },
+        "policy": {},
+        "subject": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75"
+      },
+      "holder": "codex:root/g1-review-tests-1",
+      "input_fp": "v1:sha256:c5026649c51a70c839b827c0e6759e8268b539dad23d0f265556dba898f1c352",
+      "ok": false,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "18bb6c27230715300b0027602831c5fa313a667f",
+          "commit": "a309da9d0fcba07159d189d58806eeb8327f77fb",
+          "path": ".zzzops/reviews/1/review_tests.md"
+        },
+        "summary": "Three material safety gaps in worktree capture, cache freshness, and dynamic dependency/fallback coverage."
+      },
+      "reason": "new",
+      "reviewed": {
+        "tests": {
+          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
+          "change": "d08a1f290512bb368f14785571546f3863de119f",
+          "commit": "f8835c54bc375b3a526003953b9863dedb4a237b",
+          "tree": "01c49495dc2e12d68ec1374bc6cc7a890811db16"
+        }
+      },
+      "status": "done"
+    },
     "test_design": {
       "attempt": 3,
       "correction_runs": 1,

@@ -1,3 +1,3 @@
-# Review of setup and maintenance skill design
+# Re-review: repository content trust and dependency alignment
 
-The design retains the original full command and gates, validates discovery and selector reliability, delegates correctness to the pinned helper, handles unknown mappings with broad fallback or a configuration gap, and makes normal execution independent of the skill. It respects generated and unowned content, detects maintenance conflicts, avoids untrusted writes and unintended automatic installation, and tests package assets in a fresh distribution and representative repository. Intent, simplicity, truth, adversary, concurrency, rollout and experience passes found no material issue.
+The update distinguishes repository content from instructions that authorize actions, retains applicable project instructions within the host hierarchy, and requires validation against concrete command effects. It includes adversarial repository-content fixtures alongside a legitimate project-instruction case. Generated adapters remain bound to G2's supported production interface rather than test-only capture seams. No new material issue in the changes.

@@ -88,6 +88,37 @@
       "reason": "new",
       "status": "done"
     },
+    "filter_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:33:24Z",
+      "fp_parts": {
+        "candidates": [
+          [
+            "adversary_design:1:1",
+            true
+          ]
+        ],
+        "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
+        "inputs": {
+          "adversary": "v1:sha256:f13c2535d260fa8c9281f16874344be70480e3bbac9e083d0828c906f7f179fd",
+          "doc": "v1:blob:5c8432108076e24419b0b8d85bad8728201db45f",
+          "review": "v1:sha256:f4f78ccc143b4e64be53e25eb72a097c6dbc21d3d73762bd890892b508a9af27",
+          "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g3-filter-1",
+      "input_fp": "v1:sha256:1c0783b9e7a1ea02934f20386605169523fbe7245f0cb1f8c1cfc277709b6ddf",
+      "ok": true,
+      "output": {
+        "summary": "The design review approved; the adversarial review raised one material issue concerning instruction precedence and trust boundaries when reading repository content. The material issue reopens design. No non-material notes require verdicts.",
+        "verdicts": {}
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "review_design": {
       "attempt": 1,
       "correction_runs": 0,

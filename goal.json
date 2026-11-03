@@ -1,0 +1,20 @@
+{
+  "budget": null,
+  "closed": null,
+  "depends_on": [
+    3
+  ],
+  "graph": "default",
+  "id": 4,
+  "links": {
+    "issue": null
+  },
+  "priority": "P2",
+  "records": {},
+  "release": 1,
+  "schema": 1,
+  "skip": {},
+  "spec": "Exercise the complete product against the release gates and acceptance matrix in docs/test-impact/design.md sections 11, 13 and 14. Add targeted fixtures for the supported ecosystems, including callbacks, reflection, shared fixtures, generated code, resources and cross-project dependencies. Compare selections with full-suite runs on representative histories and deliberately introduced failures, recording limitations and fixing or tracking defects as appropriate. Measure end-to-end snapshot, graph, discovery, setup and execution costs against full runs, selected unit count and fallback frequency. Document reproducible evidence and supported boundaries; do not claim the comparison proves all dependency kinds are modeled. The entire design remains binding. Work directly in this fork for an eventual upstream pull request; no separate product repository or subtree.",
+  "state": "open",
+  "title": "Validate end-to-end safety and measure sparse testing"
+}

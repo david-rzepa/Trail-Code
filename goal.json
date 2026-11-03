@@ -37,6 +37,66 @@
       },
       "reason": "new",
       "status": "done"
+    },
+    "review_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:32:30Z",
+      "fp_parts": {
+        "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
+        "inputs": {
+          "doc": "v1:blob:5c8432108076e24419b0b8d85bad8728201db45f",
+          "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
+        },
+        "lenses": [
+          "intent",
+          "simplicity",
+          "truth",
+          "adversary",
+          "concurrency",
+          "rollout",
+          "experience"
+        ],
+        "policy": {
+          "intent": {
+            "not": [
+              "A new graph service, a replacement test runner or a separately implemented multilingual parser.",
+              "Predict which tests will fail, promise the mathematically smallest selection, or infer external integration state from Git alone."
+            ],
+            "principles": [
+              "Require explicit endpoints.",
+              "Keep exclusion decisions in code.",
+              "Broaden on uncertainty.",
+              "Preserve the complete workflow.",
+              "Test selection and execution require no model reasoning during normal runs."
+            ],
+            "purpose": "Determine which tests to run based on a git changeset.",
+            "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
+          }
+        },
+        "subject": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c"
+      },
+      "holder": "codex:root/g3-review-1",
+      "input_fp": "v1:sha256:dd893e9c8ed0d945ac43ea1c19d5048ab81173ab19d77c9b77224f59d8cecaec",
+      "ok": true,
+      "output": {
+        "decision": "approved",
+        "report": {
+          "blob": "c4be3ac8de378fc430eba856db6ab417bf2a1f57",
+          "commit": "362ef5a2421f9fa3110c79c8d064ed61774e313d",
+          "path": ".zzzops/reviews/3/review_design.md"
+        },
+        "summary": "Setup design preserves full fallback and user edits while using the shared helper."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
+          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1"
+        }
+      },
+      "status": "done"
     }
   },
   "release": 1,

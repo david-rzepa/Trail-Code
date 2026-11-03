@@ -106,9 +106,16 @@
       "status": "done"
     },
     "design": {
+      "answer": {
+        "decided_at": "2026-11-03T22:23:03Z",
+        "decided_by": "Dave",
+        "quote": "Ok that looks good",
+        "text": "Add a separate trail impact --from <commit> --to <commit|worktree> --json command with versioned schema 1 and no model use."
+      },
       "attempt": 3,
       "blocked": {
         "category": "decision",
+        "instructions": "The human answered: Add a separate trail impact --from <commit> --to <commit|worktree> --json command with versioned schema 1 and no model use.",
         "options": [
           "Q1: Add `trail impact --from <commit> --to <commit|worktree> --json` as a separate command, with a versioned schema 1 report and no model use.",
           "Q1: Extend `trail blast` with an explicit `--conservative` mode and required `--from`/`--to`, while leaving existing blast behavior unchanged.",
@@ -118,7 +125,7 @@
         "reason": "owner question: Q1: Which public analyzer invocation should adapters and tests use for conservative exact-endpoint impact? The current blast command has different merge-base and navigation semantics.",
         "recommendation": "Q1: Add the separate `trail impact` command. It gives adapters and tests an unambiguous interface and avoids confusing the existing blast navigation contract with conservative output. The v1 report will use the required fields already specified in docs/test-impact/design.md.",
         "repeats": 1,
-        "waiting_for": "human"
+        "waiting_for": "agent"
       },
       "correction_runs": 2,
       "findings": [],

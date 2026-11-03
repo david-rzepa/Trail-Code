@@ -12,8 +12,8 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "adversary_design:1:1",
@@ -22,7 +22,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "design",
           "target_attempt": 1,
           "target_fp": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c",
@@ -30,33 +30,33 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-03T22:32:48Z",
+      "finished_at": "2026-11-03T22:40:20Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:5c8432108076e24419b0b8d85bad8728201db45f",
+          "doc": "v1:blob:a239731b95eff6a51c41ae0253dafae3a2604cfa",
           "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
         },
         "policy": {},
-        "subject": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c"
+        "subject": "v1:sha256:17ce4f012c140e131d8ca99f986cd168f372a00b72ad15ed839d7c45427a334f"
       },
-      "holder": "codex:root/g3-adversary-1",
-      "input_fp": "v1:sha256:f5f3c985fbbe93171b905b9bebfe1381b09c48363385ae38e4bd67b6c9a1ff14",
+      "holder": "codex:root/g3-adversary-2",
+      "input_fp": "v1:sha256:bb7a0e8a36620e6af6045ac826df5803ba9f93c29b3c1d5098789e4a2112f664",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "4829ba0ac9dcba187b3992c9af9921421b0ae023",
-          "commit": "7b499d5b2edf3784848296ca8268d00e2ecb017f",
+          "blob": "7e2aab4f75324c8226ce7c5abee64b9dba580193",
+          "commit": "e9b38aef80428ff9bdff2cddd6cc212e0de342ed",
           "path": ".zzzops/reviews/3/adversary_design.md"
         },
-        "summary": "Protect setup against instructions embedded in untrusted repository content."
+        "summary": "Repository-content trust boundary is specified; no new material adversarial findings."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
-          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1"
+          "blob": "a239731b95eff6a51c41ae0253dafae3a2604cfa",
+          "commit": "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5"
         }
       },
       "status": "done"

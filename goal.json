@@ -45,10 +45,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:06:17Z",
+      "finished_at": "2026-11-03T22:12:51Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -57,18 +57,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/design-1",
+      "holder": "codex:root/design-correction-1",
       "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "602591719b897c5bcfe667acc12a20c8fc253d34",
-          "commit": "0e146f2cdc002c58cb8e00f8c61fe2cb0a5f33d0",
+          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
+          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197",
           "path": ".zzzops/reviews/1/design.md"
         },
-        "summary": "Design conservative impact analysis directly in the Trail-code fork, retaining exact snapshot identities, uncertainty and complete reverse dependency closure for an upstreamable change. Separate versioned reports and isolated caches support safe downstream fallback, with targeted failure and regression fixtures guarding against unsound exclusions."
+        "responses": {
+          "review_design:1:1": "fixed: Specify point-in-time capture or continuous reliable observation/serialization across enumeration, reads and sealing, with retry or failure on mutations or observation loss; add direct concurrency and failure tests."
+        },
+        "summary": "Require a coherent worktree capture spanning enumeration, reads and sealing, with invalidation on relevant mutations or observation loss. Test concurrent edits, additions, renames, edit-and-revert and lost observation so synthetic snapshots cannot validate a target."
       },
-      "reason": "new",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

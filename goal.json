@@ -12,30 +12,10 @@
   "priority": "P2",
   "records": {
     "design": {
-      "answer": {
-        "decided_at": "2026-11-03T22:17:10Z",
-        "decided_by": "Dave",
-        "quote": "Versioned JSON files (recommended)",
-        "text": "Use versioned JSON files for local verification receipts."
-      },
-      "attempt": 1,
-      "blocked": {
-        "category": "decision",
-        "instructions": "The human answered: Use versioned JSON files for local verification receipts.",
-        "options": [
-          "Q1: Versioned JSON receipt files in a local, uncommitted repository-scoped store.",
-          "Q1: A versioned SQLite database in a local, uncommitted repository-scoped store.",
-          "Q1: Another storage format or location; specify."
-        ],
-        "question": "owner question: Q1: What durable storage format should the first local verification receipts use? This affects records that persist across runs and future upgrades.",
-        "reason": "owner question: Q1: What durable storage format should the first local verification receipts use? This affects records that persist across runs and future upgrades.",
-        "recommendation": "Q1: Use versioned JSON receipt files: they are inspectable, require no database dependency, and can be atomically created; reject corrupt or incompatible records rather than reusing them.",
-        "repeats": 1,
-        "waiting_for": "agent"
-      },
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:16:13Z",
+      "finished_at": "2026-11-03T22:18:15Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -44,12 +24,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-1",
+      "holder": "codex:root/g2-design-2",
       "input_fp": "v1:sha256:265dab9999beb1f090c4aea689706aad9fabcd350e54752e691502bc6e77ac55",
-      "ok": false,
-      "output": null,
-      "reason": "new",
-      "status": "blocked"
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
+          "commit": "892b8c4cf27c200644ad527c7deac489e4d35eb8",
+          "path": ".zzzops/reviews/2/design.md"
+        },
+        "summary": "Design a deterministic helper and Trail-code adapter that validate exact snapshot identity, conservatively map runner targets, preserve full workflows, and issue versioned JSON receipts only for complete successful verification. Use this repository’s existing Node/tsx test runner as the first real integration, broadening or failing where selection or mutation protection cannot be proven."
+      },
+      "reason": "retry",
+      "status": "done"
     }
   },
   "release": 1,

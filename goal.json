@@ -120,14 +120,14 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:32:30Z",
+      "finished_at": "2026-11-03T22:40:06Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:5c8432108076e24419b0b8d85bad8728201db45f",
+          "doc": "v1:blob:a239731b95eff6a51c41ae0253dafae3a2604cfa",
           "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
         },
         "lenses": [
@@ -156,25 +156,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:ef02186a9aa23b8cb4ee7055b79a2550e76b77e6eb6ac111768099a0cc03604c"
+        "subject": "v1:sha256:17ce4f012c140e131d8ca99f986cd168f372a00b72ad15ed839d7c45427a334f"
       },
-      "holder": "codex:root/g3-review-1",
-      "input_fp": "v1:sha256:dd893e9c8ed0d945ac43ea1c19d5048ab81173ab19d77c9b77224f59d8cecaec",
+      "holder": "codex:root/g3-review-2",
+      "input_fp": "v1:sha256:756f16258ce66e92cdf95c79b6274ea964caef4fee0eacf23a09e81509941211",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "c4be3ac8de378fc430eba856db6ab417bf2a1f57",
-          "commit": "362ef5a2421f9fa3110c79c8d064ed61774e313d",
+          "blob": "42f5294a3ff54bf6d2ed65fa66a18b54cbdab58d",
+          "commit": "c606f34cfa549f0c24c98d076734538efb6b6e29",
           "path": ".zzzops/reviews/3/review_design.md"
         },
-        "summary": "Setup design preserves full fallback and user edits while using the shared helper."
+        "summary": "Content trust and production-interface changes preserve authorized setup and fallback."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "5c8432108076e24419b0b8d85bad8728201db45f",
-          "commit": "0be58ce5321e3da9b699452a141cbc149fee4ff1"
+          "blob": "a239731b95eff6a51c41ae0253dafae3a2604cfa",
+          "commit": "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5"
         }
       },
       "status": "done"

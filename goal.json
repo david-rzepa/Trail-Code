@@ -37,6 +37,66 @@
       },
       "reason": "new",
       "status": "done"
+    },
+    "review_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:43:03Z",
+      "fp_parts": {
+        "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
+        "inputs": {
+          "doc": "v1:blob:3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
+          "spec": "v1:sha256:0525e6926dc268bd55a143c38bcf9e6c359188f89d1a60c255df069c70104a1b"
+        },
+        "lenses": [
+          "intent",
+          "simplicity",
+          "truth",
+          "adversary",
+          "concurrency",
+          "rollout",
+          "experience"
+        ],
+        "policy": {
+          "intent": {
+            "not": [
+              "A new graph service, a replacement test runner or a separately implemented multilingual parser.",
+              "Predict which tests will fail, promise the mathematically smallest selection, or infer external integration state from Git alone."
+            ],
+            "principles": [
+              "Require explicit endpoints.",
+              "Keep exclusion decisions in code.",
+              "Broaden on uncertainty.",
+              "Preserve the complete workflow.",
+              "Test selection and execution require no model reasoning during normal runs."
+            ],
+            "purpose": "Determine which tests to run based on a git changeset.",
+            "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
+          }
+        },
+        "subject": "v1:sha256:75fe4151a60461faa73c8fc594b4ef7c218f8dd804ce36a433cc42788c93ffb5"
+      },
+      "holder": "codex:root/g4-review-1",
+      "input_fp": "v1:sha256:91d99653d9f11935a5aaec405687171610de66b8f40c470e37ac2a284cbf6412",
+      "ok": true,
+      "output": {
+        "decision": "approved",
+        "report": {
+          "blob": "9ede5ad16610490ad6b99320329acba1651c32d1",
+          "commit": "4210dc8e8b9973525e89e3c16789345281d34231",
+          "path": ".zzzops/reviews/4/review_design.md"
+        },
+        "summary": "Validation design covers the release gates and measures end-to-end behavior without overclaiming."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
+          "commit": "8f2e3cd74dd768866ace0152bcd5831eed765ebb"
+        }
+      },
+      "status": "done"
     }
   },
   "release": 1,

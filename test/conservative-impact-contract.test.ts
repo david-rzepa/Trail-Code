@@ -141,14 +141,17 @@ test("deletions and dependency chains retain old revision impact beyond default 
   assert.ok(out.affected.some((x: Json) => x.revision === "from" && x.path === "src/c7.ts") || out.required_fallback_scopes.some((x: Json) => x.kind === "full_profile"), "old dependency or full fallback must cover surviving caller");
 }));
 
-test("unmodeled dynamic behavior cannot silently justify exclusion", () => fixture(dir => {
+test("unbounded dynamic lookup requires a global gap and full fallback", () => fixture(dir => {
   file(dir, "src/registry.ts", "export function dispatch(name: string) { return (globalThis as any)[name](); }\n");
+  file(dir, "src/target.ts", "export function target() { return 1; }\n");
+  file(dir, "src/caller.ts", "import { dispatch } from './registry.js';\nexport function caller() { return dispatch('target'); }\n");
   const a = commit(dir, "dynamic call");
   file(dir, "src/registry.ts", "export function dispatch(name: string) { return (globalThis as any)[name](42); }\n");
   const b = commit(dir, "modify dynamic call");
   const out = report(dir, a, b);
-  assert.ok(out.analysis_gaps.length > 0 || out.affected.some((x: Json) => x.path === "src/registry.ts" && x.reasons.some((r: Json) => r.kind === "dependency")), "dynamic behavior needs a modeled relationship or an explicit gap");
-  for (const gap of out.analysis_gaps) assert.ok(out.required_fallback_scopes.some((s: Json) => s.kind === "full_profile" || s.scope === gap.scope));
+  assert.ok(out.analysis_gaps.some((g: Json) => g.scope === null && g.revision === "to"), "unbounded global lookup requires an explicit unbounded gap");
+  assert.equal(out.analysis_status, "incomplete");
+  assert.ok(out.required_fallback_scopes.some((s: Json) => s.kind === "full_profile" && s.scope === null));
 }));
 
 test("cold and warm analyses have deterministic reports and do not modify source", () => fixture(dir => {
@@ -216,4 +219,49 @@ test("a failed parse or unsupported input is never a gap-free exclusion", () => 
   const b = commit(dir, "invalid syntax");
   const out = report(dir, a, b);
   assert.ok(out.analysis_gaps.some((g: Json) => g.revision === "to") && out.required_fallback_scopes.length > 0, "a parse failure must be reported and broaden selection");
+}));
+
+
+test("cache reuse honors snapshot identities after warming a different comparison", () => fixture(dir => {
+  file(dir, "src/changed.ts", "export const a = 1;\n");
+  const a = commit(dir, "A");
+  file(dir, "src/changed.ts", "export const a = 2;\n");
+  const b = commit(dir, "B");
+  const same = report(dir, b, b);
+  assert.deepEqual(same.changes, []);
+  const changed = report(dir, a, b);
+  assert.equal(changed.comparison.from.commit, a);
+  assert.equal(changed.comparison.to.commit, b);
+  assert.ok(changed.changes.some((c: Json) => c.kind === "modified" && c.old_path === "src/changed.ts" && c.new_path === "src/changed.ts"));
+  assert.ok(changed.affected.some((x: Json) => x.path === "src/changed.ts") || changed.required_fallback_scopes.some((x: Json) => x.kind === "full_profile"));
+  const warmAgain = report(dir, b, b);
+  assert.deepEqual(warmAgain, same);
+}));
+
+test("an unavailable target cannot reuse a previously valid cached report", () => fixture(dir => {
+  file(dir, "src/known.ts", "export const a = 1;\n");
+  const a = commit(dir, "known target");
+  report(dir, a, a);
+  const r = invoke(dir, "--from", a, "--to", "missing-target-ref", "--json");
+  assert.notEqual(r.status, 0, "an unavailable target must not succeed from cache");
+  assert.ok(r.stderr.length > 0);
+  assert.throws(() => JSON.parse(r.stdout), "an unavailable target must not emit the prior valid report");
+}));
+
+test("navigation graph and later refresh cannot substitute for the conservative comparison", () => fixture(dir => {
+  file(dir, "src/nav.ts", "export function source() { return 1; }\n");
+  file(dir, "src/caller.ts", "import { source } from './nav.js';\nexport function caller() { return source(); }\n");
+  const a = commit(dir, "before");
+  const nav = spawnSync(process.execPath, ["--import", tsx, cli, "build", dir], { cwd: dir, encoding: "utf8", timeout: 120_000, env: { ...process.env, HOME: dir, USERPROFILE: dir } });
+  assert.equal(nav.status, 0, `navigation build failed: ${nav.stderr}`);
+  file(dir, "src/nav.ts", "export function source() { return 2; }\n");
+  git(dir, "add", "src/nav.ts");
+  git(dir, "commit", "-m", "after");
+  const b = git(dir, "rev-parse", "HEAD");
+  const out = report(dir, a, b);
+  assert.equal(out.analysis_identity.mode, "conservative");
+  assert.equal(out.comparison.from.commit, a);
+  assert.equal(out.comparison.to.commit, b);
+  assert.ok(out.changes.some((c: Json) => c.kind === "modified" && c.old_path === "src/nav.ts"));
+  assert.ok(out.affected.some((x: Json) => x.path === "src/caller.ts") || out.required_fallback_scopes.some((x: Json) => x.kind === "full_profile"));
 }));

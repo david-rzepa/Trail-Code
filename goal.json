@@ -106,8 +106,8 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "review_design:1:1",
@@ -117,7 +117,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "design",
           "target_attempt": 1,
           "target_fp": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e",
@@ -125,11 +125,11 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-03T22:10:18Z",
+      "finished_at": "2026-11-03T22:13:56Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:602591719b897c5bcfe667acc12a20c8fc253d34",
+          "doc": "v1:blob:582a07c3d6fa4ef7df570010346bdadafea14eaa",
           "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
         },
         "lenses": [
@@ -158,25 +158,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e"
+        "subject": "v1:sha256:03bbeac8092f182d2e066f89025c3e17252e1073ea1b8e52c6312df77290dd46"
       },
-      "holder": "codex:root/review-design-1",
-      "input_fp": "v1:sha256:ad28366d89c39e4648978fb93d8d51aa440345bf56ccf598e19ffc1012702d8b",
+      "holder": "codex:root/review-design-2",
+      "input_fp": "v1:sha256:92c735329b082a2b3314f5b3b16305666f663a85624b39c9444599697d6bcdaa",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "0b2140f423005bae3f0d5cdf4153513f4997b38f",
-          "commit": "db19d49c03cae6b21b398144100789cdb66d8c57",
+          "blob": "43cfad537dc29001361b8be83da5d85bf0b9c40e",
+          "commit": "1d0fc9037d61b68ff7829af2cf0e3114304306cc",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Require a coherent worktree capture before reporting snapshot identity."
+        "summary": "Coherent capture and observation-loss handling address the prior finding."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "602591719b897c5bcfe667acc12a20c8fc253d34",
-          "commit": "0e146f2cdc002c58cb8e00f8c61fe2cb0a5f33d0"
+          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
+          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197"
         }
       },
       "status": "done"

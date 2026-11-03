@@ -8,7 +8,35 @@
     "issue": null
   },
   "priority": "P2",
-  "records": {},
+  "records": {
+    "design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:06:17Z",
+      "fp_parts": {
+        "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
+        "inputs": {
+          "dep_designs": "v1:sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/design-1",
+      "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "602591719b897c5bcfe667acc12a20c8fc253d34",
+          "commit": "0e146f2cdc002c58cb8e00f8c61fe2cb0a5f33d0",
+          "path": ".zzzops/reviews/1/design.md"
+        },
+        "summary": "Design conservative impact analysis directly in the Trail-code fork, retaining exact snapshot identities, uncertainty and complete reverse dependency closure for an upstreamable change. Separate versioned reports and isolated caches support safe downstream fallback, with targeted failure and regression fixtures guarding against unsound exclusions."
+      },
+      "reason": "new",
+      "status": "done"
+    }
+  },
   "release": 1,
   "schema": 1,
   "skip": {},

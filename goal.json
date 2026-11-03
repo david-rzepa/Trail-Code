@@ -12,51 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 2,
-      "correction_runs": 1,
-      "findings": [
-        {
-          "id": "adversary_design:1:1",
-          "impact": "An attacker or accidentally committed receipt can make the tool claim full verification while required tests never ran.",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 2,
-          "target_fp": "v1:sha256:85f65796d449bba2dd6051e71904f544d5866b2e97fd206f6e7195798c891e92",
-          "text": "The repository-scoped receipt store has no specified provenance or trust boundary. An untrusted checkout can supply a schema-valid forged receipt for a known commit and configuration, causing unaffected tests to be skipped and a new passing receipt to be recorded although the baseline never ran. Require a local store outside versioned/untrusted checkout control, validate its ownership and path (including symlinks/replacement), reject tracked/imported or otherwise untrusted records, and fall back to full verification when provenance cannot be established; test forged tracked receipts and unsafe or symlinked stores. Define the local trust assumption without promising protection against the same local user.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-03T22:27:20Z",
+      "attempt": 3,
+      "correction_runs": 2,
+      "findings": [],
+      "finished_at": "2026-11-03T22:29:16Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:d9404751ae1aa1507b395f44529c07e182ac09e2",
+          "doc": "v1:blob:2b5a8c741eef968f76e36bad86fed2114e2bf42a",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {},
-        "subject": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401"
+        "subject": "v1:sha256:91371c0b8972111c6a16c75d9fde9e776a4e75062edc5baeccb221e95bf2120a"
       },
-      "holder": "codex:root/g2-adversary-2",
-      "input_fp": "v1:sha256:5e791a13cfb402ffeac82101d042106eca5474307a05cd755f91aabcc987df00",
+      "holder": "codex:root/g2-adversary-3",
+      "input_fp": "v1:sha256:38f39eb1f8a92bcedd7872672a9d0860741fce20546ea2f02e42f5f2450c2a1b",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "b55cd259f639c24968b59e08325bd564e18cbd5e",
-          "commit": "b63b71628a3adc03c82c3121c06dc308f41b98b1",
+          "blob": "f3403b21c01020821965f6d1f0e963e8ba0bab06",
+          "commit": "f853bb990caefcc2b08c859bbd78639c6cb100a4",
           "path": ".zzzops/reviews/2/adversary_design.md"
         },
-        "summary": "The receipt provenance finding is resolved; no new material adversarial findings."
+        "summary": "No material adversarial findings in the pinned analyzer endpoint clarification."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "d9404751ae1aa1507b395f44529c07e182ac09e2",
-          "commit": "bd339cf9240700262acbac14833ab9530c51d23e"
+          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
+          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a"
         }
       },
       "status": "done"

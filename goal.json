@@ -1,0 +1,18 @@
+{
+  "budget": null,
+  "closed": null,
+  "depends_on": [],
+  "graph": "default",
+  "id": 1,
+  "links": {
+    "issue": null
+  },
+  "priority": "P2",
+  "records": {},
+  "release": 1,
+  "schema": 1,
+  "skip": {},
+  "spec": "Implement conservative impact analysis directly in this Trail-code fork specified in docs/test-impact/design.md, sections 1–6, 8, 11–13 and delivery steps 1–2. Use upstream base ca20a67764e99531a1cf272eea8354e2c16f71d9 and define versioned impact contracts and exact explicit endpoints. Analyze both snapshots, preserve ambiguity and analysis gaps, traverse complete reverse dependencies without arbitrary limits, handle deletions, renames and rebinding, and isolate and validate conservative caches. Report justified fallback scopes instead of silently omitting uncertainty. Include meaningful tests for endpoint semantics, graph completeness, gaps, cache freshness and representative dependency cases. Preserve upstream licensing and document the pinned source. Do not implement a replacement parser or assume normal navigation output is conservative. The full design and its acceptance matrix are binding; resolve open distribution and interface choices through the workflow. Work directly in this fork for a future upstream pull request; no separate test-impact repository or Git subtree. Preserve the separate Unity plugin branch. Where the design refers to a separate fork and adapter distribution, adapt it to this unified repository.",
+  "state": "open",
+  "title": "Build conservative two-snapshot impact analysis"
+}

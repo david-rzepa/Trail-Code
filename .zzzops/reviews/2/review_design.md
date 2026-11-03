@@ -1,5 +1,7 @@
-# Review of deterministic planning, execution and evidence design
+# Re-review: analyzer integration and receipt trust
 
-The design preserves exact endpoint and execution identity, distinguishes impact from execution and evidence, and defaults to full execution or incomplete verification when the required guarantees are unavailable. It retains the independently callable full test workflow, including the actual test runner's discovery, Git overrides and temporary-directory handling, and records only successful compatible evidence. The design covers concurrent snapshot changes, invalidation, dependent resources, incomplete receipts, supported selector boundaries and schema version rejection.
+## Truth
 
-Intent, simplicity, truth, adversary, concurrency, rollout and experience passes found no material issue. The receipt storage format is recorded as an owner decision. The initial adapter must prove selector and workflow equivalence before enabling file selection, and broad fallback remains acceptable where that proof is unavailable.
+The proposed integration sends immutable IDs to `trail impact`, but requires its `comparison` to match the requested endpoints. The G1 schema defines `comparison.*.requested` as the literal analyzer argument. When the user supplies `--from main` or `--to feature`, the analyzer therefore reports the resolved SHA in `requested`, not the user's symbolic reference. A validator that requires literal equality to the user request rejects otherwise valid runs. Specify that analyzer requested values match the arguments actually submitted to the analyzer, and validate commit/tree identities against the helper's once-resolved identities; separately retain the user's original values in the execution report. Add symbolic-ref and moving-ref tests. This preserves the requirement to resolve refs exactly once and makes both records truthful.
+
+The receipt trust changes otherwise establish a clearly bounded trusted local store, reject checkout-controlled receipts and cover no-follow/path-replacement and predecessor validation.

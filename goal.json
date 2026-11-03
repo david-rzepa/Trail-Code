@@ -219,31 +219,56 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 2,
-      "blocked": {
-        "category": "decision",
-        "instructions": "Reopen G1 design to resolve the absent conservative analyzer invocation and define the schema details needed to write observable black-box tests. The current design explicitly leaves CLI/API naming and field details to later review, so tests would otherwise impose unapproved public interfaces. Once the design is current, restart test_design and write tests against that contract.",
-        "reason": "Reopen G1 design to resolve the absent conservative analyzer invocation and define the schema details needed to write observable black-box tests. The current design explicitly leaves CLI/API naming an",
-        "repeats": 1,
-        "waiting_for": "agent"
-      },
-      "correction_runs": 0,
+      "attempt": 3,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:20:45Z",
+      "finished_at": "2026-11-03T22:29:42Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:582a07c3d6fa4ef7df570010346bdadafea14eaa"
+          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-test-design-1",
-      "input_fp": "v1:sha256:5880f658877b7e8321b72fe8bf72d385e48d81795bd36587e9e81b1be440cf1d",
-      "ok": false,
-      "output": null,
-      "reason": "new",
-      "status": "blocked"
+      "frozen": [
+        "test/conservative-impact-contract.test.ts"
+      ],
+      "holder": "codex:root/g1-test-design-3",
+      "input_fp": "v1:sha256:7e0f7ef9c5c7d3e86a28310185796b1724847df21b8c81f8b021e9dca48d8406",
+      "ok": true,
+      "output": {
+        "commands": [
+          "node --import tsx --test test/conservative-impact-contract.test.ts"
+        ],
+        "cost": {
+          "changed_tests": [
+            {
+              "duration_ms": 9497,
+              "id_or_scope": "test/conservative-impact-contract.test.ts (11 tests, node test runner total)",
+              "observation": "failing: all 11 tests reached the actual CLI and the pre-implementation command was unknown"
+            }
+          ],
+          "checkpoint": "f8835c54bc375b3a526003953b9863dedb4a237b",
+          "commands": [
+            {
+              "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
+              "duration_ms": 9572,
+              "exit": 1
+            }
+          ],
+          "summary": "Red baseline: 11 tests exercise temporary Git repositories and the real CLI; all fail because the impact command is not implemented. The test runner duration is reported separately from the measured process wall time.",
+          "total_ms": 9572
+        },
+        "tests": {
+          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
+          "change": "d08a1f290512bb368f14785571546f3863de119f",
+          "commit": "f8835c54bc375b3a526003953b9863dedb4a237b",
+          "tree": "01c49495dc2e12d68ec1374bc6cc7a890811db16"
+        }
+      },
+      "reason": "stale",
+      "status": "done"
     }
   },
   "release": 1,

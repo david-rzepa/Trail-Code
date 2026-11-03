@@ -10,36 +10,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-03T22:14:03Z",
+      "finished_at": "2026-11-03T22:24:48Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:582a07c3d6fa4ef7df570010346bdadafea14eaa",
+          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690",
           "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
         },
         "policy": {},
-        "subject": "v1:sha256:03bbeac8092f182d2e066f89025c3e17252e1073ea1b8e52c6312df77290dd46"
+        "subject": "v1:sha256:0d261feee0840a72e8b9aff620492233f2e04fbb6371f0991e990bf3a65fd84f"
       },
-      "holder": "codex:root/adversary-design-2",
-      "input_fp": "v1:sha256:db784b5069caa998cbe43449f1ec5c9aacaf3d620784388dc48d9d9299009a47",
+      "holder": "codex:root/g1-adversary-3",
+      "input_fp": "v1:sha256:a398b1f090b688d5ff097351ca8c5c1b033384b6b66f0794f8fb0eff9cbee774",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "309942b60791bc98980f2862c083eee6a9b9863a",
-          "commit": "e725dfa6e56ad96dafde763dd9e78c790ea94576",
+          "blob": "8eb37649edc8081889cbf1b399d4622dbe4db11e",
+          "commit": "c161e8d97f23228a651cd918b43a737f3df78c1a",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the revised capture design."
+        "summary": "No material adversarial findings in the proposed analyzer command and report contract."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
-          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197"
+          "blob": "659387a7758750e6e09ac6e3cc010b36dfd17690",
+          "commit": "e1320eb8c7b00d9951de6652d70af54a7ace6fe1"
         }
       },
       "status": "done"

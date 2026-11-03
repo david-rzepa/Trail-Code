@@ -120,14 +120,30 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 1,
-      "correction_runs": 0,
-      "findings": [],
-      "finished_at": "2026-11-03T22:19:16Z",
+      "attempt": 2,
+      "correction_runs": 1,
+      "findings": [
+        {
+          "id": "review_design:2:1",
+          "impact": "Valid commands using symbolic refs may be rejected or encourage weakening endpoint identity validation.",
+          "lens": "truth",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 4,
+          "target_fp": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401",
+          "text": "The helper invokes the analyzer using resolved immutable commit IDs, but says its comparison must match the requested endpoints. G1 defines comparison.requested as the literal analyzer argument, so a user-provided symbolic ref such as main becomes a SHA in the analyzer report; comparing those literal values would reject a valid run. Define validation against the exact analyzer arguments and once-resolved commit/tree identities while retaining the user's original arguments separately in the execution report; test symbolic and moving refs.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:27:16Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
+          "doc": "v1:blob:d9404751ae1aa1507b395f44529c07e182ac09e2",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "lenses": [
@@ -156,25 +172,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:85f65796d449bba2dd6051e71904f544d5866b2e97fd206f6e7195798c891e92"
+        "subject": "v1:sha256:6f24bc8fee31655c886c710b7c76792d99fdf8a0e1966f6e8d722d6267750401"
       },
-      "holder": "codex:root/g2-review-1",
-      "input_fp": "v1:sha256:8a2afac545e3f736dd6d902d1a6b39f4430b731f6595daf5b316b5fd4f3e5e5a",
+      "holder": "codex:root/g2-review-2",
+      "input_fp": "v1:sha256:ad5080dd2c588c81b894162b40986b38f6494786e115f86eeade7821eb999877",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "b8d39852fe699bb2e6ffa5f237457618cc553ef7",
-          "commit": "c9520c55d16ed3aded49325c608e184faf3528b3",
+          "blob": "9f15044357a44edfc9bf9487a72092131ded7f0a",
+          "commit": "1a2c0c1a75d53da2540cbd6f00d20fcffe252c53",
           "path": ".zzzops/reviews/2/review_design.md"
         },
-        "summary": "Design preserves target identity, full fallback and evidence compatibility."
+        "summary": "Clarify validation of symbolic endpoints after resolving and passing immutable IDs."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "8e613de7cd14d6b7ea5fe0ca05c5e7a17503af4c",
-          "commit": "892b8c4cf27c200644ad527c7deac489e4d35eb8"
+          "blob": "d9404751ae1aa1507b395f44529c07e182ac09e2",
+          "commit": "bd339cf9240700262acbac14833ab9530c51d23e"
         }
       },
       "status": "done"

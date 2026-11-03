@@ -10,7 +10,35 @@
     "issue": null
   },
   "priority": "P2",
-  "records": {},
+  "records": {
+    "design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:42:26Z",
+      "fp_parts": {
+        "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
+        "inputs": {
+          "dep_designs": "v1:sha256:55dc1f4dbb02ab5f5ee534be9ad812ebbab5aa35a8caab73f84887a067e97b18",
+          "spec": "v1:sha256:0525e6926dc268bd55a143c38bcf9e6c359188f89d1a60c255df069c70104a1b"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g4-design-1",
+      "input_fp": "v1:sha256:fcf6754e6619bae1d58846d7924c836ff93924147cbc32f867d8b0e5a26e4234",
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
+          "commit": "8f2e3cd74dd768866ace0152bcd5831eed765ebb",
+          "path": ".zzzops/reviews/4/design.md"
+        },
+        "summary": "Specify an integrated release-gate matrix with isolated Git histories, induced failures and protected snapshot/receipt checks across supported ecosystems. Measure end-to-end selective and full runs with reproducible provenance, explicit fallback frequency and honest unavailable results."
+      },
+      "reason": "new",
+      "status": "done"
+    }
+  },
   "release": 1,
   "schema": 1,
   "skip": {},

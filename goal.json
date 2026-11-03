@@ -35,6 +35,82 @@
       },
       "reason": "new",
       "status": "done"
+    },
+    "review_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "review_design:1:1",
+          "impact": "A later run could falsely validate a synthetic or incomplete target while omitting changes that existed during capture.",
+          "lens": "concurrency",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e",
+          "text": "The design protects inputs during execution but leaves enumeration and capture unprotected. A file read early can change, or a relevant file can appear after enumeration, producing a fingerprint for a mixed or incomplete tree that never represented the requested worktree. Specify point-in-time capture or reliable observation/serialization of enumeration and reads with invalidation/retry on mutation or lost observation, and test concurrent file changes, additions and edit-and-revert during capture.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-03T22:10:18Z",
+      "fp_parts": {
+        "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
+        "inputs": {
+          "doc": "v1:blob:602591719b897c5bcfe667acc12a20c8fc253d34",
+          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+        },
+        "lenses": [
+          "intent",
+          "simplicity",
+          "truth",
+          "adversary",
+          "concurrency",
+          "rollout",
+          "experience"
+        ],
+        "policy": {
+          "intent": {
+            "not": [
+              "A new graph service, a replacement test runner or a separately implemented multilingual parser.",
+              "Predict which tests will fail, promise the mathematically smallest selection, or infer external integration state from Git alone."
+            ],
+            "principles": [
+              "Require explicit endpoints.",
+              "Keep exclusion decisions in code.",
+              "Broaden on uncertainty.",
+              "Preserve the complete workflow.",
+              "Test selection and execution require no model reasoning during normal runs."
+            ],
+            "purpose": "Determine which tests to run based on a git changeset.",
+            "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
+          }
+        },
+        "subject": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e"
+      },
+      "holder": "codex:root/review-design-1",
+      "input_fp": "v1:sha256:ad28366d89c39e4648978fb93d8d51aa440345bf56ccf598e19ffc1012702d8b",
+      "ok": true,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "0b2140f423005bae3f0d5cdf4153513f4997b38f",
+          "commit": "db19d49c03cae6b21b398144100789cdb66d8c57",
+          "path": ".zzzops/reviews/1/review_design.md"
+        },
+        "summary": "Require a coherent worktree capture before reporting snapshot identity."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "602591719b897c5bcfe667acc12a20c8fc253d34",
+          "commit": "0e146f2cdc002c58cb8e00f8c61fe2cb0a5f33d0"
+        }
+      },
+      "status": "done"
     }
   },
   "release": 1,

@@ -10,36 +10,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:10:45Z",
+      "finished_at": "2026-11-03T22:14:03Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:602591719b897c5bcfe667acc12a20c8fc253d34",
+          "doc": "v1:blob:582a07c3d6fa4ef7df570010346bdadafea14eaa",
           "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
         },
         "policy": {},
-        "subject": "v1:sha256:27af07a8236cec30751aea532f0d9e29d54ca59d4488eb5406f4b35618d2ee8e"
+        "subject": "v1:sha256:03bbeac8092f182d2e066f89025c3e17252e1073ea1b8e52c6312df77290dd46"
       },
-      "holder": "codex:root/adversary-design-1",
-      "input_fp": "v1:sha256:b54c156293418833e71ad10ac1a7be178d792861a9903d54735811974d127008",
+      "holder": "codex:root/adversary-design-2",
+      "input_fp": "v1:sha256:db784b5069caa998cbe43449f1ec5c9aacaf3d620784388dc48d9d9299009a47",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "b06ab4503ec3a1d5026754bb55fff0cc6ba2e80d",
-          "commit": "6c348621c595d0432752f3d07109c22bec66a613",
+          "blob": "309942b60791bc98980f2862c083eee6a9b9863a",
+          "commit": "e725dfa6e56ad96dafde763dd9e78c790ea94576",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "No material adversarial design findings; preserve conservative handling of unsafe or unavailable snapshot inputs."
+        "summary": "No material adversarial findings in the revised capture design."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "602591719b897c5bcfe667acc12a20c8fc253d34",
-          "commit": "0e146f2cdc002c58cb8e00f8c61fe2cb0a5f33d0"
+          "blob": "582a07c3d6fa4ef7df570010346bdadafea14eaa",
+          "commit": "41192b33a7bac60fb30a9d72f5fa8a44b0637197"
         }
       },
       "status": "done"

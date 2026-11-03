@@ -106,10 +106,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:23:53Z",
+      "finished_at": "2026-11-03T22:34:53Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -118,18 +118,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-design-4",
+      "holder": "codex:root/g1-design-5",
       "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "659387a7758750e6e09ac6e3cc010b36dfd17690",
-          "commit": "e1320eb8c7b00d9951de6652d70af54a7ace6fe1",
+          "blob": "bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
+          "commit": "f6423531c156c582e98c82681f9691999e6149a6",
           "path": ".zzzops/reviews/1/design.md"
         },
-        "summary": "Define the owner-approved trail impact command and a concrete versioned JSON report for exact endpoint analysis. Document observable failure, incomplete-analysis and fallback behavior, and test the contract through subprocess fixtures."
+        "responses": {
+          "test_design:4:1": "fixed: Added an internal capture/backend and cache-store seam with deterministic barriers, event and cache fault injection, explicit success/unavailability assertions, and coverage of both snapshot and observed-live strategies."
+        },
+        "summary": "Specify a non-public injected capture and cache boundary for deterministic race and fault testing. Test both coherent snapshot and observed-live strategies while retaining production-wiring integration coverage."
       },
-      "reason": "retry",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

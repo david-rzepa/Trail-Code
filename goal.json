@@ -62,33 +62,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-03T22:34:03Z",
+      "finished_at": "2026-11-03T22:39:30Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:b89bf65dccf9e69e6c5a086563c2ebaffae553c02520fe3c683e9d8c18bae41d",
+          "dep_designs": "v1:sha256:940194773f5a5e4a8068aa3d1f91a5d4ccc36e942b0dd17d0d176b07d9e00a43",
           "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-design-2",
-      "input_fp": "v1:sha256:68b20bc78d38bea5e48853e91489337bb5e6a4b4809fe5099c076f6fcac9b52b",
+      "holder": "codex:root/g3-design-3",
+      "input_fp": "v1:sha256:396931dce1cf3971d94a051e1f8fe094463c512fb1cb61178b121fdd1e31dad9",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "4443223963187891e1da29f75fc941efee295377",
-          "commit": "8bb097aa2fd849a2106b3368f54ae30b9c56caf0",
+          "blob": "a239731b95eff6a51c41ae0253dafae3a2604cfa",
+          "commit": "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5",
           "path": ".zzzops/reviews/3/design.md"
         },
-        "responses": {
-          "adversary_design:1:1": "fixed: added explicit lower-trust repository-data boundaries, command and sensitive-write authorization checks, and injection tests including legitimate project instructions."
-        },
-        "summary": "Protect setup from instructions embedded in repository data and require separately established authority for validation commands and sensitive writes, while honoring applicable project instructions within the host instruction hierarchy. Exercise credential exfiltration, unauthorized execution and test-omission injections in controlled fixtures."
+        "summary": "Refresh the setup-skill design against G2’s internal-only capture/cache test seam: generated adapters use only supported production interfaces, with real packaged wiring tested and identity protection retained. Preserve the untrusted repository-content boundaries and injection tests."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

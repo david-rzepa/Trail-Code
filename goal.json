@@ -11,6 +11,41 @@
   },
   "priority": "P2",
   "records": {
+    "adversary_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-03T22:43:44Z",
+      "fp_parts": {
+        "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
+        "inputs": {
+          "doc": "v1:blob:3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
+          "spec": "v1:sha256:0525e6926dc268bd55a143c38bcf9e6c359188f89d1a60c255df069c70104a1b"
+        },
+        "policy": {},
+        "subject": "v1:sha256:75fe4151a60461faa73c8fc594b4ef7c218f8dd804ce36a433cc42788c93ffb5"
+      },
+      "holder": "codex:root/g4-adversary-1",
+      "input_fp": "v1:sha256:4fda4767b2e15033954a3cb62b721785e96ef80f9679f884f76cfdda8d224dda",
+      "ok": true,
+      "output": {
+        "decision": "approved",
+        "report": {
+          "blob": "7d4639f639324024520fbdb6e80dacc754acc5d1",
+          "commit": "ca842dce420bf7d2cb8d7f235cc07a6d1a23d2d6",
+          "path": ".zzzops/reviews/4/adversary_design.md"
+        },
+        "summary": "No material adversarial findings in the end-to-end release-gate design."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
+          "commit": "8f2e3cd74dd768866ace0152bcd5831eed765ebb"
+        }
+      },
+      "status": "done"
+    },
     "design": {
       "attempt": 1,
       "correction_runs": 0,

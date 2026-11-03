@@ -1,0 +1,3 @@
+# Review of end-to-end validation design
+
+The design treats all 17 acceptance cases as release gates, combines real packaged integration and original runner checks with controlled fault injection, and explicitly tests baseline evidence, execution identity, uncertain dependencies, invalidation and failure propagation. Full-versus-selective comparisons use equivalent target and context with deliberately introduced failures; timing covers end-to-end cost and accurately labels unavailable measurements and corpus scope. Test-fixture and public-artifact boundaries avoid changing the user's checkout or publishing sensitive evidence. Intent, simplicity, truth, adversary, concurrency, rollout and experience passes found no material issue.

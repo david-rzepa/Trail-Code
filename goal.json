@@ -12,36 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:29:16Z",
+      "finished_at": "2026-11-03T22:37:53Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:2b5a8c741eef968f76e36bad86fed2114e2bf42a",
+          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
           "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
         },
         "policy": {},
-        "subject": "v1:sha256:91371c0b8972111c6a16c75d9fde9e776a4e75062edc5baeccb221e95bf2120a"
+        "subject": "v1:sha256:8424e0e4facd4f5fb65145192b4360fb95de89689cc85bfad8b3956fe72b4dc3"
       },
-      "holder": "codex:root/g2-adversary-3",
-      "input_fp": "v1:sha256:38f39eb1f8a92bcedd7872672a9d0860741fce20546ea2f02e42f5f2450c2a1b",
+      "holder": "codex:root/g2-adversary-4",
+      "input_fp": "v1:sha256:b82cb37153d49666782ac85d98530ba4866dd3bd35460807ac34d1a9a90434e0",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "f3403b21c01020821965f6d1f0e963e8ba0bab06",
-          "commit": "f853bb990caefcc2b08c859bbd78639c6cb100a4",
+          "blob": "093ea85928871ee448783c430f1d97b4f2777a5e",
+          "commit": "f98ecf837d7f08966481eb84cde4430f1f7b19e0",
           "path": ".zzzops/reviews/2/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the pinned analyzer endpoint clarification."
+        "summary": "No material adversarial findings in the dependency test-seam alignment."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "2b5a8c741eef968f76e36bad86fed2114e2bf42a",
-          "commit": "f281afff6e2e036ae064755e716ae016a9756d7a"
+          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
+          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5"
         }
       },
       "status": "done"

@@ -81,28 +81,28 @@
       "status": "done"
     },
     "design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-04T17:34:37Z",
+      "finished_at": "2026-11-04T19:23:56Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:fcfb2122412f833d4da297fc7bb33576d2a5c387e9efecaffe1bd6588f2b3a87",
-          "spec": "v1:sha256:4c09c0e14d1d9afa3eb6eb3ec78cf97526cb6a678043498b26e32577528407e3"
+          "dep_designs": "v1:sha256:a1d7e9ab77f00e4a0f9f3034040cbb9b41751b060e2814f6e68a8b2fc2d05dbd",
+          "spec": "v1:sha256:14cb5b049de9d9505c204a32bf6a504f43f645ce6870f68fb36cb056c1837796"
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-normal-design",
-      "input_fp": "v1:sha256:e70d4741203e25833516ece7ae78eac254445e2d710f8bf42fe7fa4d5250004c",
+      "holder": "codex:root/g3-multilingual-design",
+      "input_fp": "v1:sha256:0f6d4a9260a180e450e501c92e91373aae5fa7e9d60c204f212349e1a0892102",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "d85b2764b6579d5b71e082132aa4603451027f68",
-          "commit": "f4ea95d0e8dfbbdcc38150009a108bb8a53feb67",
+          "blob": "ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "commit": "38dbd2c818c6be92e6362e3bf0a320f8380b689a",
           "path": ".zzzops/reviews/3/design.md"
         },
-        "summary": "Refresh setup skill and generated adapter design to committed-only endpoints and normal stable-input execution, with explicit worktree rejection and ordinary checkout preflight. Require G2 to validate the full independently derived v2 context requirement set before sparse execution, preserving safe fallback and repository-data trust safeguards."
+        "summary": "Refresh the setup design for G1/G2’s language-agnostic graph and independent cross-build boundary validation. Generate working real Node/TypeScript and conventional Go adapters, demonstrate selective execution for both, and broaden safely for unmodeled or mixed-language dependencies."
       },
       "reason": "stale",
       "status": "done"

@@ -319,8 +319,8 @@
       "status": "done"
     },
     "review_impl": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "review_impl:1:1",
@@ -330,7 +330,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 1,
           "target_fp": "v1:sha256:ab3b780ae6549b0aafba0dbfa128a40a457f07e2c8c478d76d6815e77148882d",
@@ -345,7 +345,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 1,
           "target_fp": "v1:sha256:ab3b780ae6549b0aafba0dbfa128a40a457f07e2c8c478d76d6815e77148882d",
@@ -360,7 +360,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 4,
           "target_fp": "v1:sha256:969c3965715e9e38c64c31959cee0a0d1f19713219eda1b95322fad16b2a5caf",
@@ -368,14 +368,14 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T22:56:18Z",
+      "finished_at": "2026-11-04T23:31:37Z",
       "fp_parts": {
         "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
         "inputs": {
           "base": "v1:sha256:c17f2f3e7e9837983b445a232a40ccd115e28b930a54a7cd667136e2810ea9bf",
-          "code": "v1:sha256:5df10cbea4ee229120a4b75a9a30b4dc3fc9b4528c98dabc969b9d59d7703ee1",
+          "code": "v1:sha256:aea190279243f187391e20c34125eb183559bd5f8ac0ded0fa89a43f0dbe47d4",
           "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
-          "tests": "v1:sha256:5839adf7febe0d4b8bbfc290609837c328cee3495a16534342b7d97b22c8c5f9"
+          "tests": "v1:sha256:3f19ccbfc7b4eaeadbc7f52c76a574506bfb2645ed9e009dda48dbd7399c155f"
         },
         "lenses": [
           "compliance",
@@ -385,27 +385,27 @@
           "craft"
         ],
         "policy": {},
-        "subject": "v1:sha256:ab3b780ae6549b0aafba0dbfa128a40a457f07e2c8c478d76d6815e77148882d"
+        "subject": "v1:sha256:fccef48352d596df1fea5a4eebb7cbd4c651c892cfca9f706276d2638df72feb"
       },
-      "holder": "codex:root/g2-review-impl",
-      "input_fp": "v1:sha256:5c23f9dcb1c16b559d987d297a340cbc769527a4449ec847f50a555e54840f12",
+      "holder": "codex:root/g2-review-impl2",
+      "input_fp": "v1:sha256:b5f5c31ff6e700f0c23f4e2aabafe37d92f40668db2d874043a400e8fd10e398",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "09d560d4c18a7e237010760cb981110d6df31258",
-          "commit": "4819fb05b3395dc51c1479c88bd67919071ae990",
+          "blob": "6a434878cd165381b1b80c1eb3d7c93e76cfbbd7",
+          "commit": "aa823d2d310234999c2c3b5aa958fd5fe521fe28",
           "path": ".zzzops/reviews/2/review_impl.md"
         },
-        "summary": "Changes required: untracked Go tests can yield a false validated result, and analyzer-reported affected units can be discarded."
+        "summary": "Approved: the three previous findings are resolved, with regression coverage and passing Linux verification."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "code": {
           "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
-          "change": "d3af4fb28ec0c777aef803daef5d15a2e8d70bb4",
-          "commit": "bd7b15389392532f45d9ee1867dd799486d06714",
-          "tree": "c90185221ab4c3087b72fc3564dc204090264849"
+          "change": "2b291c82eb5dc54f2abd8cae76a783411ef3fee9",
+          "commit": "00e927683a864f9c3d75c80364ec3e7beb53b4cd",
+          "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434"
         }
       },
       "status": "done"

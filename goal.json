@@ -248,6 +248,58 @@
         }
       },
       "status": "done"
+    },
+    "test_design": {
+      "attempt": 2,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T21:24:36Z",
+      "fp_parts": {
+        "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
+        "inputs": {
+          "base": "v1:sha256:5fb49a478fd7faec78ff25a140844636acf48cd1003a4d1954799f41e4838ec0",
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423"
+        },
+        "policy": {}
+      },
+      "frozen": [
+        "test/test-impact-verification-contract.test.ts"
+      ],
+      "holder": "codex:root/g2-multilingual-tests",
+      "input_fp": "v1:sha256:8bb7778e4f5e5968e2ac5c280f79583e0febf68d0cfea4082d2989bb6c0e996b",
+      "ok": true,
+      "output": {
+        "commands": [
+          "node --import tsx --test test/test-impact-verification-contract.test.ts"
+        ],
+        "cost": {
+          "changed_tests": [
+            {
+              "duration_ms": 7770,
+              "id_or_scope": "test/test-impact-verification-contract.test.ts (9 Node/Go fixture tests)",
+              "observation": "Incomplete red observation: real Node analyzer fixture passed, Node and Go analyzer plus real baseline/changed full runner setups executed, and the Go bounded-resource analyzer fixture executed; eight G2 cases fail at import because the private verification seam does not exist yet. The planned G2 selection, receipt and evidence assertions could not execute."
+            }
+          ],
+          "checkpoint": "90ca0152c3ccfbb46b938bef8872e976734b5acb",
+          "commands": [
+            {
+              "cmd": "node --import tsx --test test/test-impact-verification-contract.test.ts",
+              "duration_ms": 7828,
+              "exit": 1
+            }
+          ],
+          "summary": "Measured with Go 1.27.3 on PATH; nine tests registered, one passed and eight failed at the unimplemented G2 private seam. This measures fixture setup and early failure, not completed G2 behavior. The Go-specific tests skip if Go is unavailable.",
+          "total_ms": 7828
+        },
+        "tests": {
+          "base": "db0d148e7dbc47c3199d2e3b23b207d4e277531e",
+          "change": "b9f256fd9ed736a24730a7cae1e829c4c67aa559",
+          "commit": "90ca0152c3ccfbb46b938bef8872e976734b5acb",
+          "tree": "b1695ab70604daab6f414110841bb729dd7f5ce3"
+        }
+      },
+      "reason": "new",
+      "status": "done"
     }
   },
   "release": 1,

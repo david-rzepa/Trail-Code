@@ -315,6 +315,120 @@
       },
       "status": "done"
     },
+    "run_tests": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "carrier_fp": "v1:sha256:61d59eb384084da69d8be1d1016f8c7012ec62c5482ec3e9ad634193c29b204e",
+          "id": "run_tests:failed",
+          "note": null,
+          "repeats": 1,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 4,
+          "target_fp": "v1:sha256:f7ba70d2aa8171f31c5105cddeaf7eb9d4334db4351439552760f2c28da2d4a9",
+          "text": "`npm test` exited 1:\ncope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T01:18:06Z",
+      "fp_parts": {
+        "def": "v1:sha256:def927cb81b82bf3b076ecd841fe451396715db71445477cd2a999786666b4ca",
+        "inputs": {
+          "code": "v1:sha256:00dd857bc36f31910c4c74dd47ba8d95a818be2c00996838a263076320419371",
+          "commands": "v1:sha256:f1118dd4506ba7af51de350c8e5dfb4ed0a9e26b8615c4ea9c405742ac3d95c5"
+        },
+        "policy": {
+          "verification": {
+            "ci_timeout_minutes": 120,
+            "commands": [
+              "npm run build",
+              "npm test"
+            ],
+            "required_ci": [],
+            "timeout_minutes": 60
+          },
+          "verification.commands": [
+            "npm run build",
+            "npm test"
+          ]
+        }
+      },
+      "holder": "codex:root/g1-run-tests",
+      "input_fp": "v1:sha256:61d59eb384084da69d8be1d1016f8c7012ec62c5482ec3e9ad634193c29b204e",
+      "ok": false,
+      "output": {
+        "result": {
+          "details": [
+            {
+              "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
+              "exit": 0,
+              "milliseconds": 20465,
+              "seconds": 20,
+              "source": "goal",
+              "tail": "nnot consume external content or suppress fallback (871.973529ms)\n✔ unsafe committed chained-escape symlinks cannot consume external content or suppress fallback (890.410691ms)\n✔ unsafe committed path-component-escape symlinks cannot consume external content or suppress fallback (899.044432ms)\n✔ unsafe committed loop symlinks cannot consume external content or suppress fallback (897.977135ms)\n✔ unsafe committed missing symlinks cannot consume external content or suppress fallback (895.440477ms)\n✔ a contained symlink never contributes bytes from outside the pinned tree (930.995604ms)\n✔ production analysis never reads an external target through a committed absolute link (903.377022ms)\n✔ production analysis never reads an external target through a committed chain link (946.351669ms)\n✔ production analysis never reads an external target through a committed component link (914.263554ms)\nℹ tests 25\nℹ suites 0\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 20436.156144\n"
+            },
+            {
+              "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
+              "exit": 0,
+              "milliseconds": 99,
+              "seconds": 0,
+              "source": "goal",
+              "tail": "✔ cache rejects wrong snapshot and returns only rebuilt current identity (1.636491ms)\n✔ cache rejects navigation mode and returns only rebuilt current identity (0.213372ms)\n✔ cache rejects wrong policy and returns only rebuilt current identity (0.170552ms)\n✔ cache rejects incompatible version and returns only rebuilt current identity (0.163706ms)\n✔ cache refreshFails cannot promote stale data to current (0.291705ms)\n✔ cache publishFails cannot promote stale data to current (0.180228ms)\n✔ committed analysis binds a moved ref to the originally resolved tree (0.370413ms)\n✔ unavailable committed resolve cannot become a valid snapshot (0.220362ms)\n✔ unavailable committed tree cannot become a valid snapshot (0.184252ms)\n✔ unavailable committed blob cannot become a valid snapshot (0.220116ms)\n✔ unavailable committed materialize cannot become a valid snapshot (0.148778ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 75.181142\n"
+            },
+            {
+              "cmd": "npm run build",
+              "exit": 0,
+              "milliseconds": 4722,
+              "seconds": 4,
+              "source": "verification",
+              "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g1/dist/vendor/grammars (9 wasm)\n"
+            },
+            {
+              "cmd": "npm test",
+              "exit": 1,
+              "milliseconds": 149041,
+              "seconds": 149,
+              "source": "verification",
+              "tail": "cope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n"
+            }
+          ],
+          "passed": false,
+          "timing": {
+            "baseline": {
+              "reason": "no_prior_run",
+              "status": "unavailable",
+              "verification": {
+                "reason": "no_prior_run",
+                "status": "unavailable"
+              }
+            },
+            "cpu_budget": 20,
+            "environment": {
+              "cpus": 20,
+              "platform": "linux",
+              "python": "3.14"
+            },
+            "goal_ms": 20564,
+            "parallel_commands": false,
+            "plan_sha256": "54174388c1de77cedb657a94d81330dfc78796be779e4edb9363a10f751c1f79",
+            "total_ms": 174327,
+            "verification_ms": 153763,
+            "verification_plan_sha256": "37985072594afcd351b0c84b0e576f0f968290a92ceccfc5671100b134987c6c",
+            "workers": {
+              "goal": 20,
+              "verification": 20
+            }
+          },
+          "tree": "d8766808e7bf581a41a6c748226fc1491091d870"
+        }
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "test_design": {
       "attempt": 8,
       "correction_runs": 6,

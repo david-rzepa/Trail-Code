@@ -46,6 +46,40 @@
       },
       "status": "done"
     },
+    "approve_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T00:09:33Z",
+      "fp_parts": {
+        "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
+        "inputs": {
+          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
+          "filter": "v1:sha256:f61eda89e49cbc2e1b29fce9d0299fbfecda8d537e1be21b045b1fe092c9de05",
+          "summary": "v1:sha256:4ac7f5f7d613296cad4feb576436e99819428992245a54dfcf3e7e484f1685eb"
+        },
+        "policy": {},
+        "subject": "v1:sha256:8424e0e4facd4f5fb65145192b4360fb95de89689cc85bfad8b3956fe72b4dc3"
+      },
+      "holder": "human",
+      "input_fp": "v1:sha256:08fc4b71c10c7f5458a664cb7c1e8ea2e4d4230296a83927b2e0b4463eb922ed",
+      "ok": true,
+      "output": {
+        "decided_at": "2026-11-04T00:09:33Z",
+        "decided_by": "Dave",
+        "decision": "approved",
+        "quote": "Approved",
+        "summary": "Approved the deterministic planning, execution and trusted JSON receipt design."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
+          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5"
+        }
+      },
+      "status": "done"
+    },
     "design": {
       "attempt": 6,
       "correction_runs": 5,

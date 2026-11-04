@@ -222,15 +222,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "review_tests:1:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 3,
           "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
@@ -242,7 +242,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 3,
           "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
@@ -256,41 +256,41 @@
           "rounds": 1,
           "status": "open",
           "target": "test_design",
-          "target_attempt": 3,
-          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
+          "target_attempt": 5,
+          "target_fp": "v1:sha256:21a223d9482eca3ceb468360f1c3a92468879ac4011f2348ad690017ba780610",
           "text": "The dynamic behavior assertion accepts any dependency reason on the changed file even if the dynamic target and its dependents are omitted. An unsound gap-free analysis can pass. Require a justified modeled relationship covering candidate targets or an explicit gap with appropriate fallback (full profile for unbounded global lookup), and test status/gap/fallback consistency.",
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-03T22:31:10Z",
+      "finished_at": "2026-11-04T00:13:17Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
-          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690",
-          "tests": "v1:sha256:7670cfd45c54d86c85fbab5e62ab20afa8d38256f30bfa3d55c2c739478f03e6"
+          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
+          "tests": "v1:sha256:1131291620d964d370f49d7d500a234052d620795251c0ce9dfcd57b4fb53faf"
         },
         "policy": {},
-        "subject": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75"
+        "subject": "v1:sha256:21a223d9482eca3ceb468360f1c3a92468879ac4011f2348ad690017ba780610"
       },
-      "holder": "codex:root/g1-review-tests-1",
-      "input_fp": "v1:sha256:c5026649c51a70c839b827c0e6759e8268b539dad23d0f265556dba898f1c352",
+      "holder": "codex:root/g1-review-tests-2",
+      "input_fp": "v1:sha256:cd8070b91ce404d90818ccd182b16af23f650c11fc4b80ee964eba1bc2b450f3",
       "ok": false,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "18bb6c27230715300b0027602831c5fa313a667f",
-          "commit": "a309da9d0fcba07159d189d58806eeb8327f77fb",
+          "blob": "7971dc1a63ca7f12ce14ff420e28fd822494eaec",
+          "commit": "f24c41d281a5623182c6928990d9684682cd7ff0",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Three material safety gaps in worktree capture, cache freshness, and dynamic dependency/fallback coverage."
+        "summary": "Capture and cache findings resolved; bounded gap/status/fallback consistency remains untested."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "d08a1f290512bb368f14785571546f3863de119f",
-          "commit": "f8835c54bc375b3a526003953b9863dedb4a237b",
-          "tree": "01c49495dc2e12d68ec1374bc6cc7a890811db16"
+          "change": "f384289ee18fa993efa744317d93d3da32bc1ef6",
+          "commit": "13a8da12227317f3417fe2bd7721e9388935282b",
+          "tree": "a50da8f417922d5b4ae05ed51651595d5cb84a04"
         }
       },
       "status": "done"

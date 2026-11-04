@@ -162,17 +162,17 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 2,
+      "attempt": 3,
       "blocked": {
         "category": "decision",
-        "instructions": "Partial checkpoints 477e974 and 55d7e59 preserve raw local/receiver and relative-import candidates with source/name/relation/basis, explicit unresolved gaps, and unsupported/unindexed source reporting; new five-test suite and original 15+27 tests and npm run build pass. Do not treat the goal complete. Remaining: (1) ordinary worktree capture cannot establish coherent snapshots on this host: repository is not a Btrfs subvolume, parent /home subvolume is owned by root, and mount lacks user_subvol_rm_allowed. Simple inotify or before/after hashing does not reliably observe mmap writes or all nested paths; do not promote it as complete. Implement and verify a valid capture backend or arrange a suitable supported platform. (2) Current candidate preservation covers only explicit relative-module, local and same-file receiver evidence; cross-file dispatch, inheritance and multiple languages remain incomplete; graph analysis still forces full-profile fallback for nonempty trees. Extend extraction and conservative resolution with justified candidates and gaps and validate end-to-end before claiming completion. (3) Verify real production snapshot capture and identity on a supported environment; tests currently permit explicit unavailable. Full fallback and passing tests alone are not completion.",
-        "reason": "Partial checkpoints 477e974 and 55d7e59 preserve raw local/receiver and relative-import candidates with source/name/relation/basis, explicit unresolved gaps, and unsupported/unindexed source reporting",
-        "repeats": 2,
+        "instructions": "Checkpoint 9e5b0af adds conservative cross-file typed-receiver hierarchy candidates: all explicit class-name candidates, raw extends/implements links in both directions without hop limits, and candidate method overloads/overrides are retained as inferred possibilities. Source identities remain ambiguous and the existing global full fallback remains mandatory. Three new tests pass including a real Git/CLI scenario; the five previous candidate tests, 15 CLI contract tests, 27 coordinator tests and npm run build pass. Continue implementation: (1) successfully validate a coherent production worktree snapshot backend for ordinary checkouts or use a suitable supported environment; this host uses root-owned /home Btrfs subvolume, the repository is not a subvolume and user_subvol_rm_allowed is absent. Do not use best-effort watchers or before/after hashes as proof. (2) extend cross-file module/type bindings, callbacks, inheritance and language coverage with justified candidates and explicit uncertainty. (3) define a defensible supported-model completeness criterion before removing unconditional fallback for nonempty trees, and test end-to-end. This checkpoint is partial and not a complete sparse analyzer.",
+        "reason": "Checkpoint 9e5b0af adds conservative cross-file typed-receiver hierarchy candidates: all explicit class-name candidates, raw extends/implements links in both directions without hop limits, and candida",
+        "repeats": 3,
         "waiting_for": "agent"
       },
-      "correction_runs": 1,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T00:44:15Z",
+      "finished_at": "2026-11-04T00:49:03Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
@@ -182,7 +182,7 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-implement-2",
+      "holder": "codex:root/g1-implement-3",
       "input_fp": "v1:sha256:6aa7d9fdbc702f5a45f08257835a94eaac8d23d8e3b9501af0ceb5bce76d87b9",
       "ok": false,
       "output": null,

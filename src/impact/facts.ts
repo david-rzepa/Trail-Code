@@ -46,6 +46,14 @@ export function preserveCandidates(nodes: readonly NodeV1[], raw: readonly RawEd
     }
   }
   for (const intent of raw) {
+    if (intent.relation === "imports" && intent.specifier) {
+      const spec=intent.specifier, stem=spec.startsWith(".") ? posix.normalize(posix.join(posix.dirname(intent.file),spec)).replace(/\.(?:[cm]?[jt]sx?)$/, "") : spec.replace(/\./g,"/");
+      const possible=nodes.filter(n=>n.kind === "file" && (n.path === stem || [".ts",".tsx",".js",".jsx",".py"].some(ext=>n.path === stem+ext || n.path === `${stem}/index${ext}` || n.path === `${stem}/__init__${ext}`)));
+      const candidates=[...new Set(possible.map(n=>n.id))].sort();
+      facts.push({path:intent.file,source:intent.source,relation:"imports",name:spec,candidates,basis:"module-specifier"});
+      for(const target of candidates) {const key=`${intent.source}\0imports\0${target}`;if(!seen.has(key)){seen.add(key);edges.push({source:intent.source,target,relation:"imports",confidence:"inferred"});}}
+      continue;
+    }
     if (!["calls", "references", "extends", "implements"].includes(intent.relation) || !intent.name) continue;
     const sameName = named.get(intent.name) ?? [];
     let basis: CandidateFact["basis"] = "unknown";

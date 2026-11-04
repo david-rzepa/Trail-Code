@@ -71,7 +71,7 @@ test("real CLI includes transitive static imports and emits mandatory builtin re
       for(const p of ["src/a.ts","src/bridge.ts","tests/a.ts"]) assert.ok(paths.has(p),`${revision}: missing ${p}`);
       for(const p of ["src/b.ts","tests/b.ts"]) assert.ok(!paths.has(p),`${revision}: unexpectedly affected ${p}`);
     }
-    assert.deepEqual(report.supported_model,{id:"node-typescript-static-esm",version:"2"});
+    assert.deepEqual(report.supported_model,{id:"node-typescript-static-esm",version:"3"});
     const req=report.context_requirements.map((x:any)=>x.id);
     assert.ok(req.includes("dependency:node:test"));assert.ok(req.includes("dependency:node:assert/strict"));
     assert.deepEqual(req,[...req].sort());

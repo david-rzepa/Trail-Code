@@ -4,7 +4,8 @@ import { spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
-import type { RawEdge } from "../src/graph/extract.js";
+import {extractFile, type RawEdge} from "../src/graph/extract.js";
+import {warmDepthGrammars} from "../src/graph/depth-parser.js";
 import type { NodeV1 } from "../src/graph/types.js";
 import { preserveCandidates } from "../src/impact/facts.js";
 
@@ -12,6 +13,22 @@ function node(id: string, name: string, kind: NodeV1["kind"], path: string, owne
   return {id,name,kind,path,owner,span:"L1-L1",signature:null,exported:false,origin:"ast",body_hash:"x",summary_state:"pending",summary:null,crux:null};
 }
 const caller = node("a.ts#caller", "caller", "function", "a.ts");
+
+test("raw extraction retains Python multi-imports and TypeScript re-exports",async()=>{
+  await warmDepthGrammars(["python","typescript"]);
+  const py=extractFile("a.py","import os, pkg.b as z\nfrom pkg.c import value\n","python");
+  assert.deepEqual(py.rawEdges.filter(e=>e.relation === "imports").map(e=>e.specifier),["os","pkg.b","pkg.c"]);
+  const ts=extractFile("a.ts","export { value } from './lib.js';\n","typescript");
+  assert.deepEqual(ts.rawEdges.filter(e=>e.relation === "imports").map(e=>e.specifier),["./lib.js"]);
+});
+
+test("raw import facts preserve every plausible target and original specifier", () => {
+  const nodes = [node("src/a.ts","a.ts","file","src/a.ts"),node("src/lib.ts","lib.ts","file","src/lib.ts"),node("src/lib.tsx","lib.tsx","file","src/lib.tsx")];
+  const result=preserveCandidates(nodes,[{source:"src/a.ts",file:"src/a.ts",relation:"imports",specifier:"./lib.js"}]);
+  assert.deepEqual(result.facts[0].candidates,["src/lib.ts","src/lib.tsx"]);
+  assert.equal(result.facts[0].name,"./lib.js");
+  assert.deepEqual(result.edges.map(e=>e.target),["src/lib.ts","src/lib.tsx"]);
+});
 
 test("preserves every local ambiguous callable with call-site provenance", () => {
   const nodes = [caller,node("a.ts#f~2","f","function","a.ts"),node("a.ts#f","f","function","a.ts"),node("b.ts#f","f","function","b.ts")];

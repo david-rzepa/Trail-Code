@@ -13,10 +13,18 @@ test("Go package facts preserve import and package provenance",async()=>{
   assert.ok(model.imports.get("a/a_test.go")?.includes("a/a.go"));
   assert.deepEqual(model.provenance.get("consumer/c.go")?.get("a/a.go"),["Go import example.test/p/a"]);
 });
+test("supported Go formatting records a standard-library requirement",async()=>{
+  const issues:unknown[]=[];
+  const model=await certifyGoStatic(map({...base,"a/a.go":"package a\nimport \"fmt\"\nfunc Value() string { return fmt.Sprintf(\"%d\", 1) }\n"}),x=>issues.push(x));
+  assert.ok(model);assert.deepEqual(issues,[]);assert.ok(model.builtins.includes("fmt"));
+});
 test("Go unknown inputs and unbounded source constructs fail closed",async()=>{
   for(const [name,extra] of Object.entries({
     unresolved:{"consumer/c.go":"package consumer\nimport \"example.test/p/missing\"\n"},
     external:{"a/a.go":"package a\nimport \"os\"\n"},
+    fmtInput:{"a/a.go":"package a\nimport \"fmt\"\nfunc Read(){ fmt.Scan() }\n"},
+    fmtAlias:{"a/a.go":"package a\nimport f \"fmt\"\nfunc Read(){ f.Scan() }\n"},
+    fuzzCorpus:{"a/testdata/fuzz/FuzzValue/README.md":"go test fuzz v1\nint(1)\n"},
     cgo:{"a/a.go":"package a\nimport \"C\"\n"},
     buildTag:{"a/a.go":"//go:build linux\n\npackage a\n"},
     generated:{"a/a.go":"package a\n//go:generate run\n"},
@@ -39,7 +47,7 @@ test("embedded input reports a bounded package scope and cross-package dependent
     const cli=resolve("src/cli.ts");const r=spawnSync(process.execPath,["--import",import.meta.resolve("tsx"),cli,"impact","--from",from,"--to",to,"--json","--schema-version","2"],{cwd:dir,encoding:"utf8"});assert.equal(r.status,0,r.stderr);
     const report=JSON.parse(r.stdout);assert.equal(report.analysis_status,"conditional");
     const gaps=report.analysis_gaps.filter((g:{kind:string})=>g.kind==="opaque_embedded_resource");assert.equal(gaps.length,2);
-    for(const gap of gaps) {assert.equal(gap.scope,"go-package:example.test/p:a");assert.deepEqual(gap.boundary.model,{id:"go-static-packages",version:"1"});assert.equal(gap.boundary.package_path,"a");assert.ok(report.required_fallback_scopes.some((s:{kind:string;scope:string})=>s.kind==="scope"&&s.scope===gap.scope));}
+    for(const gap of gaps) {assert.equal(gap.scope,"go-package:example.test/p:a");assert.deepEqual(gap.boundary.model,{id:"go-static-packages",version:"2"});assert.equal(gap.boundary.package_path,"a");assert.ok(report.required_fallback_scopes.some((s:{kind:string;scope:string})=>s.kind==="scope"&&s.scope===gap.scope));}
     assert.ok(report.affected.some((a:{path:string})=>a.path==="consumer/c.go"));assert.ok(!report.required_fallback_scopes.some((s:{kind:string})=>s.kind==="full_profile"));
   } finally {rmSync(dir,{recursive:true,force:true});}
 });

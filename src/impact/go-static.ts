@@ -5,7 +5,7 @@ import { posix } from "node:path";
 import { depthReady, parseDepth, warmDepthGrammars, type SyntaxNode } from "../graph/depth-parser.js";
 import {recordDependency, type FileDependencyFacts} from "./dependency-facts.js";
 
-export const GO_STATIC_MODEL = { id:"go-static-packages", version:"1" } as const;
+export const GO_STATIC_MODEL = { id:"go-static-packages", version:"2" } as const;
 export interface GoModel extends FileDependencyFacts { resources:Map<string,string>; moduleName:string; builtins:string[]; goVersion:string }
 export interface GoIssue {path:string; kind:string; detail:string}
 function walk(n:SyntaxNode, visit:(n:SyntaxNode)=>void):void { visit(n); for(const c of n.namedChildren) walk(c,visit); }
@@ -40,8 +40,17 @@ export async function certifyGoStatic(files:ReadonlyMap<string,Buffer>, issue:(x
             const literal=n.namedChildren.find(c=>c.type === "interpreted_string_literal");
             if (!literal || !/^"[A-Za-z0-9._~/-]+"$/.test(literal.text)) {fail(path,"unresolved_import","Unsupported Go import literal");return;}
             rawImports.push(literal.text.slice(1,-1));
+            if(literal.text === '"fmt"') {
+              const alias=n.namedChildren.find(c=>c.type === "package_identifier" || c.type === "dot" || c.type === "blank_identifier");
+              if(alias && alias.text !== "fmt") fail(path,"unsupported_standard_library","Aliased or dot fmt import is not modeled");
+            }
           });
         }
+        walk(root,n=>{
+          if(n.type !== "selector_expression") return;
+          const operand=n.childForFieldName("operand"), field=n.childForFieldName("field");
+          if(operand?.text === "fmt" && (!field || !["Sprintf","Sprint","Sprintln","Errorf","Append","Appendf","Appendln"].includes(field.text))) fail(path,"unsupported_standard_library",`fmt.${field?.text ?? "?"} may access unmodeled inputs or effects`);
+        });
       });
       if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(packageName)) {fail(path,"parse_error","Missing Go package declaration");continue;}
       const dir=posix.dirname(path), baseName=packageName.endsWith("_test") && path.endsWith("_test.go") ? packageName.slice(0,-5) : packageName;
@@ -63,7 +72,10 @@ export async function certifyGoStatic(files:ReadonlyMap<string,Buffer>, issue:(x
   // These conventional documentation files cannot be read by supported Go
   // source: filesystem APIs are outside this adapter, while explicit embeds
   // above are always tracked as dependencies regardless of filename.
-  for(const path of files.keys()) if(path !== "go.mod" && !sources.includes(path) && !inputs.has(path) && !/^(?:.*\/)?(?:README\.md|LICENSE)$/.test(path)) fail(path,"unmodeled_input","Go project input is not covered by the static package model");
+  for(const path of files.keys()) {
+    if (/(?:^|\/)testdata(?:\/|$)/.test(path)) {fail(path,"unmodeled_input","Go testdata can contain automatically discovered corpus inputs");continue;}
+    if(path !== "go.mod" && !sources.includes(path) && !inputs.has(path) && !/^(?:.*\/)?(?:README\.md|LICENSE)$/.test(path)) fail(path,"unmodeled_input","Go project input may affect test discovery or execution and is not covered by the static package model");
+  }
   const facts:FileDependencyFacts={imports:new Map(),provenance:new Map()};
   for(const path of sources) {
     const dir=posix.dirname(path), edges=new Set((packages.get(dir)??[]).filter(p=>p!==path));
@@ -71,7 +83,7 @@ export async function certifyGoStatic(files:ReadonlyMap<string,Buffer>, issue:(x
     for(const member of edges) recordDependency(facts,path,member,`same Go package ${dir}`);
     for(const resource of embeds.get(path)??[]) recordDependency(facts,path,resource,`Go embed ${resource}`);
     for(const spec of sourceImports.get(path)??[]) {
-      if(spec === "testing" || spec === "embed") {builtins.add(spec);continue;}
+      if(["testing","embed","strings","strconv","fmt"].includes(spec)) {builtins.add(spec);continue;}
       const target=spec === moduleName ? "." : spec.startsWith(moduleName+"/") ? spec.slice(moduleName.length+1) : null;
       const members=target === null ? undefined : packages.get(target);
       if(!members?.length) { fail(path,"unresolved_import",`Unresolved or unsupported Go import ${spec}`); continue; }

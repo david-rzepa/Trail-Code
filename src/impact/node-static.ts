@@ -7,7 +7,7 @@ import { posix } from "node:path";
 import { depthReady, parseDepth, warmDepthGrammars, type SyntaxNode } from "../graph/depth-parser.js";
 import {recordDependency, type FileDependencyFacts} from "./dependency-facts.js";
 
-export const NODE_STATIC_MODEL = { id:"node-typescript-static-esm", version:"2" } as const;
+export const NODE_STATIC_MODEL = { id:"node-typescript-static-esm", version:"3" } as const;
 export interface StaticModel extends FileDependencyFacts { builtins: string[] }
 type Bindings = {values:Set<string>; functions:Set<string>; modules:Set<string>; tests:Set<string>; asserts:Set<string>; imports:{target:string;specifier:string}[]; builtins:Set<string>};
 const namePattern = /^[A-Za-z_$][A-Za-z0-9_$]*$/;

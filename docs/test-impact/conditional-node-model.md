@@ -2,7 +2,7 @@
 
 `trail impact --from A --to B --json --schema-version 2` can return
 `analysis_status: "conditional"` for model `node-typescript-static-esm`,
-version `2`. This is a tracked-source result, not proof that tests passed or
+version `3`. This is a tracked-source result, not proof that tests passed or
 that its execution context is safe. Schema v1 remains the default and retains
 full fallback for changed trees.
 
@@ -29,7 +29,7 @@ unmodeled behavior forces full fallback instead of assuming it is pure. This is
 not a general JavaScript or TypeScript dependency analyzer.
 
 A conditional report's `supported_model` is `{ "id":
-"node-typescript-static-esm", "version": "2" }`. Its `context_requirements`
+"node-typescript-static-esm", "version": "3" }`. Its `context_requirements`
 are sorted and mandatory. Their singleton registry entries are:
 
 | ID and kind | Predicate `op` | Evidence kind |

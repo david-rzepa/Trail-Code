@@ -1046,6 +1046,24 @@ grouped(program.command("callers"), GROUP.find)
     },
   );
 
+grouped(program.command("impact"), GROUP.ci)
+  .description("Conservative impact of exact Git endpoints (no model calls)")
+  .exitOverride((error) => { process.exit(error.code === "commander.helpDisplayed" ? 0 : 2); })
+  .option("--from <commit>", "comparison source commit", (value: string, previous: string[] = []) => [...previous, value], [])
+  .option("--to <commit|worktree>", "comparison target", (value: string, previous: string[] = []) => [...previous, value], [])
+  .option("--json", "emit a versioned JSON impact report")
+  .action(async (opts: { from: string[]; to: string[]; json?: boolean }) => {
+    try {
+      if (opts.from.length !== 1 || opts.to.length !== 1) throw new Error("impact requires exactly one --from and one --to endpoint");
+      const { analyzeImpact } = await import("./impact/analyze.js");
+      const result = await analyzeImpact(process.cwd(), opts.from[0], opts.to[0], currentVersion);
+      console.log(JSON.stringify(result));
+    } catch (error) {
+      console.error(`impact: ${error instanceof Error ? error.message : String(error)}`);
+      process.exitCode = 2;
+    }
+  });
+
 grouped(program.command("blast"), GROUP.ci)
   .description(
     "Blast radius of a diff: what depends on the lines this change touched ($0, no LLM). " +

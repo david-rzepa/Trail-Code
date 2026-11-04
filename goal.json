@@ -452,51 +452,38 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 13,
-      "correction_runs": 12,
-      "findings": [
-        {
-          "id": "review_tests:12:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 15,
-          "target_fp": "v1:sha256:9089ce13146108c4d0fa5134432e2351cc18a948c141e154b5395fc1210e6149",
-          "text": "The only selective Go change is always in package A; the import-deletion case changes the consumer itself and accepts its own package tests, so it does not demonstrate that a deleted old cross-package dependency reaches surviving dependents. A hardcoded A-only model or a model omitting old cross-package closure can pass. Add the design-required inverse B case (include B targets and exclude unrelated A/consumer) and a deletion/import-change case that exercises old-revision cross-package dependents or explicitly required fallback.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T19:32:55Z",
+      "attempt": 14,
+      "correction_runs": 13,
+      "findings": [],
+      "finished_at": "2026-11-04T20:32:21Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
-          "tests": "v1:sha256:22cee2312f025b59011cecdd28fc575b6f03a975137b3cfd5e33103f9a248634"
+          "tests": "v1:sha256:5ed1e190ea242a0e640e7d9d52b3b033f9c76bbb03bd553be14f5b6548a4173d"
         },
         "policy": {},
-        "subject": "v1:sha256:e6af0b055ee4b2a2113998fa1353d00710bd2c333a0213932b04849fdc35c578"
+        "subject": "v1:sha256:0cac1b98c2cdd35aa42eb63c43dd64df58d9035597006438fbebff7bdfa9d620"
       },
-      "holder": "codex:root/g1-multilingual-review-tests2",
-      "input_fp": "v1:sha256:46eff18f241dbcab5f1f20d182271c27e79da8b049e58d0874f3c67ae5be5361",
+      "holder": "codex:root/g1-multilingual-fuzz-review",
+      "input_fp": "v1:sha256:29bc3012cfcd655182c6801e612b5bb8875056e0cb31fe5588a299f8ec916142",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "52300b5b65bf13be9656d8c5027dd7e8d91eaa92",
-          "commit": "ae456adcfb2cb391bda077bd0b142fd0175552ff",
+          "blob": "a4b727d58d75a98ab56f34b195bc7411da35f425",
+          "commit": "ba6f9ee8158d9f70f2990fba9ccfe18967c7ac26",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Inverse B selection and deleted A old-graph cross-package cases resolve the prior finding."
+        "summary": "Real Go fuzz failure and multilingual fallback regressions are meaningful and appropriately measured."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "a99f5e48123f02c845f204f834d6942981183cce",
-          "commit": "608c26fc00515d34dae474925a4e8f745a530cfc",
-          "tree": "bce395e99defe12bd41a0d0cee2f00be5914dc58"
+          "change": "c8ff44d5c253ef49a0f72cc63fca72f542bffa70",
+          "commit": "b97c026450a7442a7d34d1029e516200d5ed1dd6",
+          "tree": "9b8f559b88c2dd712d00c78c283b45cd30d9cbbc"
         }
       },
       "status": "done"

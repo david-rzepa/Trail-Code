@@ -158,16 +158,35 @@ test('failed Go discovery cannot produce a valid empty sparse plan',()=>{
   } finally {rmSync(dir,{recursive:true,force:true});}
 });
 
-test('fresh package includes explicitly invokable setup assets', {timeout:180_000},()=>{
-  const dir=mkdtempSync(join(tmpdir(),'impact-packed-'));try {
+test('fresh installed package configures and runs an adapter without the development checkout', {timeout:240_000},()=>{
+  const dir=mkdtempSync(join(tmpdir(),'impact-packed-'));const target=fixture('go');try {
     const build=run(setupRoot,'npm',['run','build'],{},180_000);assert.equal(build.status,0,build.stderr);
     const packed=run(setupRoot,'npm',['pack','--ignore-scripts','--json','--pack-destination',dir]);
     assert.equal(packed.status,0,packed.stderr);const tarball=join(dir,JSON.parse(packed.stdout)[0].filename);
-    const unpack=run(dir,'tar',['-xzf',tarball]);assert.equal(unpack.status,0,unpack.stderr);
-    const asset=join(dir,'package','dist','test-impact','setup-cli.js');
-    assert.ok(existsSync(asset),'packaged setup asset must be present');
-    const help=run(dir,process.execPath,[asset,'--help']);assert.equal(help.status,0,help.stderr);
-  } finally {rmSync(dir,{recursive:true,force:true});}
+    const install=join(dir,'install');mkdirSync(install);
+    put(install,'package.json',JSON.stringify({name:'isolated-install',private:true,type:'module'}));
+    const isolated={HOME:join(dir,'home'),USERPROFILE:join(dir,'home'),XDG_CONFIG_HOME:join(dir,'config'),NODE_PATH:'',NODE_OPTIONS:''};
+    mkdirSync(isolated.HOME,{recursive:true});mkdirSync(isolated.XDG_CONFIG_HOME,{recursive:true});
+    const installed=run(install,'npm',['install','--ignore-scripts','--no-audit','--no-fund','--offline',tarball],isolated,180_000);
+    assert.equal(installed.status,0,`offline install failed: ${installed.stderr}`);
+    const asset=join(install,'node_modules','@nanonets','graft','dist','test-impact','setup-cli.js');
+    assert.ok(existsSync(asset),'installed setup asset must be present');
+    const configured=run(target,process.execPath,[asset,'--target',target,'--profile','go','--json'],isolated);
+    assert.equal(configured.status,0,configured.stderr);const result=JSON.parse(configured.stdout);
+    assert.equal(typeof result.adapter,'string');const adapter=resolve(target,result.adapter);
+    assert.ok(adapter.startsWith(target+'/'));assert.ok(existsSync(adapter));
+    assert.ok(!readFileSync(adapter,'utf8').includes(setupRoot),'adapter must not refer to development checkout');
+    if(typeof result.config==='string') assert.ok(!readFileSync(resolve(target,result.config),'utf8').includes(setupRoot));
+    put(target,'.gitignore','state/\n');const head=commit(target,'installed setup');
+    mkdirSync(join(target,'state'),{recursive:true});
+    const executed=run(target,process.execPath,[adapter,'--from',head,'--to',head,'--all','--json'],{
+      ...isolated,XDG_STATE_HOME:join(target,'state'),IMPACT_TEST_LOG:join(target,'state','execution.log')
+    },180_000);
+    assert.equal(executed.status,0,executed.stderr);const report=JSON.parse(executed.stdout);
+    assert.equal(report.execution_status,'passed');assert.equal(report.verification_status,'validated');
+    const actual=readFileSync(join(target,'state','execution.log'),'utf8').trim().split('\n').sort();
+    assert.deepEqual(actual,['a','b','consumer'],'installed helper must run all Go tests');
+  } finally {rmSync(dir,{recursive:true,force:true});rmSync(target,{recursive:true,force:true});}
 });
 
 test('mixed-language changes and unknown integration boundaries broaden or block',()=>{

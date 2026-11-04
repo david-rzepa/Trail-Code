@@ -134,30 +134,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 10,
-      "correction_runs": 9,
+      "attempt": 11,
+      "correction_runs": 10,
       "findings": [],
-      "finished_at": "2026-11-04T17:30:30Z",
+      "finished_at": "2026-11-04T19:16:25Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:b3b1f8ec414f7f71658ebdcfdd257b9e84f5bcc4e58b4d0a92331cbc8b9d7e03",
-          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
+          "dep_designs": "v1:sha256:c0e269624aadd3b4d293de8a97002afd0497aba2c318f48d7d12b8efd30b0b9e",
+          "spec": "v1:sha256:e192d2c48b0a9a62b09f4e89fbf7d7c9447d07b111dc183b478fef01f03417df"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-normal-execution",
-      "input_fp": "v1:sha256:086cb84736da53c8452419c7e6d565b9b94595fc07a129eae6f01b672f6f9307",
+      "holder": "codex:root/g2-multilingual-design",
+      "input_fp": "v1:sha256:bf04aa026eaca6ac1028d16fa6a40eaf1ae0020680e513743e1914f7a0c6ee95",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56",
+          "blob": "83e827dc59df9658a1eae976e99b6af2821df423",
+          "commit": "bb092c2a6e633f4e822166af16cdd729e68c3c89",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "summary": "Align committed-only execution with the owner’s normal test-runner stable-input assumption and G1’s v2 conditional model. Independently derive required context and collector evidence, require full fallback for missing or mismatched evidence, and preserve trusted JSON receipt handling."
+        "summary": "Extend the deterministic adapter design to G1’s multilingual graph, independently verified build boundaries and real selective Node/TypeScript and Go execution. Preserve committed endpoints, normal runner stable-input assumptions and fail-closed conditional evidence."
       },
-      "reason": "retry",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

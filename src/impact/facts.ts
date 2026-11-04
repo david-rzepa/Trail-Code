@@ -10,7 +10,7 @@ export interface CandidateFact {
   relation: RawEdge["relation"];
   name: string;
   candidates: string[];
-  basis: "local-name" | "receiver-owner" | "module-specifier" | "unknown";
+  basis: "local-name" | "receiver-owner" | "receiver-hierarchy" | "module-specifier" | "unknown";
 }
 
 /** The selected candidates have explicit local or receiver evidence. A missing
@@ -26,6 +26,25 @@ export function preserveCandidates(nodes: readonly NodeV1[], raw: readonly RawEd
   const facts: CandidateFact[] = [];
   const edges: EdgeV1[] = [];
   const seen = new Set<string>();
+  // A type name can denote several declarations. Keep all name-compatible
+  // declarations, and all raw inheritance links, rather than using the
+  // navigation resolver's single preferred match. These are possibilities,
+  // not proof that a binding or dynamic dispatch was completely modelled.
+  const typeKinds = new Set(["class", "interface", "trait", "struct"]);
+  const types = nodes.filter(n => typeKinds.has(n.kind));
+  const typeById = new Map(types.map(n => [n.id, n]));
+  const neighbours = new Map<string, Set<string>>();
+  const link = (from: string, to: string) => {
+    const set = neighbours.get(from) ?? new Set<string>();
+    set.add(to); neighbours.set(from, set);
+  };
+  for (const intent of raw) {
+    if ((intent.relation !== "extends" && intent.relation !== "implements") || !intent.name || !typeById.has(intent.source)) continue;
+    for (const target of named.get(intent.name) ?? []) {
+      if (!typeById.has(target.id)) continue;
+      link(intent.source, target.id); link(target.id, intent.source);
+    }
+  }
   for (const intent of raw) {
     if (!["calls", "references", "extends", "implements"].includes(intent.relation) || !intent.name) continue;
     const sameName = named.get(intent.name) ?? [];
@@ -41,10 +60,25 @@ export function preserveCandidates(nodes: readonly NodeV1[], raw: readonly RawEd
       const variants = new Set([base, ...[".ts",".tsx",".mts",".cts",".js",".jsx",".mjs",".cjs",".py"].flatMap(ext => [stem + ext, `${stem}/index${ext}`])]);
       possible = sameName.filter(n => variants.has(n.path));
     } else if (intent.relation === "calls" && intent.viaMember && intent.recvType) {
-      // Keep every same-file owner match, including overloads. Cross-file type
-      // identity, inheritance, and dispatch remain explicitly unresolved.
-      basis = "receiver-owner";
-      possible = sameName.filter(n => n.kind === "method" && n.path === intent.file && n.owner === intent.recvType);
+      // Keep every declaration compatible with the stated receiver type and
+      // raw inheritance graph, including possible overrides and overloads.
+      // Cross-file identity remains unresolved; broad matches are candidates.
+      const visited = new Set<string>();
+      const queue = types.filter(n => n.name === intent.recvType).map(n => n.id);
+      while (queue.length) {
+        const id = queue.pop()!;
+        if (visited.has(id)) continue;
+        visited.add(id);
+        for (const neighbour of neighbours.get(id) ?? []) if (!visited.has(neighbour)) queue.push(neighbour);
+      }
+      const owners = new Set([...visited].map(id => {
+        const type = typeById.get(id)!;
+        return `${type.path}\0${type.name}`;
+      }));
+      // Some extractors record an owner without a corresponding type node.
+      owners.add(`${intent.file}\0${intent.recvType}`);
+      possible = sameName.filter(n => n.kind === "method" && owners.has(`${n.path}\0${n.owner}`));
+      basis = visited.size ? "receiver-hierarchy" : "receiver-owner";
     } else if (!intent.viaMember && !intent.specifier) {
       basis = "local-name";
       possible = sameName.filter(n => n.path === intent.file && (intent.kinds ? intent.kinds.includes(n.kind) : intent.relation === "calls" ? n.kind === "function" : ["class","interface","trait","struct","enum","type","module"].includes(n.kind)));

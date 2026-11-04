@@ -81,28 +81,28 @@
       "status": "done"
     },
     "design": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-03T22:37:05Z",
+      "finished_at": "2026-11-04T01:02:09Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:051987f5aa2ee79a2a0a69ec02a26e20c4e83c1302b42e8ce2942047982a1c5d",
-          "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
+          "dep_designs": "v1:sha256:a5335ef99ae9abbd72d053d823e68e256d1c5c17bdaa86ddafbfce0b39e3d26a",
+          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-design-6",
-      "input_fp": "v1:sha256:9b73b91fe9ae7e3fe6538bfe63b9e282814ed92a757957ce648aa5dbc6fe65d4",
+      "holder": "codex:root/g2-commit-design",
+      "input_fp": "v1:sha256:8462549182e844c72081cfe3197dc4e71f43fe8eb90eadf3f3b879d3971712b4",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
-          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5",
+          "blob": "9406acaa0a2efcacd6bd0583042ca4228edc9a46",
+          "commit": "c4e4ba233324745759235aa04fe78d6cdc1d5c47",
           "path": ".zzzops/reviews/2/design.md"
         },
-        "summary": "Align adapter design with G1’s internal-only capture and cache test seam while preserving the approved analyzer contract, exact endpoint handling and receipt trust boundary."
+        "summary": "Revise the helper and real Trail-code adapter for portable explicit committed endpoints only, rejecting worktree. Preserve strict target identity, safe materialization and symlink containment, conservative runner fallback and trusted versioned JSON receipts."
       },
       "reason": "stale",
       "status": "done"

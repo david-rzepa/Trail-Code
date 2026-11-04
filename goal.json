@@ -494,14 +494,14 @@
       "status": "done"
     },
     "run_tests": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-04T19:48:58Z",
+      "finished_at": "2026-11-04T20:41:44Z",
       "fp_parts": {
         "def": "v1:sha256:def927cb81b82bf3b076ecd841fe451396715db71445477cd2a999786666b4ca",
         "inputs": {
-          "code": "v1:sha256:7153519ff1e90b54fe654d71e9427ffdf991ecc457cda26301ae71c352a51a56",
+          "code": "v1:sha256:368b14e9a9163d5df2ba7d6559cc2ef9bdd1aa2a0eeeaf0c4273227d9d96dec5",
           "commands": "v1:sha256:6c0b07091ebbc3908e3b546881e99e7c2ddcc233cfae63dd5564bfe25c9c51d8"
         },
         "policy": {
@@ -520,8 +520,8 @@
           ]
         }
       },
-      "holder": "codex:root/g1-multilingual-run-tests",
-      "input_fp": "v1:sha256:ed7ad834766dd810727172caca0ad80c5ded1593a694ec7c78da3cc50dc532f2",
+      "holder": "codex:root/g1-multilingual-fix-run",
+      "input_fp": "v1:sha256:02b89ef7143513d42c967603fbc5b562870a3e09d23e5d1da204ab7b95a83d0e",
       "ok": true,
       "output": {
         "result": {
@@ -529,39 +529,39 @@
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
               "exit": 0,
-              "milliseconds": 63586,
-              "seconds": 63,
+              "milliseconds": 65433,
+              "seconds": 65,
               "source": "goal",
-              "tail": "t through a committed component link (2511.356748ms)\n✔ unchanged populated committed trees are complete without fabricated fallback (1244.371123ms)\n✔ Git commit replacement refs cannot rewrite pinned commit analysis (2505.357873ms)\n✔ Git tree replacement refs cannot rewrite pinned commit analysis (2519.331251ms)\n✔ Git blob replacement refs cannot rewrite pinned commit analysis (2449.631386ms)\nℹ tests 29\nℹ suites 0\nℹ pass 29\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 63541.656204\n"
+              "tail": "et through a committed component link (2584.975636ms)\n✔ unchanged populated committed trees are complete without fabricated fallback (1260.090025ms)\n✔ Git commit replacement refs cannot rewrite pinned commit analysis (2613.96906ms)\n✔ Git tree replacement refs cannot rewrite pinned commit analysis (2558.333177ms)\n✔ Git blob replacement refs cannot rewrite pinned commit analysis (2620.507553ms)\nℹ tests 29\nℹ suites 0\nℹ pass 29\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 65384.586249\n"
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
               "exit": 0,
-              "milliseconds": 210,
+              "milliseconds": 221,
               "seconds": 0,
               "source": "goal",
-              "tail": "ms)\n✔ committed analysis binds a moved ref to the originally resolved tree (1.138951ms)\n✔ unavailable committed resolve cannot become a valid snapshot (0.676693ms)\n✔ unavailable committed tree cannot become a valid snapshot (0.62769ms)\n✔ unavailable committed blob cannot become a valid snapshot (0.725732ms)\n✔ unavailable committed materialize cannot become a valid snapshot (0.409912ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 158.4437\n"
+              "tail": "\n✔ committed analysis binds a moved ref to the originally resolved tree (1.161379ms)\n✔ unavailable committed resolve cannot become a valid snapshot (0.648316ms)\n✔ unavailable committed tree cannot become a valid snapshot (0.661025ms)\n✔ unavailable committed blob cannot become a valid snapshot (0.709334ms)\n✔ unavailable committed materialize cannot become a valid snapshot (0.519317ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 169.017244\n"
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
               "exit": 0,
-              "milliseconds": 20296,
-              "seconds": 20,
+              "milliseconds": 21063,
+              "seconds": 21,
               "source": "goal",
-              "tail": "✔ npm CLI discovery uses Node-compatible paths for Windows (1.209831ms)\n✔ isolated source copy includes edited and added inputs while excluding outputs (2.450847ms)\n✔ packed distribution has meaningful grammar identity and reuses extraction cache offline (20068.422188ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 20252.308203\n"
+              "tail": "✔ npm CLI discovery uses Node-compatible paths for Windows (2.485832ms)\n✔ isolated source copy includes edited and added inputs while excluding outputs (2.563791ms)\n✔ packed distribution has meaningful grammar identity and reuses extraction cache offline (20806.338365ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 21011.83784\n"
             },
             {
               "cmd": "node --import tsx --test test/impact-conditional-contract.test.ts",
               "exit": 0,
-              "milliseconds": 29629,
-              "seconds": 29,
+              "milliseconds": 37942,
+              "seconds": 37,
               "source": "goal",
-              "tail": " v2 practical TypeScript project handles ordinary functions and built-in test imports (1397.652535ms)\n✔ v2 inverse Go change selects B and leaves A and A's consumer alone (1391.692104ms)\n✔ v2 Go deletion reaches surviving tests through old cross-package imports or falls back fully (1357.339432ms)\nℹ tests 17\nℹ suites 0\nℹ pass 17\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 29583.369236\n"
+              "tail": "dard-library imports remain selective when package A changes (1488.795447ms)\n✔ Go fuzz corpus README change selects the owner or full fallback and reproduces a real failure (2022.195902ms)\n✔ Python raw imports retain missing-module provenance or dependent coverage with full fallback (1390.968651ms)\n✔ mixed Node-to-Python subprocess dependencies include the caller or fall back (1459.915486ms)\nℹ tests 21\nℹ suites 0\nℹ pass 21\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 37890.355242\n"
             },
             {
               "cmd": "npm run build",
               "exit": 0,
-              "milliseconds": 13514,
+              "milliseconds": 13245,
               "seconds": 13,
               "source": "verification",
               "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g1/dist/vendor/grammars (9 wasm)\n"
@@ -569,10 +569,10 @@
             {
               "cmd": "npm test",
               "exit": 0,
-              "milliseconds": 1294602,
-              "seconds": 1294,
+              "milliseconds": 1275623,
+              "seconds": 1275,
               "source": "verification",
-              "tail": "t COMMON-term (low-idf) name match is NOT overcorrected out (24.824725ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (25.40518ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (27.018151ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.667424ms)\nℹ tests 4231\nℹ suites 0\nℹ pass 4222\nℹ fail 0\nℹ cancelled 0\nℹ skipped 9\nℹ todo 0\nℹ duration_ms 1294066.124598\n"
+              "tail": " COMMON-term (low-idf) name match is NOT overcorrected out (22.939747ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (24.117512ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (25.473276ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.537034ms)\nℹ tests 4238\nℹ suites 0\nℹ pass 4229\nℹ fail 0\nℹ cancelled 0\nℹ skipped 9\nℹ todo 0\nℹ duration_ms 1275107.969415\n"
             }
           ],
           "passed": true,
@@ -591,18 +591,18 @@
               "platform": "linux",
               "python": "3.14"
             },
-            "goal_ms": 113721,
+            "goal_ms": 124659,
             "parallel_commands": false,
             "plan_sha256": "3ea57b51273deba7fe3e0af2ae7935479f6dea17f33944f5d156a93efdcb6cb5",
-            "total_ms": 1421839,
-            "verification_ms": 1308116,
+            "total_ms": 1413527,
+            "verification_ms": 1288868,
             "verification_plan_sha256": "707adb38c7263e1efa6f40732b18f24b57a9a961d40161de22b2befd644ae63d",
             "workers": {
               "goal": 2,
               "verification": 2
             }
           },
-          "tree": "8ea22b3ec5032925dc2b60b39d89c8b48014192f"
+          "tree": "f63a5a92f843af1671e5850264710703d722be03"
         }
       },
       "reason": "stale",

@@ -11,6 +11,7 @@ export interface DiscoveredComparison {
   affected: string[];
   /** Each independently established Go package boundary maps to its dependents. */
   scopes: Map<string, string[]>;
+  requiredScopes: string[];
 }
 
 function git(cwd: string, args: string[]): Buffer {
@@ -63,7 +64,7 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
       // The conventional fixture runner only discovers files directly in test/.
       if ([...after.keys()].some(p => p.endsWith('.test.ts') && !inventory.includes(p))) return null;
       const paths = new Set([...closure(changed, a), ...closure(changed, b)]);
-      return { model: { id: 'node-typescript-static-esm', version: '3', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort() }, inventory, affected: inventory.filter(p => paths.has(p)), scopes: new Map() };
+      return { model: { id: 'node-typescript-static-esm', version: '3', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort() }, inventory, affected: inventory.filter(p => paths.has(p)), scopes: new Map(), requiredScopes: [] };
     }
     const a = await certifyGoStatic(before, () => {}), b = await certifyGoStatic(after, () => {});
     if (!a || !b || a.moduleName !== b.moduleName || a.goVersion !== b.goVersion) return null;
@@ -71,13 +72,15 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
     const inventory = [...new Set([...after.keys()].filter(p => p.endsWith('_test.go')).map(unit))].sort();
     const paths = new Set([...closure(changed, a), ...closure(changed, b)]);
     const scopes = new Map<string, string[]>();
+    const requiredScopes = new Set<string>();
     for (const source of [a, b]) for (const dir of source.resources.values()) {
       const seed = new Set([...source.imports.keys()].filter(p => posix.dirname(p) === dir));
       const reached = closure(seed, source);
       const key = `go-package:${source.moduleName}:${dir}`;
+      if ([...source.resources].some(([resource, owner]) => owner === dir && changed.has(resource))) requiredScopes.add(key);
       const previous = scopes.get(key) ?? [];
       scopes.set(key, [...new Set([...previous, ...inventory.filter(u => [...reached].some(p => p.endsWith('_test.go') && unit(p) === u))])].sort());
     }
-    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('_test.go') && unit(p) === u)), scopes };
+    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('_test.go') && unit(p) === u)), scopes, requiredScopes: [...requiredScopes].sort() };
   } catch { return null; }
 }

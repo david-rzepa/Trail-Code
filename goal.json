@@ -10,36 +10,51 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 9,
-      "correction_runs": 8,
-      "findings": [],
-      "finished_at": "2026-11-04T17:16:42Z",
+      "attempt": 10,
+      "correction_runs": 9,
+      "findings": [
+        {
+          "id": "adversary_design:10:1",
+          "impact": "Workers or acceptance gates may block the requested ordinary runner or falsely represent mutation protection as a requirement or proven guarantee.",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 13,
+          "target_fp": "v1:sha256:3d8247d33a71cbcf0ef5ff863ac4c6dfa18fe1799876aef9e95ac587285a8968",
+          "text": "The multilingual design says the execution layer must validate and protect target identity, and retains language requiring mutation protection and acceptance testing of execution-time mutation protection. This conflicts with the owner decision that ordinary test-runner behavior assumes stable inputs and does not require proof that a checkout did not change. Amend these cross-goal requirements to require the agreed ordinary preflight and honest stable-input reporting, without imposing continuous monitoring or proof. Preserve immutable committed-object analysis and independent context validation.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T19:06:13Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "doc": "v1:blob:7f147521938cbeea607e7eec549cbbd37be958c5",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {},
-        "subject": "v1:sha256:21ecc7cafd1edb4dec18c9a7320d1a8000f69fe8a98f3677d3ec4a844ffeafb1"
+        "subject": "v1:sha256:f920cf0fa68b3ba519c2f66c0d84bbb1fe6c2e5add9ce65307b3dafebceda9d6"
       },
-      "holder": "codex:root/g1-context-adversary3",
-      "input_fp": "v1:sha256:0927e6e6f1f753c1b8485d37b2a24f5539ab63ac044610387a37eb371d31ff24",
+      "holder": "codex:root/g1-multilingual-adversary",
+      "input_fp": "v1:sha256:6f01eee063eb39b1a2af920be2fc0d0c974ee6aa62ca57fce2e2d74ef628c060",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "640ff9804d45442ffb4a329422a041f2ba80b07c",
-          "commit": "ea8e4d10152e2685db3bb458819f1db37f9e4fdc",
+          "blob": "93a7f934d54ac8c564c2e5bf8b1ec359cae4d982",
+          "commit": "5ff1c50fbc2e085d210f34638f768986b244a8aa",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "No material adversarial finding in the predicate and independent evidence split."
+        "summary": "Align execution-layer references with the owner-approved ordinary stable-input model."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "commit": "9f2c1070538df1cdbe3952e62f9bfdc39517fbb4"
+          "blob": "7f147521938cbeea607e7eec549cbbd37be958c5",
+          "commit": "bc06a3a9ae31498ebeb2ac75118446c3ab08f550"
         }
       },
       "status": "done"

@@ -81,7 +81,7 @@
       "status": "done"
     },
     "design": {
-      "attempt": 8,
+      "attempt": 9,
       "blocked": {
         "category": "decision",
         "options": [
@@ -92,25 +92,25 @@
         "question": "owner question: Q1 (review_design:5:1): Which execution guarantee should the initial cross-platform, commit-only release provide? Standard Git and ordinary unprivileged portable filesystem APIs do not by themselves guarantee detection of an edit-and-revert by a same-user process during test execution.",
         "reason": "owner question: Q1 (review_design:5:1): Which execution guarantee should the initial cross-platform, commit-only release provide? Standard Git and ordinary unprivileged portable filesystem APIs do not",
         "recommendation": "Q1: Use a private isolated checkout and disclose the same-user trust assumption if broad portability is the priority. Tests run against the pinned commit, output is separated or declared, and detectable changes invalidate the result; this does not claim to detect edit-and-revert. Keep strict isolation as a future optional mode.",
-        "repeats": 1,
+        "repeats": 2,
         "waiting_for": "human"
       },
-      "correction_runs": 7,
+      "correction_runs": 8,
       "findings": [],
-      "finished_at": "2026-11-04T01:04:57Z",
+      "finished_at": "2026-11-04T17:22:03Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:a5335ef99ae9abbd72d053d823e68e256d1c5c17bdaa86ddafbfce0b39e3d26a",
+          "dep_designs": "v1:sha256:b3b1f8ec414f7f71658ebdcfdd257b9e84f5bcc4e58b4d0a92331cbc8b9d7e03",
           "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-commit-design2",
-      "input_fp": "v1:sha256:8462549182e844c72081cfe3197dc4e71f43fe8eb90eadf3f3b879d3971712b4",
+      "holder": "codex:root/g2-context-design",
+      "input_fp": "v1:sha256:086cb84736da53c8452419c7e6d565b9b94595fc07a129eae6f01b672f6f9307",
       "ok": false,
       "output": null,
-      "reason": "reopened",
+      "reason": "stale",
       "status": "blocked"
     },
     "filter_design": {

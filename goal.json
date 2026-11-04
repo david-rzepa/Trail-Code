@@ -255,30 +255,30 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 9,
-      "correction_runs": 8,
+      "attempt": 10,
+      "correction_runs": 9,
       "findings": [
         {
-          "id": "review_design:8:1",
-          "impact": "The analyzer cannot construct a valid usable conditional report for its stated CLI, so practical sparse execution may be impossible or require unverifiable guessed expectations.",
-          "lens": "truth",
+          "id": "review_design:10:1",
+          "impact": "G1 downstream acceptance could reimpose an explicitly rejected mutation-monitoring or isolation requirement on G2 and block a valid ordinary-runner implementation.",
+          "lens": "intent",
           "material": true,
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "resolved",
+          "status": "open",
           "target": "design",
-          "target_attempt": 11,
-          "target_fp": "v1:sha256:93b90bf23a807db669d007c83a76184c04fdece82b79d330882619f5e2593393",
-          "text": "The v2 report requires an `expected` value for each singleton including actual runner/profile, discovered inventory and compatible baseline receipt identity, but the documented `trail impact` invocation provides only two commit arguments and schema version; G1 cannot determine which G2 profile, inventory or local receipt will be used. Define a machine-readable registry predicate/descriptor for execution-only facts that G2 independently binds and verifies, or a supported explicit context input with strict validation, and distinguish analyzer-known facts from consumer evidence. Test standalone analyzer invocation followed by a real matching G2 conditional sparse run and forged/mismatched values.",
+          "target_attempt": 13,
+          "target_fp": "v1:sha256:3d8247d33a71cbcf0ef5ff863ac4c6dfa18fe1799876aef9e95ac587285a8968",
+          "text": "The multilingual design says the execution layer must validate and protect target execution identity, and its v2 requirements and acceptance still require mutation protection. The later owner decision explicitly chose ordinary runner semantics and a stable-input assumption rather than proving uninterrupted identity or detecting mid-run edits. Replace those execution-layer references with ordinary target preflight and honest stable-input reporting while preserving G1 pinned-tree analysis and its clean-checkout independence.",
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T17:16:20Z",
+      "finished_at": "2026-11-04T19:06:06Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "doc": "v1:blob:7f147521938cbeea607e7eec549cbbd37be958c5",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "lenses": [
@@ -307,25 +307,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:21ecc7cafd1edb4dec18c9a7320d1a8000f69fe8a98f3677d3ec4a844ffeafb1"
+        "subject": "v1:sha256:f920cf0fa68b3ba519c2f66c0d84bbb1fe6c2e5add9ce65307b3dafebceda9d6"
       },
-      "holder": "codex:root/g1-context-review3",
-      "input_fp": "v1:sha256:342b3bb2df93ebd2ae864b4e458220d5fa0c7444a1d09025477be732c24a33ff",
+      "holder": "codex:root/g1-multilingual-review",
+      "input_fp": "v1:sha256:526cc7edaf35f5d60502ac26fc5dda706b35492aea820e21a6667f154f6084e9",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "95dcb02221f0a2a0ab30e33f563019cf76bf6efa",
-          "commit": "e1eb647b5735a0ebf654a135de67c547e80c3878",
+          "blob": "cc5e41be7a6713bb1d217c667b927e09fa947ea3",
+          "commit": "825fae914fe9f879845a3a546592fd26e685fc82",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Registry predicates separate analyzer-known facts from independently observed execution evidence."
+        "summary": "Align execution references in multilingual design with the owner-approved stable-input assumption."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "commit": "9f2c1070538df1cdbe3952e62f9bfdc39517fbb4"
+          "blob": "7f147521938cbeea607e7eec549cbbd37be958c5",
+          "commit": "bc06a3a9ae31498ebeb2ac75118446c3ab08f550"
         }
       },
       "status": "done"

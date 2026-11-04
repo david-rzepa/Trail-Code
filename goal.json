@@ -80,6 +80,53 @@
       },
       "status": "done"
     },
+    "base": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T23:35:28Z",
+      "fp_parts": {
+        "def": "v1:sha256:9b5973f3342b82689a1174525e34920af8ec08a54db6f4e643b2844a436917fe",
+        "inputs": {
+          "heads": "v1:sha256:37416e83694451045f7d4c0b0464e934e6f9348c4df76e3ac20b99203dd249a2",
+          "merges": "v1:sha256:1d8897c9c30418c748272dd8bc42113d6ecc76d48025e0f2ff09cf40d6d23fcd"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g3-base",
+      "input_fp": "v1:sha256:cb2bf3bdb338a80384eb6bb7629410c7312505d05a847c24ae8db3b8eeabad86",
+      "ok": true,
+      "output": {
+        "base_commit": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
+        "branch": "zzzops/work/g3",
+        "replay_map": {
+          "0be58ce5321e3da9b699452a141cbc149fee4ff1": "b35540cf8c22e51c84459c680d36987582c3e820",
+          "2bb11477eb441c0545e6cebee361ca873249933b": "fb99fca64a67ffa743acd601c5a1f4a53f1b9c44",
+          "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5": "6883cbf6be5026429b3e07c5e24406f67a293c76",
+          "362ef5a2421f9fa3110c79c8d064ed61774e313d": "cca31879b105e3eef79d0abc52f20b42556f2f54",
+          "38dbd2c818c6be92e6362e3bf0a320f8380b689a": "a3a91590a647e9a3c6048745bd379cd254d1ba85",
+          "5460cbb0f513985f27c332605ddc61b9893fe007": "ed6fc60f663a5abc8eebbb8e9cfe781db2ba2723",
+          "661ea574c57649d235d4a14ea3e2eaab16dc7151": "018c6d9deb7515de951d9fe14b0f76c5e4112297",
+          "7b499d5b2edf3784848296ca8268d00e2ecb017f": "6781e0665503cd3d8f6b64fc3c180f6e6abefaf0",
+          "8bb097aa2fd849a2106b3368f54ae30b9c56caf0": "214a53518f480f41becfec7af2abab40a19a5502",
+          "9e41769dd2311ecbee414c577f3a87ddd3370d24": "b38ef5b9116c4267a38c0ece1dd277e32579587f",
+          "c606f34cfa549f0c24c98d076734538efb6b6e29": "225531ff60e5b229b29b29cb716bc3db45f0ad15",
+          "e9b38aef80428ff9bdff2cddd6cc212e0de342ed": "0ae590ceb4b235c466f90aea8104de4695b6f2d6",
+          "f4ea95d0e8dfbbdcc38150009a108bb8a53feb67": "42183936f896747991849e32415664132fcdb1cb"
+        },
+        "replay_pos": {},
+        "stack": [
+          {
+            "goal": 2,
+            "head": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
+            "pr": 2
+          }
+        ],
+        "synced": null
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "design": {
       "attempt": 5,
       "correction_runs": 4,

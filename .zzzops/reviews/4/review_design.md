@@ -1,5 +1,3 @@
-# Re-review: committed endpoints and conditional sparse acceptance
+# Re-review: full fallback and receipts
 
-The revision adopts the owner's stable-input assumption, retains ordinary checkout preflight and truthful reporting, and includes an end-to-end two-target conditional sparse case with independent evidence and negative tests. One status ambiguity could cause the release gate to reject a valid full fallback.
-
-The matrix says missing or incomplete conditional context must broaden to full profile or report incomplete if full validation is unavailable. It also says incomplete context must never create a full-profile passing receipt. Those statements conflict when a conditional-v2 collector is unavailable but the original full profile is otherwise valid: G2 permits a complete successful full run and receipt without sparse eligibility. Differentiate missing context required only for selective reuse from context required to validate the full run or establish compatible receipt identity. Require full fallback for the former and allow a full receipt only if all full-run evidence and identity requirements are met; reject receipts for the latter. Test both cases.
+Resolved `review_design:2:1`. The revised matrix distinguishes missing evidence needed only for conditional sparse selection from missing full-run or receipt-identity evidence. It permits a successful full fallback receipt only when the latter requirements are satisfied and requires separate tests for both cases. No new material issue in the change.

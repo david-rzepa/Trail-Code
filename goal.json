@@ -222,39 +222,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [
-        {
-          "id": "review_tests:1:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 3,
-          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
-          "text": "The static worktree case allows unconditional capture failure and never exercises concurrent edits, additions/renames, edit-and-revert, or observer loss/overflow during enumeration, reads, and sealing. An incoherent snapshot could be reported as valid while all tests pass. Add deterministic tests asserting retry or failure without a valid capture for these cases, and exercise the supported successful capture path.",
-          "upheld": false
-        },
-        {
-          "id": "review_tests:1:2",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 3,
-          "target_fp": "v1:sha256:676946aa071b1dea09c20019a0874d39e4f82f9e53abb3561aa063d4229c0d75",
-          "text": "The cold/warm test runs twice on the same snapshots and does not exercise stale or incompatible caches or refresh failures. An analyzer that reuses a stale or navigation-mode graph can pass and omit impact. Prime caches, change snapshot or identity/mode and simulate failed refresh, then require fresh results or explicit incomplete fallback, never stale successful output.",
-          "upheld": false
-        },
         {
           "id": "review_tests:1:3",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 5,
           "target_fp": "v1:sha256:21a223d9482eca3ceb468360f1c3a92468879ac4011f2348ad690017ba780610",
@@ -262,35 +238,35 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T00:13:17Z",
+      "finished_at": "2026-11-04T00:15:51Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "tests": "v1:sha256:1131291620d964d370f49d7d500a234052d620795251c0ce9dfcd57b4fb53faf"
+          "tests": "v1:sha256:85b0ea5b5d40a6054ec6a82d36f134f2baae5b8e4a7d3e4c808754efcebbf89b"
         },
         "policy": {},
-        "subject": "v1:sha256:21a223d9482eca3ceb468360f1c3a92468879ac4011f2348ad690017ba780610"
+        "subject": "v1:sha256:2f17629d2ea7082a9ee2bcb98132f83a088f1c7d0d616c289a0d6861c8d00a22"
       },
-      "holder": "codex:root/g1-review-tests-2",
-      "input_fp": "v1:sha256:cd8070b91ce404d90818ccd182b16af23f650c11fc4b80ee964eba1bc2b450f3",
-      "ok": false,
+      "holder": "codex:root/g1-review-tests-3",
+      "input_fp": "v1:sha256:6a5555c8201be8cb99adc3f5fe1dc79e2631886c053579d30b3390abc2208eed",
+      "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "7971dc1a63ca7f12ce14ff420e28fd822494eaec",
-          "commit": "f24c41d281a5623182c6928990d9684682cd7ff0",
+          "blob": "44658d32b59b06f6ff12056cc51fd16684c80a8e",
+          "commit": "a1b839fb406803701b12941597ed10acc96cf568",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Capture and cache findings resolved; bounded gap/status/fallback consistency remains untested."
+        "summary": "Bounded gap/fallback consistency is now covered; prior findings are resolved."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "f384289ee18fa993efa744317d93d3da32bc1ef6",
-          "commit": "13a8da12227317f3417fe2bd7721e9388935282b",
-          "tree": "a50da8f417922d5b4ae05ed51651595d5cb84a04"
+          "change": "6a56625510091df0e815548495ed124d8df9c2d8",
+          "commit": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
+          "tree": "ac84ad57833d0a2e456c754e22d1673c0c200b8e"
         }
       },
       "status": "done"

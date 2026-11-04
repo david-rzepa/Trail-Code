@@ -305,24 +305,9 @@
       "status": "done"
     },
     "review_impl": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [
-        {
-          "id": "review_impl:1:1",
-          "impact": "The report can validate and cache analysis of a different source tree than the exact commit requested.",
-          "lens": "correctness",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "implement",
-          "target_attempt": 5,
-          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
-          "text": "src/impact/analyze.ts Git commands honor replace refs: a requested commit ID can be paired with a different commit’s tree and replacement blob bytes. Disable replacement effects or verify real objects for every endpoint/tree/blob read.",
-          "upheld": false
-        },
         {
           "id": "review_impl:1:2",
           "impact": "The analyzer cannot enable sparse execution for any normal repository, even with identical endpoints and a compatible passing baseline.",
@@ -331,42 +316,12 @@
           "note": null,
           "response": "disputed: Identical populated Git trees now analyze inputs and return complete when no actual gaps exist. Changed trees still require unbounded fallback because callbacks, resources, dynamic dispatch and cross-file resolution remain unmodeled; treating those relationships as complete would violate the approved design. No unsupported scope is claimed.",
           "rounds": 2,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 6,
           "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
           "text": "src/impact/analyze.ts unconditionally emits an unbounded gap for every changed tree and every identical nonempty tree. Implement justified supported completeness or bounded scopes, including a valid unchanged populated tree, rather than always forcing full-profile fallback.",
           "upheld": true
-        },
-        {
-          "id": "review_impl:1:3",
-          "impact": "Normal installations report an indistinguishable unavailable grammar identity and always disable extraction caching, undermining reproducibility and repeated-run performance.",
-          "lens": "correctness",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "implement",
-          "target_attempt": 5,
-          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
-          "text": "src/impact/analyze.ts derives grammar identity and the raw extraction cache key from package-lock.json, but package.json excludes this file from the npm distribution. Use shipped actual grammar identities and enable safe extraction cache reuse in installed packages.",
-          "upheld": false
-        },
-        {
-          "id": "review_impl:1:4",
-          "impact": "The current test suite passes while exact identity can be falsified and sparse execution and production cache reuse never occur.",
-          "lens": "tests",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 8,
-          "target_fp": "v1:sha256:452c91b64eb8a79df5c662602854c03e7b5d506aa992429c206b2019f217d34f",
-          "text": "test/conservative-impact-contract.test.ts checks valid empty only for empty repositories and lacks replacement-ref and actual packed-install checks. Add regression coverage for immutable commit/tree/blob IDs under Git replacements, unchanged populated trees without fabricated full fallback, and installed package grammar identity/cache reuse.",
-          "upheld": false
         },
         {
           "id": "review_impl:2:1",
@@ -376,7 +331,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 6,
           "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
@@ -391,22 +346,52 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 6,
           "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
           "text": "src/impact/analyze.ts extractionCache tests POSIX group/other mode bits on all platforms. On Windows libuv synthesizes those bits for ordinary writable directories and does not model NTFS ACL privacy, so the parent check rejects cache creation and the packed cache test fails. Use a Windows-appropriate secure cache design and verify on Windows.",
           "upheld": false
+        },
+        {
+          "id": "review_impl:3:1",
+          "impact": "A malformed or partially recovered source tree can be asserted to have complete conditional dependency coverage, allowing the consumer to exclude tests despite analysis of an incomplete or incorrect syntax tree.",
+          "lens": "correctness",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 9,
+          "target_fp": "v1:sha256:d02b04a6cce2fc39d7ce751496052742c16d2337756c40065eda1dd91a2ea9f9",
+          "text": "src/impact/node-static.ts certifies tree-sitter trees without rejecting parse errors or missing tokens. A changed commit with `export function a() { return 2;` and no closing brace produces schema v2 conditional with no gap or fallback, although tsc reports TS1005. Reject malformed/recovered trees for both endpoints.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:3:2",
+          "impact": "The test suite passes while the analyzer incorrectly reports conditional completeness for syntactically invalid committed inputs.",
+          "lens": "tests",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 13,
+          "target_fp": "v1:sha256:63d4700e67f9ce92b4445b236940dc657320bfffb1501691f82d6d63601ff4c7",
+          "text": "test/impact-conditional-contract.test.ts does not cover missing anonymous syntax tokens or other tree-sitter recovery shapes. Add a real-CLI regression with a missing closing brace (and both endpoints as appropriate) requiring an unbounded gap and full fallback.",
+          "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T02:50:36Z",
+      "finished_at": "2026-11-04T18:28:59Z",
       "fp_parts": {
         "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "code": "v1:sha256:21f59dbead91aab9b0e6ce14afbcce8070aa1df4a1fee8d09c753b63482edb90",
-          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:ca6b7b7f85963f5eefbbde93978d6d9b5bc0ad26b1479f46a40fa251e6c97950"
+          "code": "v1:sha256:7854e4482a5f054d2ae575b469322f8a51fd1fa3f00640e31cded23a06943263",
+          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "tests": "v1:sha256:9321a85293c7eb0a5e4600bffe5ad4bdb5fabace20bcb2ee9668a7c7d341158b"
         },
         "lenses": [
           "compliance",
@@ -416,27 +401,27 @@
           "craft"
         ],
         "policy": {},
-        "subject": "v1:sha256:80c7e6e4787d1abeefc79d1eef2891802e4bc0f2eb1a843da0d90c2ac2506769"
+        "subject": "v1:sha256:d02b04a6cce2fc39d7ce751496052742c16d2337756c40065eda1dd91a2ea9f9"
       },
-      "holder": "codex:root/g1-review-impl-2",
-      "input_fp": "v1:sha256:e443a7547a3fa79cdbc689ea4220e04ddb4b76546a20da983a068f32eff5a741",
+      "holder": "codex:root/g1-v2-review-impl",
+      "input_fp": "v1:sha256:b5355bc0a2dd4cd7661b064d94f519bb5dad00b4ccaeb1dc2dde1b484923460e",
       "ok": true,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "1b08ec1b098403cd63148d0d2d5848c2f531d855",
-          "commit": "c3272f1f00fcb10e209bc82520dee75c841ca6e9",
+          "blob": "312cfa74ab4793e4f6f781047ac3ad97deb0a8e5",
+          "commit": "f4621c02199e891bd5856aaae52a583c5409283a",
           "path": ".zzzops/reviews/1/review_impl.md"
         },
-        "summary": "Changed comparisons still force full fallback; Windows cache permissions and the grammar runtime identity also require correction."
+        "summary": "The v2 certifier must reject recovered syntax errors before reporting conditional completeness."
       },
       "reason": "stale",
       "reviewed": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "d1b89621476b0308e7e7ac60a4bb52c605e9b547",
-          "commit": "40105ba4506ea364410f8fc9872ad772ea7ba8ec",
-          "tree": "9598388b5df746158cb642c6c5744e095401eaca"
+          "change": "4d36fb8599ded121f0a5e46f8593549659912900",
+          "commit": "507003d235ecd9a5d22a91abbfcea51534345071",
+          "tree": "eac3717cf0596aea9153febcceb024044f0a5cfd"
         }
       },
       "status": "done"

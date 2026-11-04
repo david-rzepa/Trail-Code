@@ -455,15 +455,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 9,
-      "correction_runs": 8,
+      "attempt": 10,
+      "correction_runs": 9,
       "findings": [
         {
           "id": "review_tests:9:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 12,
           "target_fp": "v1:sha256:4b0ebaf714667bd63b1e4eb761835aba648db03dfb551247f16e8b1afefafcea",
@@ -471,35 +471,35 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T17:45:12Z",
+      "finished_at": "2026-11-04T17:49:22Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "tests": "v1:sha256:cca544b6b9884dd0baaec7472191ebf916b05bee7e8fa577ea5f5c9610ba4165"
+          "tests": "v1:sha256:9321a85293c7eb0a5e4600bffe5ad4bdb5fabace20bcb2ee9668a7c7d341158b"
         },
         "policy": {},
-        "subject": "v1:sha256:4b0ebaf714667bd63b1e4eb761835aba648db03dfb551247f16e8b1afefafcea"
+        "subject": "v1:sha256:a59ff70df403d60dd68f4f68b23c7611d11a59c5397f5832c0f855730e946e33"
       },
-      "holder": "codex:root/g1-context-review-tests",
-      "input_fp": "v1:sha256:78718781c2c239f9f45c3c340b491940e2d433ce209181d2eeb067431c0cddd7",
-      "ok": false,
+      "holder": "codex:root/g1-v2-review-tests2",
+      "input_fp": "v1:sha256:703e91c71bcf8ee0d0594a6e5c92bff47077ae32884bfdfefd74de2cf4aad58a",
+      "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "9955c1f4c4f1bf8186a643bd87d46276f504aa94",
-          "commit": "3b9931965c33cc090728146fc511fdc4b25acaf2",
+          "blob": "404ae702e6c0ac3c2445dc9a4a6ea150721de61e",
+          "commit": "f364c8d761f8accc68f0b12bdce85ac6dfcf9c91",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Conditional v2 fixtures cover practical sparse selection but do not validate mandatory retained identities and report fields."
+        "summary": "V2 real-CLI tests now validate mandatory retained identities and status consistency."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "366a6450257219a479a319abe42816ac4d511274",
-          "commit": "c8f3bd1f2b7838c6c6ed10048224f01491ae595c",
-          "tree": "663c58dd3ad7eba59a15b1f99b8f1861538ba351"
+          "change": "80aec9930fb226a14ca1185bdf0c050c30cc451c",
+          "commit": "b26dee40e82ce71315c3b036f0f9f49bed00bc1d",
+          "tree": "ff378d3bebc4f75d242f52b7d3f4f3748565ba94"
         }
       },
       "status": "done"

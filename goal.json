@@ -162,34 +162,25 @@
       "status": "done"
     },
     "filter_impl": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T18:29:48Z",
+      "finished_at": "2026-11-04T18:55:55Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "review_impl:3:1",
-            true
-          ],
-          [
-            "review_impl:3:2",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:5fab78ee7a74554d9897b964ee764247bd55068d6c3b2a64932fad9704979c4b",
         "inputs": {
-          "code": "v1:sha256:7854e4482a5f054d2ae575b469322f8a51fd1fa3f00640e31cded23a06943263",
+          "code": "v1:sha256:4dc21de67e21082766705f421d9db025d339ed068caa9ceba578cd3c26ee5fc8",
           "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "review": "v1:sha256:07a14fe684eb0acd2ff67328d9c4de824d8239bc2a13371e13c4b6624cc7bb6a"
+          "review": "v1:sha256:a574b565b02e8c529692995571c3c4b4e1dce2bae2eb669f156d1c53b505c706"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-v2-filter-impl",
-      "input_fp": "v1:sha256:13d4df23fd25061a32fecaa0a48a704c2c7bd630ed5bc0b03613ab9443c6a041",
+      "holder": "codex:root/g1-v2-filter-impl2",
+      "input_fp": "v1:sha256:7405afcd40920aa97e7e4117262744f520fc4d963dfa8005efa67f5725a2797c",
       "ok": true,
       "output": {
-        "summary": "Implementation review found two material issues: the v2 certifier accepts recovered syntax errors and its contract tests omit recovery shapes. These reopen implementation and test design. No non-material notes require verdicts.",
+        "summary": "Implementation re-review resolved both malformed-tree implementation and regression-test findings. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

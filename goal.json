@@ -350,8 +350,8 @@
       "status": "done"
     },
     "review_impl": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [
         {
           "id": "review_impl:5:1",
@@ -361,7 +361,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 11,
           "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
@@ -376,7 +376,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 11,
           "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
@@ -391,7 +391,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 11,
           "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
@@ -406,7 +406,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 16,
           "target_fp": "v1:sha256:3cfb6b347ea59a126a52f9d00264266bce33700b76b1085794583ca781ab72ff",
@@ -414,14 +414,14 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T20:21:50Z",
+      "finished_at": "2026-11-04T21:07:37Z",
       "fp_parts": {
         "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "code": "v1:sha256:3fc9fd59454a5c87e9b3c36b797d6b2fbbe2e379b2f2e6cd1b51c561e67860c6",
+          "code": "v1:sha256:a24f360224c7dd66bbda1a6192bc1f05da8911defb5d827ab419a3199c25483d",
           "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
-          "tests": "v1:sha256:22cee2312f025b59011cecdd28fc575b6f03a975137b3cfd5e33103f9a248634"
+          "tests": "v1:sha256:5ed1e190ea242a0e640e7d9d52b3b033f9c76bbb03bd553be14f5b6548a4173d"
         },
         "lenses": [
           "compliance",
@@ -431,27 +431,27 @@
           "craft"
         ],
         "policy": {},
-        "subject": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d"
+        "subject": "v1:sha256:6e223265595d07e30fb21154f08b3e207b3c5760ed969bd4486a9c2d2a30f045"
       },
-      "holder": "codex:root/g1-multilingual-review-impl",
-      "input_fp": "v1:sha256:926c7fe5f5501e7a6c713bd9b2ae905e83f0e79339e975d48c6a8d4445bc8af0",
+      "holder": "codex:root/g1-multilingual-review-impl2",
+      "input_fp": "v1:sha256:6b593bb867900131f52b487a93f3b0f9ec325d8bc5439a2332ce72cdca09c29a",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "862c6c7c034344e45f17fdb706ba7d8f311416b6",
-          "commit": "615cbb02a930173bdde061ae007be1b2c3c81562",
+          "blob": "ac4479ef7e9961368f64d28dee47fad07577f58b",
+          "commit": "e3093bb78e4e29c33a1d952925edeab3d50c5219",
           "path": ".zzzops/reviews/1/review_impl.md"
         },
-        "summary": "A real Go fuzz corpus change can omit a failing test with no fallback, and the implementation does not preserve or use the approved shared multilingual import graph for Go selection."
+        "summary": "Prior material findings are resolved: Go fuzz testdata triggers full fallback, raw import candidates are retained, Go dependencies join the shared reverse graph, and the supported standard-library case is selective. Four focused contract tests pass with Go installed."
       },
       "reason": "stale",
       "reviewed": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "ceef65cb3a569e809f6ccb6148163e30f8c4025f",
-          "commit": "aacc7388d18a83ca62efc473f4d834cd3c20ddf4",
-          "tree": "8ea22b3ec5032925dc2b60b39d89c8b48014192f"
+          "change": "5be617847f95fcdb487ca61540b52483b9d4b6f4",
+          "commit": "333923c91f7b1a52457987f11301848fb1f1626c",
+          "tree": "f63a5a92f843af1671e5850264710703d722be03"
         }
       },
       "status": "done"

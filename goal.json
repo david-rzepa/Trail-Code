@@ -78,6 +78,40 @@
       },
       "status": "done"
     },
+    "approve_merge": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T21:39:21Z",
+      "fp_parts": {
+        "def": "v1:sha256:a2d3367f8c6fe8d79f2275e7ae90c04deb746148accdf26f5bfd54ee7ecb28e3",
+        "inputs": {
+          "code": "v1:sha256:a24f360224c7dd66bbda1a6192bc1f05da8911defb5d827ab419a3199c25483d"
+        },
+        "policy": {},
+        "subject": "v1:sha256:6e223265595d07e30fb21154f08b3e207b3c5760ed969bd4486a9c2d2a30f045"
+      },
+      "holder": "human",
+      "input_fp": "v1:sha256:16059cf39a3d04ab7a8b6974de3fe8affd58c64d55031e72a586cb28e652765f",
+      "ok": true,
+      "output": {
+        "decided_at": "2026-11-04T21:39:21Z",
+        "decided_by": "Dave",
+        "decision": "approved",
+        "quote": "Approve merge",
+        "summary": "Approved merging PR #1 into the test-impact branch with reviewed multilingual impact analysis."
+      },
+      "reason": "new",
+      "reviewed": {
+        "code": {
+          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
+          "change": "5be617847f95fcdb487ca61540b52483b9d4b6f4",
+          "commit": "333923c91f7b1a52457987f11301848fb1f1626c",
+          "tree": "f63a5a92f843af1671e5850264710703d722be03"
+        }
+      },
+      "status": "done"
+    },
     "base": {
       "attempt": 1,
       "correction_runs": 0,

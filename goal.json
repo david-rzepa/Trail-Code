@@ -134,31 +134,15 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 3,
-      "correction_runs": 2,
-      "findings": [
-        {
-          "id": "review_design:2:1",
-          "impact": "The release gate may reject a correctly completed full fallback or incorrectly accept a receipt whose full-run identity is incomplete.",
-          "lens": "truth",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 2,
-          "target_fp": "v1:sha256:d068d0c8e2f6da7eb34bc50f4f7f521f6d2191d8897dd60d326a2fbfbee5bcf3",
-          "text": "The v2 matrix requires missing or incomplete conditional context to trigger a full-profile fallback, but later forbids a full-profile passing receipt for any incomplete context. When a collector is needed only for sparse eligibility yet the original full run and its receipt identity are otherwise valid, those requirements conflict with G2's successful-full-run receipt behavior. Distinguish missing sparse-only conditions from missing context required to validate the full run or its receipt, and test both outcomes.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T17:43:44Z",
+      "attempt": 4,
+      "correction_runs": 3,
+      "findings": [],
+      "finished_at": "2026-11-04T19:29:57Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:0442cc456e673992864369a02b67d48806decd5e",
-          "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
+          "doc": "v1:blob:3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "spec": "v1:sha256:97beaf135607fc6f7f9c557a0d92b8722af6e800cf2c3420f8515a334055d95b"
         },
         "lenses": [
           "intent",
@@ -186,25 +170,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:de41c740fa4ae43db5fad37b3b1e3519ba67d2c251d8562d9f0f60238d465033"
+        "subject": "v1:sha256:489d87944e735cf42bd20410d8881208f30d8f8c2ed35475ddf443562ca11a81"
       },
-      "holder": "codex:root/g4-normal-review2",
-      "input_fp": "v1:sha256:9a95cef8ae3a0826b6a37f05a2035b4d2cedf895ba681cc10c03a661bd880173",
+      "holder": "codex:root/g4-multilingual-review",
+      "input_fp": "v1:sha256:db2c962d0c5defff416050e3a51267d4efa8e3ff0bd35640274f59af129f1fe3",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "760e19d61c780e075315a949279755bf1ab55810",
-          "commit": "08550992a4db44cc93cb29d1ea46c1ef0220d4b1",
+          "blob": "2c4ae6264e5b8e714e67a8147beae10f3b29b9de",
+          "commit": "f1bba8f9e313372b33e64c6d6094629b16dfd85b",
           "path": ".zzzops/reviews/4/review_design.md"
         },
-        "summary": "Full fallback receipt requirements now distinguish sparse-only evidence gaps."
+        "summary": "Multilingual release gates require real sparse execution and safe fallback evidence."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "0442cc456e673992864369a02b67d48806decd5e",
-          "commit": "adc5d4c2d046eb360e65f781375d66eeed623fb3"
+          "blob": "3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "commit": "314d2c02f3679f496eb1c5dd2b3b47595e056536"
         }
       },
       "status": "done"

@@ -210,14 +210,14 @@
       "status": "blocked"
     },
     "review_design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T00:55:19Z",
+      "finished_at": "2026-11-04T00:57:54Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:e6a1b1620717362d7fc8639267e7ca655272da68",
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "lenses": [
@@ -246,25 +246,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:83d8a8f1e060ab27f505815b4b130195f5099defa9896168e9d7267a0be396c6"
+        "subject": "v1:sha256:ad72273520fed21274d5d24e18df777c58f91d2c59509b05c7bd899425f06bc7"
       },
-      "holder": "codex:root/g1-portable-review",
-      "input_fp": "v1:sha256:c7217ff76df4c47706b32ea1ea75917e2110a4f35a7c247478dd1d8df735c982",
+      "holder": "codex:root/g1-commit-review2",
+      "input_fp": "v1:sha256:609e2c067a5ba5efd4fc2aa1cdc9d2aa198eb6cb17d592a3f2bc4a97978e0f54",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "35154d8e8448f77cfbd8052268709fd461ff3254",
-          "commit": "0fad9fd62aadc084e6e411e0cd944d86b9b01747",
+          "blob": "c2075ca13784a272f0caf5b7653fee7d9fd8f305",
+          "commit": "4d44f550a26680fbd5080a53c99f046ec2f53307",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Committed endpoint design retains exact identity and portable analysis."
+        "summary": "Symlink and materialization boundaries preserve pinned-tree identity and containment."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "e6a1b1620717362d7fc8639267e7ca655272da68",
-          "commit": "2f883c1ae68c06490174c89b36940c30821b9e67"
+          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c"
         }
       },
       "status": "done"

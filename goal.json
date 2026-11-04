@@ -215,10 +215,23 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "blocked": {
+        "category": "decision",
+        "options": [
+          "Add schema v2 with an explicit conditional status, a versioned supported-model identity and machine-readable required context; G2 must validate every requirement before using the sparse impact and otherwise run the full profile. Existing v1 consumers reject v2, and v1 retains conservative fallback.",
+          "Keep schema v1 and require full-profile fallback until analyzer and adapter can establish all runtime dependencies without a conditional contract.",
+          "Use another explicit contract; specify the boundary and fallback behavior."
+        ],
+        "question": "owner question: May the impact report add a versioned v2 contract for sparse results that are conditional on a validated execution context? A tracked-source graph alone cannot rule out a test runner, loader, plugin, or external dependency importing project code dynamically. Schema v1 has no way to express a condition that downstream must validate, and marking it complete could cause an unsafe exclusion.",
+        "reason": "owner question: May the impact report add a versioned v2 contract for sparse results that are conditional on a validated execution context? A tracked-source graph alone cannot rule out a test runner, ",
+        "recommendation": "Use schema v2 with mandatory context requirements and explicit conditional status. Implement a first practical Node/TypeScript static-import slice, retain import-time effects in file-level reverse closure, and treat unknown syntax, dynamic loading, unsupported test hooks, unverified runners or unknown requirements as full fallback. The adapter must verify pinned runner, configuration and external inputs, not merely trust an undocumented assumption. The ESM/runtime and Windows ACL fixes are checkpointed at 39f6612; the Windows path requires real Windows verification.",
+        "repeats": 1,
+        "waiting_for": "human"
+      },
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-04T02:33:23Z",
+      "finished_at": "2026-11-04T17:01:14Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
@@ -228,25 +241,12 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-review-fixes",
+      "holder": "codex:root/g1-sparse-implement",
       "input_fp": "v1:sha256:919a5606c71dd0aa8e9d7ec484f0ab74a710200a7cd55bc0111951d3d6849206",
-      "ok": true,
-      "output": {
-        "code": {
-          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "d1b89621476b0308e7e7ac60a4bb52c605e9b547",
-          "commit": "40105ba4506ea364410f8fc9872ad772ea7ba8ec",
-          "tree": "9598388b5df746158cb642c6c5744e095401eaca"
-        },
-        "responses": {
-          "review_impl:1:1": "fixed: Every analyzer Git subprocess uses --no-replace-objects; commit, tree and blob replacement-ref contract tests pass.",
-          "review_impl:1:2": "disputed: Identical populated Git trees now analyze inputs and return complete when no actual gaps exist. Changed trees still require unbounded fallback because callbacks, resources, dynamic dispatch and cross-file resolution remain unmodeled; treating those relationships as complete would violate the approved design. No unsupported scope is claimed.",
-          "review_impl:1:3": "fixed: Grammar identity hashes the actual depth and breadth grammars, queries and runtimes, including missing-asset markers, and keys extraction caches with that identity. The real offline npm tarball test confirms identity and warm cache reuse without package-lock."
-        },
-        "summary": "Pin Git object reads against replacement refs, compute grammar and cache identity from shipped grammar and runtime bytes, and support valid unchanged populated comparisons while reusing compatible extraction facts. Changed comparisons remain conservatively full-fallback until dependency completeness can be proven."
-      },
-      "reason": "stale",
-      "status": "done"
+      "ok": false,
+      "output": null,
+      "reason": "reopened",
+      "status": "blocked"
     },
     "review_design": {
       "attempt": 6,

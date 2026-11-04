@@ -249,6 +249,92 @@
       },
       "status": "done"
     },
+    "review_tests": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "review_tests:1:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:7a7a0320e367ea3def3930cfc1e2cce8352fcc46ae6a33b1f1614de6baaac5ce",
+          "text": "Add tests with actual missing, stale or incompatible independently collected context and evidence from another commit/profile/inventory, incomplete discovery and Go build/platform/dependency context; mutating only analyzer output does not test independent validation.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:2",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:7a7a0320e367ea3def3930cfc1e2cce8352fcc46ae6a33b1f1614de6baaac5ce",
+          "text": "Exercise receipt compatibility, complete predecessor-chain validation, failed/partial/cancelled execution, forged tracked evidence, unsafe store paths, partial writes and concurrent publication; invalid evidence must not justify selective execution or a passing receipt.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:3",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:7a7a0320e367ea3def3930cfc1e2cce8352fcc46ae6a33b1f1614de6baaac5ce",
+          "text": "Exercise the production entry point and real repository workflow, including preparation, order, logs, gates, nonrecursive full fallback, JSON isolation and failure/cancellation; verify honest ordinary checkout preflight and stable-input reporting.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:4",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:7a7a0320e367ea3def3930cfc1e2cce8352fcc46ae6a33b1f1614de6baaac5ce",
+          "text": "Cover inverse changes, deletion and import rebinding, runnable test discovery changes, mixed-language/build boundaries, unvalidated bounded scopes and non-code/input invalidations, asserting dependent inclusion or full fallback across both revisions.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T21:27:34Z",
+      "fp_parts": {
+        "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
+        "inputs": {
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
+          "tests": "v1:sha256:8810172c9d6b40041e6c4eceda082f74cfb9396061efcbd912e7abc825bb1ad1"
+        },
+        "policy": {},
+        "subject": "v1:sha256:7a7a0320e367ea3def3930cfc1e2cce8352fcc46ae6a33b1f1614de6baaac5ce"
+      },
+      "holder": "codex:root/g2-multilingual-review-tests",
+      "input_fp": "v1:sha256:09483f60054470a68e931a049a1f727cf6e16a0755a6e917a59212722ad2f982",
+      "ok": false,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "265722c8f6982a8f034ecd001d9f4a12ee567380",
+          "commit": "2b52eb8fb4f57222dc44167531e882c2e770c202",
+          "path": ".zzzops/reviews/2/review_tests.md"
+        },
+        "summary": "Real Node and Go sparse fixtures are promising, but independent context validation, receipt safety, production workflow integration, and two-revision boundary cases need substantive tests."
+      },
+      "reason": "new",
+      "reviewed": {
+        "tests": {
+          "base": "db0d148e7dbc47c3199d2e3b23b207d4e277531e",
+          "change": "b9f256fd9ed736a24730a7cae1e829c4c67aa559",
+          "commit": "90ca0152c3ccfbb46b938bef8872e976734b5acb",
+          "tree": "b1695ab70604daab6f414110841bb729dd7f5ce3"
+        }
+      },
+      "status": "done"
+    },
     "test_design": {
       "attempt": 2,
       "correction_runs": 0,

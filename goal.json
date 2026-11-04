@@ -448,15 +448,15 @@
       "status": "done"
     },
     "run_tests": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T22:23:37Z",
+      "finished_at": "2026-11-04T23:07:45Z",
       "fp_parts": {
         "def": "v1:sha256:def927cb81b82bf3b076ecd841fe451396715db71445477cd2a999786666b4ca",
         "inputs": {
-          "code": "v1:sha256:a6444d336720c2af9afdc0645343674f49f45d748aacec0438657927d1297780",
-          "commands": "v1:sha256:b356904cc54ec857b75359053cde53ce083ea0c4e2dc2ee76c9f7b55e075fdfc"
+          "code": "v1:sha256:950f4164a733fb03042d991219fea83bc9a7ffd4391e717a12fa68e5dcff9636",
+          "commands": "v1:sha256:ab7e4e3234655efa17008a825553b7e3c070dd322e4cd4c149808a3cbaea5e52"
         },
         "policy": {
           "verification": {
@@ -474,35 +474,35 @@
           ]
         }
       },
-      "holder": "codex:root/g2-run-tests",
-      "input_fp": "v1:sha256:cedf20ef0f63d3299ba9d01fecada99a9de5d87ec7890331fca38a1c160417a3",
+      "holder": "codex:root/g2-run-tests2",
+      "input_fp": "v1:sha256:d67adc165bb8b1f5cafab22d7d177c33334d1c43ada425afde86580104c0c264",
       "ok": true,
       "output": {
         "result": {
           "details": [
             {
-              "cmd": "PATH=/tmp/trail-g1-go/go/bin:$PATH node --import tsx --test test/test-impact-verification-contract.test.ts",
+              "cmd": "PATH=/tmp/trail-g1-go/go/bin:$PATH node --import tsx --test --test-name-pattern='untracked failing Go test|ignored failing Go test|additional affected test|malformed analyzer affected' test/test-impact-verification-contract.test.ts",
               "exit": 0,
-              "milliseconds": 213130,
-              "seconds": 213,
+              "milliseconds": 24694,
+              "seconds": 24,
               "source": "goal",
-              "tail": "ng old or new dependents (9459.969221ms)\n✔ unverified bounded scopes and mixed-language changes cannot exclude dependent tests (7009.329249ms)\n✔ declared documentation-only inputs can be excluded, while unknown resources broaden (7078.948443ms)\n✔ the actual repository adapter exposes a subprocess command and preserves the full workflow (818.753279ms)\n✔ full fallback preserves preparation, runner and gate order with child logs separate (4028.890007ms)\n✔ receipt reuse rejects a different profile and corrupted predecessor, even with a valid selective child (10779.099279ms)\n✔ replacement of a verified store component before use cannot redirect reads or writes (4576.118744ms)\n✔ production CLI full fallback executes the actual repository runner and gate with isolated JSON (2980.813596ms)\n✔ production CLI propagates runner failure and cancellation without passing evidence (4589.019695ms)\nℹ tests 27\nℹ suites 0\nℹ pass 27\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 213085.399022\n"
+              "tail": "✔ untracked failing Go test in an unchanged package cannot yield passing sparse verification (4159.32846ms)\n✔ ignored failing Go test in an unchanged package cannot yield passing sparse verification (3854.341427ms)\n✔ additional affected test from a valid analyzer report is included or forces full fallback (4583.270594ms)\n✔ malformed analyzer affected entries cannot justify a sparse plan (11858.415438ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 24644.854438\n"
             },
             {
               "cmd": "npm run build",
               "exit": 0,
-              "milliseconds": 13412,
+              "milliseconds": 13520,
               "seconds": 13,
               "source": "verification",
-              "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g2/dist/vendor/grammars (9 wasm)\n"
+              "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g2/dist/vendor/grammars (9 wasm)\nnpm notice\nnpm notice New major version of npm available! 11.20.0 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n"
             },
             {
               "cmd": "npm test",
               "exit": 0,
-              "milliseconds": 1529281,
-              "seconds": 1529,
+              "milliseconds": 1310794,
+              "seconds": 1310,
               "source": "verification",
-              "tail": "orkspace ask applies file-first selection after cross-repo fusion (30.360013ms)\n✔ default file-aware fusion locks the exact workspace top before projecting span queues (52.556267ms)\n✔ file-union admission preserves the workspace baseline top-lock survivor set (35.310512ms)\n✔ ask inside a single child = standalone (no federation scopes) (18.033806ms)\n✔ migration: mega-graph parent split → .graph removed, workspace.json written, exact note (17.9734ms)\n✔ check federation: OK when all in sync, STALE + not-ok when a child drifts (33.567252ms)\n✔ callers federation resolves a symbol per child, grouped (28.379312ms)\n✔ grep federation merges groups across children with child-prefixed paths (19.545282ms)\n✔ one unbuilt child is surfaced, not silently skipped (30.494139ms)\n✔ federated ask: a junk-body-token child is gated out of the ranking, into alsoMatched (20.09695ms)\n✔ federated ask: a genuinely-shared query still federates both children (17.496042ms)\n✔ federated ask: --in <child> narrows to that child; --in <unknown> errors listing repos (19.561886ms)\n✔ federated ask: explicit --in <weak child> bypasses the cross-child gate (footer hint is reachable) (17.79394ms)\n✔ strength gate: body-only junk (`position`) gated out at ~30-node scale (20.293611ms)\n✔ strength gate: body-only junk (`position`) gated out at ~200-node scale (101.990726ms)\n✔ strength gate: 3-child payment/gateway/refund — strong + mid federate, incidental-var junk gated out (39.339524ms)\n✔ strength gate: a legit COMMON-term (low-idf) name match is NOT overcorrected out (25.270419ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (25.879978ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (26.349635ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.574932ms)\nℹ tests 4271\nℹ suites 0\nℹ pass 4262\nℹ fail 0\nℹ cancelled 0\nℹ skipped 9\nℹ todo 0\nℹ duration_ms 1528748.642623\n"
+              "tail": "orkspace ask applies file-first selection after cross-repo fusion (17.697145ms)\n✔ default file-aware fusion locks the exact workspace top before projecting span queues (29.966965ms)\n✔ file-union admission preserves the workspace baseline top-lock survivor set (18.001461ms)\n✔ ask inside a single child = standalone (no federation scopes) (10.306504ms)\n✔ migration: mega-graph parent split → .graph removed, workspace.json written, exact note (9.477212ms)\n✔ check federation: OK when all in sync, STALE + not-ok when a child drifts (17.767362ms)\n✔ callers federation resolves a symbol per child, grouped (14.808876ms)\n✔ grep federation merges groups across children with child-prefixed paths (12.095638ms)\n✔ one unbuilt child is surfaced, not silently skipped (15.444259ms)\n✔ federated ask: a junk-body-token child is gated out of the ranking, into alsoMatched (10.931142ms)\n✔ federated ask: a genuinely-shared query still federates both children (10.311264ms)\n✔ federated ask: --in <child> narrows to that child; --in <unknown> errors listing repos (10.38901ms)\n✔ federated ask: explicit --in <weak child> bypasses the cross-child gate (footer hint is reachable) (10.778887ms)\n✔ strength gate: body-only junk (`position`) gated out at ~30-node scale (10.691474ms)\n✔ strength gate: body-only junk (`position`) gated out at ~200-node scale (56.861095ms)\n✔ strength gate: 3-child payment/gateway/refund — strong + mid federate, incidental-var junk gated out (22.900754ms)\n✔ strength gate: a legit COMMON-term (low-idf) name match is NOT overcorrected out (13.411227ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (14.278296ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (14.25066ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.353246ms)\nℹ tests 4276\nℹ suites 0\nℹ pass 4267\nℹ fail 0\nℹ cancelled 0\nℹ skipped 9\nℹ todo 0\nℹ duration_ms 1310397.115884\n"
             }
           ],
           "passed": true,
@@ -521,7 +521,7 @@
               "status": "unavailable",
               "verification": {
                 "caveat": "informational; machine load and concurrent goal-command workload may differ",
-                "delta_ms": 253825,
+                "delta_ms": 35446,
                 "source": {
                   "finished_at": "2026-11-04T20:41:44Z",
                   "goal": 1,
@@ -542,21 +542,21 @@
               "platform": "linux",
               "python": "3.14"
             },
-            "goal_ms": 213130,
+            "goal_ms": 24694,
             "parallel_commands": false,
-            "plan_sha256": "edfa84faffb6feff3485b82317de2ea5c9f6c3eae9aa5384cc3835c6f8a8cd40",
-            "total_ms": 1755824,
-            "verification_ms": 1542693,
+            "plan_sha256": "ebcb32b47446057b86b68167d8d60c7d579cb9cbf26e95bfe65bca06cbd844fc",
+            "total_ms": 1349008,
+            "verification_ms": 1324314,
             "verification_plan_sha256": "707adb38c7263e1efa6f40732b18f24b57a9a961d40161de22b2befd644ae63d",
             "workers": {
               "goal": 2,
               "verification": 2
             }
           },
-          "tree": "c90185221ab4c3087b72fc3564dc204090264849"
+          "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434"
         }
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "test_design": {

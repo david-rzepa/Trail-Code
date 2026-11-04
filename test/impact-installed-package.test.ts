@@ -2,9 +2,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve, win32 } from "node:path";
+import { dirname, join, relative, resolve, sep, win32 } from "node:path";
 import { x as extractTar } from "tar";
 import { pathToFileURL } from "node:url";
 
@@ -27,6 +27,16 @@ function run(command: string, args: string[], cwd: string, env: NodeJS.ProcessEn
   assert.equal(r.status, 0, `${command} ${args.join(" ")}: ${r.stderr}\n${r.stdout}`);
   return r.stdout;
 }
+/** Build from actual working files, including modified and untracked inputs,
+ * but never copy live Git metadata, dependencies, build output or worktrees. */
+function copyCurrentSource(from: string, to: string): void {
+  const excluded = new Set([".git", "node_modules", "dist", ".zzzops", ".cache"]);
+  cpSync(from, to, { recursive: true, dereference: false, filter: source => {
+    const name = relative(from, source).split(sep)[0];
+    return !excluded.has(name);
+  } });
+}
+
 function walk(root: string): string[] {
   if (!existsSync(root)) return [];
   const out: string[] = [];
@@ -44,16 +54,34 @@ test("npm CLI discovery uses Node-compatible paths for Windows", () => {
   assert.equal(npmCli(node, "C:\\custom\\npm-cli.js", true, path => path === "C:\\custom\\npm-cli.js"), "C:\\custom\\npm-cli.js");
 });
 
+test("isolated source copy includes edited and added inputs while excluding outputs", () => {
+  const dir = mkdtempSync(join(tmpdir(), "impact-copy-"));
+  try {
+    const src = join(dir, "checkout"), dest = join(dir, "copy");
+    mkdirSync(join(src, "src"), { recursive: true });
+    mkdirSync(join(src, "dist"), { recursive: true });
+    mkdirSync(join(src, "node_modules"), { recursive: true });
+    writeFileSync(join(src, "src", "existing.ts"), "modified bytes");
+    writeFileSync(join(src, "src", "added.ts"), "new untracked bytes");
+    writeFileSync(join(src, "dist", "stale.js"), "stale");
+    writeFileSync(join(src, "node_modules", "stale.js"), "stale");
+    copyCurrentSource(src, dest);
+    assert.equal(readFileSync(join(dest, "src", "existing.ts"), "utf8"), "modified bytes");
+    assert.equal(readFileSync(join(dest, "src", "added.ts"), "utf8"), "new untracked bytes");
+    assert.ok(!existsSync(join(dest, "dist")));
+    assert.ok(!existsSync(join(dest, "node_modules")));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("packed distribution has meaningful grammar identity and reuses extraction cache offline", { timeout: 300_000 }, async () => {
   const dir = mkdtempSync(join(tmpdir(), "impact-packed-"));
   try {
     const pack = join(dir, "pack"), install = join(dir, "consumer"), repo = join(dir, "repo"), home = join(dir, "home"), source = join(dir, "source");
     for (const d of [pack, install, repo, home, source]) mkdirSync(d, { recursive: true });
-    // The normal test runner executes files concurrently. Build an isolated copy
-    // of the committed source so this check cannot rewrite their shared dist/.
-    const archive = join(dir, "source.tar");
-    run("git", ["archive", "--format=tar", `--output=${archive}`, "HEAD"], project);
-    await extractTar({ file: archive, cwd: source, strict: true });
+    // The normal test runner executes files concurrently. Copy the actual
+    // checkout, including uncommitted and newly added source; build separately
+    // so this check cannot rewrite shared dist/ or node_modules.
+    copyCurrentSource(project, source);
     symlinkSync(join(project, "node_modules"), join(source, "node_modules"), "junction");
     npmRun(["run", "build"], source);
     const manifest = JSON.parse(npmRun(["pack", "--ignore-scripts", "--json", "--pack-destination", pack], source));

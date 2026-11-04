@@ -418,15 +418,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [
         {
           "id": "review_tests:6:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 9,
           "target_fp": "v1:sha256:ca2ac46efa89f584d26e4b95f4e30f2d7799aded7d7314da78085dfcd38251d7",
@@ -438,43 +438,55 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 9,
           "target_fp": "v1:sha256:ca2ac46efa89f584d26e4b95f4e30f2d7799aded7d7314da78085dfcd38251d7",
           "text": "The new automatically discovered npm test runs npm install in a fresh consumer with no lockfile, requiring registry access and resolving dependencies at test time. Offline environments or registry failures can fail the full existing test workflow unrelated to the code. Keep real packed-package and warm-cache coverage while using controlled offline-capable dependencies, or place the network-dependent check in a separately declared verification gate rather than the ordinary offline suite.",
           "upheld": false
+        },
+        {
+          "id": "review_tests:7:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 10,
+          "target_fp": "v1:sha256:4d3c541e4a5a10c9ca99ccd6b674889b2a0a2b50b1884ca6211888d659f5acb5",
+          "text": "The packed-package test builds from git archive HEAD rather than the current checkout. Running npm test after an uncommitted implementation or package metadata edit can test an old distribution, hiding new regressions or falsely reporting a fixed defect. Materialize a safe isolated copy of the actual current test source (including relevant modified and added inputs), while retaining offline dependencies and protecting concurrent tests from shared build outputs.",
+          "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T02:18:22Z",
+      "finished_at": "2026-11-04T02:24:05Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:200975b4fa842adb869f71248c736f3585fc7a82311f67837068f9b29110229a"
+          "tests": "v1:sha256:4b86cad790c0b3acd05c350917a25f26672292a3a0b868ee7e22e320697cf6eb"
         },
         "policy": {},
-        "subject": "v1:sha256:63e132e1c9ed97367a74608ddf39fe40b37f54f58b0dee0be62d5898b8156828"
+        "subject": "v1:sha256:b7e32c24758adbe71820aba8d5277335c83b4ad110c64d6d9bf5ad8dd319d7d6"
       },
-      "holder": "codex:root/g1-regression-review",
-      "input_fp": "v1:sha256:ac2e74e80c78ad23374ee9384aa9fcb1cda7f354053ed48b23cc2b54293d380d",
+      "holder": "codex:root/g1-regression-review2",
+      "input_fp": "v1:sha256:61e016cf8306b8cde3389a24cd4bf6d69c3994f27afaa81528800507c7042347",
       "ok": false,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "b5d8a855b21188a66d718d8cdbfb487e2a365ee7",
-          "commit": "3758878d4747c59c25206df7a3d991a35830baf2",
+          "blob": "ed2775a26299e831106711aa5402b99b817c5fac",
+          "commit": "dc1f6220c7bac33376bc9c53fca646547df9aa99",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Packed-install regression test cannot run portably on Windows and introduces unpinned registry access into npm test."
+        "summary": "Prior Windows and network findings resolved; packed test incorrectly archives HEAD instead of testing current source."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "b4e2cedaa44d22661d94433f65324b38cdd8603e",
-          "commit": "1215cf0b6ac06e066a517e6f13da788542a4311e",
-          "tree": "6d1056ef5f03e545296ee441b5c4eadd9dc58453"
+          "change": "2ab9b6ddb22f6b7e50fcc959438edcbf81499068",
+          "commit": "6dd00660014097efd89c66afb9d27e3257fe20d9",
+          "tree": "e5a9590ab586c2ecdc6c50acacf4fcd9c6ee531c"
         }
       },
       "status": "done"

@@ -296,10 +296,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 5,
-      "correction_runs": 3,
+      "attempt": 6,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-04T00:12:25Z",
+      "finished_at": "2026-11-04T00:15:06Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -312,7 +312,7 @@
         "test/conservative-impact-contract.test.ts",
         "test/impact-coordinator-safety.test.ts"
       ],
-      "holder": "codex:root/g1-test-design-5",
+      "holder": "codex:root/g1-test-design-6",
       "input_fp": "v1:sha256:10ba7d179c19f4f02691af68f52f5d3975d8b241640557853a2f1ad8f8b80304",
       "ok": true,
       "output": {
@@ -323,40 +323,43 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 13583,
+              "duration_ms": 12359,
               "id_or_scope": "test/conservative-impact-contract.test.ts",
-              "observation": "failing: all 14 subprocess contract tests reach real CLI, where impact is not implemented"
+              "observation": "14 fail because impact command is absent; the bounded-gap/fallback validator scenario passes (including deliberate invalid reports)"
             },
             {
-              "duration_ms": 174,
+              "duration_ms": 162,
               "id_or_scope": "test/impact-coordinator-safety.test.ts",
-              "observation": "incomplete pre-implementation: each test enters its test body, but the internal coordinator module does not yet exist so behavioral assertions cannot run"
+              "observation": "incomplete: coordinator module absent so behavioral assertions cannot yet execute"
             }
           ],
-          "checkpoint": "13a8da12227317f3417fe2bd7721e9388935282b",
+          "checkpoint": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 13637,
+              "duration_ms": 12437,
               "exit": 1
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 236,
+              "duration_ms": 224,
               "exit": 1
             }
           ],
-          "summary": "Measured separate red runs at the committed checkpoint. Capture/cache tests do not yet exercise coordinator logic because the feature module does not exist.",
-          "total_ms": 13873
+          "summary": "Measured separate runs at the committed checkpoint. The bounded-gap safety assertion is exercised; analyzer and internal seam behaviors remain red pending implementation.",
+          "total_ms": 12661
+        },
+        "responses": {
+          "review_tests:1:3": "fixed: Shared report checks now validate each bounded gap is accompanied by its applicable scope or full fallback, each unbounded gap has full fallback, and status agrees with gaps. A targeted bounded-gap scenario demonstrates rejection of absent and unrelated fallbacks, contradictory status and unbounded cases, as well as acceptance of full fallback."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "f384289ee18fa993efa744317d93d3da32bc1ef6",
-          "commit": "13a8da12227317f3417fe2bd7721e9388935282b",
-          "tree": "a50da8f417922d5b4ae05ed51651595d5cb84a04"
+          "change": "6a56625510091df0e815548495ed124d8df9c2d8",
+          "commit": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
+          "tree": "ac84ad57833d0a2e456c754e22d1673c0c200b8e"
         }
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     }
   },

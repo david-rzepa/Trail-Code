@@ -1,3 +1,3 @@
-# Re-review: repository content trust and dependency alignment
+# Re-review: committed endpoints and normal runner execution
 
-The update distinguishes repository content from instructions that authorize actions, retains applicable project instructions within the host hierarchy, and requires validation against concrete command effects. It includes adversarial repository-content fixtures alongside a legitimate project-instruction case. Generated adapters remain bound to G2's supported production interface rather than test-only capture seams. No new material issue in the changes.
+The changes align generated adapters with the owner-directed committed-only and stable-input scope, retain ordinary Git preflight and honest reporting, and preserve the original full command. Conditional v2 requirements are independently checked by the versioned helper registry; unknown or incomplete evidence forbids sparse selection. The updated tests cover supported sparse execution, malformed requirements, baseline compatibility and endpoint behavior without claiming continuous mutation detection. No new material issue in the change.

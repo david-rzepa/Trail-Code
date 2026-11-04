@@ -60,35 +60,35 @@
       "status": "done"
     },
     "approve_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T00:09:23Z",
+      "finished_at": "2026-11-04T01:05:49Z",
       "fp_parts": {
         "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
         "inputs": {
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "filter": "v1:sha256:764265fbe52fc4199cd0022ac97daccaf6024bffb3f128b354266616aa18be4f",
-          "summary": "v1:sha256:4646b2e9c9d538819be51db624c79e1e3879d776423dab26640640743c12461e"
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "filter": "v1:sha256:3e1bb215cdc463ef44cff19d5a34ef920658bc6800b6fc79bbb5e43536262f68",
+          "summary": "v1:sha256:e32a06dd44c259a65bc2acf67416ac53f60a41438d8c61ffc08c1d028a3662a5"
         },
         "policy": {},
-        "subject": "v1:sha256:2089f1328e1d7d39ae492ed9756ac007b79fdceb8287b963a737912097997409"
+        "subject": "v1:sha256:ad72273520fed21274d5d24e18df777c58f91d2c59509b05c7bd899425f06bc7"
       },
       "holder": "human",
-      "input_fp": "v1:sha256:e972afe0a79eccfba5403ae623318ce5f1f5a4e3e69bfe97a4d2a81af65cadde",
+      "input_fp": "v1:sha256:a52575e3a68c8943829ce8b7aeb29f073cd8e38a2da31ff0889c171cecb99a03",
       "ok": true,
       "output": {
-        "decided_at": "2026-11-04T00:09:23Z",
+        "decided_at": "2026-11-04T01:05:49Z",
         "decided_by": "Dave",
         "decision": "approved",
-        "quote": "Approved",
-        "summary": "Approved the revised conservative impact design including internal capture and cache testing."
+        "quote": "Approve commit-only design",
+        "summary": "Approved portable commit-only analysis and committed symlink handling."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "commit": "f6423531c156c582e98c82681f9691999e6149a6"
+          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c"
         }
       },
       "status": "done"

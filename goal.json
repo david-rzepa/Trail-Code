@@ -47,35 +47,35 @@
       "status": "done"
     },
     "approve_design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T00:09:33Z",
+      "finished_at": "2026-11-04T17:39:12Z",
       "fp_parts": {
         "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
         "inputs": {
-          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
-          "filter": "v1:sha256:f61eda89e49cbc2e1b29fce9d0299fbfecda8d537e1be21b045b1fe092c9de05",
-          "summary": "v1:sha256:4ac7f5f7d613296cad4feb576436e99819428992245a54dfcf3e7e484f1685eb"
+          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
+          "filter": "v1:sha256:00975485490c887869d708b0c0de39901c1d2c21d38a6da76921d6c193bfcf5b",
+          "summary": "v1:sha256:a72b1370dc64ced1bb6200b1ebc93b2e777b50885a299ab927623f4303e82c00"
         },
         "policy": {},
-        "subject": "v1:sha256:8424e0e4facd4f5fb65145192b4360fb95de89689cc85bfad8b3956fe72b4dc3"
+        "subject": "v1:sha256:cde01a15675dd1f01aec230a51f83e791043725b35bf7d85f09cdedcbb1db6b7"
       },
       "holder": "human",
-      "input_fp": "v1:sha256:08fc4b71c10c7f5458a664cb7c1e8ea2e4d4230296a83927b2e0b4463eb922ed",
+      "input_fp": "v1:sha256:f036a5e63699391c042d81bb182c37dd76a4a14c5ddab628669188b815ae5165",
       "ok": true,
       "output": {
-        "decided_at": "2026-11-04T00:09:33Z",
+        "decided_at": "2026-11-04T17:39:12Z",
         "decided_by": "Dave",
         "decision": "approved",
-        "quote": "Approved",
-        "summary": "Approved the deterministic planning, execution and trusted JSON receipt design."
+        "quote": "Approve both designs",
+        "summary": "Approved G2 ordinary stable-checkout execution and independently validated context design."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
-          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5"
+          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
+          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56"
         }
       },
       "status": "done"

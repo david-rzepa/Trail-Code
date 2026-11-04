@@ -256,3 +256,22 @@ test("v2 contract checks detect malformed identity, provenance and fallback", ()
   assert.throws(() => validateV2({ ...valid, analysis_gaps: [{ revision: "to", path: null, kind: "unknown", detail: "unknown", scope: null }] }, dir, a, a));
   assert.throws(() => validateV2({ ...valid, context_requirements: [] }, dir, a, a));
 }));
+
+for (const [description, malformed] of [
+  ["missing closing brace", "export function read() { return 1;\n"],
+  ["missing closing parenthesis", "export const value = (1 + 2;\n"],
+] as const) {
+  test(`v2 reports parser recovery for ${description} on both endpoint revisions`, () => fixture(dir => {
+    file(dir, "package.json", JSON.stringify({ name: "parser-recovery", private: true, type: "module" }));
+    file(dir, "src/input.ts", "export function read() { return 1; }\n");
+    const good = commit(dir, "valid input");
+    file(dir, "src/input.ts", malformed);
+    const bad = commit(dir, "malformed input");
+    for (const [from, to, revision] of [[good, bad, "to"], [bad, good, "from"]] as const) {
+      const out = run(dir, from, to, 2);
+      assert.equal(out.analysis_status, "incomplete", `parser recovery at ${revision} must not be conditional`);
+      assert.ok(out.analysis_gaps.some((g: Json) => g.revision === revision && g.path === "src/input.ts" && g.scope === null), `missing unbounded ${revision} parse gap`);
+      assert.ok(full(out), `parser recovery at ${revision} requires full-profile fallback`);
+    }
+  }));
+}

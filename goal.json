@@ -245,6 +245,42 @@
       "reason": "stale",
       "status": "done"
     },
+    "integrate": {
+      "attempt": 2,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T23:33:59Z",
+      "fp_parts": {
+        "def": "v1:sha256:e2bc5ba4bab5ee48b60bbac872aa8787c8183b9bea68e99a6cafbe25d67d00a5",
+        "inputs": {
+          "base": "v1:sha256:c17f2f3e7e9837983b445a232a40ccd115e28b930a54a7cd667136e2810ea9bf",
+          "code": "v1:sha256:950f4164a733fb03042d991219fea83bc9a7ffd4391e717a12fa68e5dcff9636"
+        },
+        "policy": {
+          "verification.required_ci": []
+        }
+      },
+      "holder": "codex:root/g2-integrate2",
+      "input_fp": "v1:sha256:5a2e203dd9127e1bdf7bfccf14e95d7a1bd6699ae505521331d2185ee82e3cfc",
+      "ok": true,
+      "output": {
+        "ci": {
+          "failed": [],
+          "passed": [],
+          "required": [],
+          "stacked": false
+        },
+        "pr": {
+          "base": "test-impact",
+          "head": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
+          "number": 2,
+          "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434",
+          "url": "https://github.com/david-rzepa/Trail-Code/pull/2"
+        }
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "review_design": {
       "attempt": 7,
       "correction_runs": 6,

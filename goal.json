@@ -10,36 +10,51 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 4,
-      "correction_runs": 3,
-      "findings": [],
-      "finished_at": "2026-11-03T22:35:43Z",
+      "attempt": 5,
+      "correction_runs": 4,
+      "findings": [
+        {
+          "id": "adversary_design:5:1",
+          "impact": "A malicious or unexpected commit can disclose or modify local data, and untracked external inputs can make a conservative report unsound.",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 8,
+          "target_fp": "v1:sha256:83d8a8f1e060ab27f505815b4b130195f5099defa9896168e9d7267a0be396c6",
+          "text": "The commit-only design permits materializing Git tree entries while preserving modes but does not constrain symlink dereferencing or filesystem containment. A committed source symlink to an absolute or parent-relative path can make a naive analyzer read outside the claimed snapshot (including private local files) or let materialization/write/cleanup escape the temporary root; external target bytes also are not covered by the snapshot identity. Require safe no-follow or proven contained, explicitly pinned resolution and unbounded gaps when link dependencies cannot be modeled; protect writes and cleanup, and test absolute/relative/link-chain escapes against external sentinels.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T00:55:41Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+          "doc": "v1:blob:e6a1b1620717362d7fc8639267e7ca655272da68",
+          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {},
-        "subject": "v1:sha256:2089f1328e1d7d39ae492ed9756ac007b79fdceb8287b963a737912097997409"
+        "subject": "v1:sha256:83d8a8f1e060ab27f505815b4b130195f5099defa9896168e9d7267a0be396c6"
       },
-      "holder": "codex:root/g1-adversary-4",
-      "input_fp": "v1:sha256:b4071c319f38ccd38f5068a6f5740086be68de3e68647d63aca8d448d604cd96",
+      "holder": "codex:root/g1-portable-adversary",
+      "input_fp": "v1:sha256:7e4decd32d33e4fa651816351eb7d37ecf8f3083dcbe4cc69bdea71b2841935a",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "f2dec64b213da81f624b8509c78d92f38a0345ce",
-          "commit": "257e1b70ae4164c7296f5137c1a8a30b30666922",
+          "blob": "41067ecd39f3d1e6f6eb3c0f48f3669c55c53bc3",
+          "commit": "78ca58b3aabcb12ef92795e7c012670c22e0a8eb",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the internal capture and cache test boundary."
+        "summary": "Constrain symlink handling when committed snapshots are materialized and analyzed."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "commit": "f6423531c156c582e98c82681f9691999e6149a6"
+          "blob": "e6a1b1620717362d7fc8639267e7ca655272da68",
+          "commit": "2f883c1ae68c06490174c89b36940c30821b9e67"
         }
       },
       "status": "done"

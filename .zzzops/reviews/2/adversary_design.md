@@ -1,3 +1,3 @@
 # Adversary re-review
 
-No new material adversarial findings. The design follows the owner's ordinary test-runner stable-input decision, explicitly records that assumption in reports and receipts, and does not claim that mid-run immutability was proven. It retains preflight rejection of a known target mismatch, exact pinned analyzer endpoints, independent validation of conditional requirements, fail-closed full fallback and a trusted receipt store outside checkout-controlled inputs. Materialization for analysis remains subject to symlink containment.
+No new material adversarial findings in the multilingual adapter changes. The design requires independent validation of each component model and context, cross-boundary dependent mapping for bounded gaps, full fallback for unknown boundaries, and version/platform/tag/dependency evidence for Go. Unresolved or unmodeled inputs cannot be excluded merely to satisfy the required positive sparse fixture.

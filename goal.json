@@ -268,6 +268,113 @@
       },
       "status": "done"
     },
+    "review_impl": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "review_impl:1:1",
+          "impact": "The report can validate and cache analysis of a different source tree than the exact commit requested.",
+          "lens": "correctness",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 5,
+          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
+          "text": "src/impact/analyze.ts Git commands honor replace refs: a requested commit ID can be paired with a different commit’s tree and replacement blob bytes. Disable replacement effects or verify real objects for every endpoint/tree/blob read.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:1:2",
+          "impact": "The analyzer cannot enable sparse execution for any normal repository, even with identical endpoints and a compatible passing baseline.",
+          "lens": "compliance",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 5,
+          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
+          "text": "src/impact/analyze.ts unconditionally emits an unbounded gap for every changed tree and every identical nonempty tree. Implement justified supported completeness or bounded scopes, including a valid unchanged populated tree, rather than always forcing full-profile fallback.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:1:3",
+          "impact": "Normal installations report an indistinguishable unavailable grammar identity and always disable extraction caching, undermining reproducibility and repeated-run performance.",
+          "lens": "correctness",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 5,
+          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
+          "text": "src/impact/analyze.ts derives grammar identity and the raw extraction cache key from package-lock.json, but package.json excludes this file from the npm distribution. Use shipped actual grammar identities and enable safe extraction cache reuse in installed packages.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:1:4",
+          "impact": "The current test suite passes while exact identity can be falsified and sparse execution and production cache reuse never occur.",
+          "lens": "tests",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 8,
+          "target_fp": "v1:sha256:452c91b64eb8a79df5c662602854c03e7b5d506aa992429c206b2019f217d34f",
+          "text": "test/conservative-impact-contract.test.ts checks valid empty only for empty repositories and lacks replacement-ref and actual packed-install checks. Add regression coverage for immutable commit/tree/blob IDs under Git replacements, unchanged populated trees without fabricated full fallback, and installed package grammar identity/cache reuse.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T02:08:21Z",
+      "fp_parts": {
+        "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
+        "inputs": {
+          "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
+          "code": "v1:sha256:2f5d4d3c54e0f2567b941a2696fa3a29c9d3306de47ebe34d51b81a79fcd57a1",
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "tests": "v1:sha256:8362cf3cf678387c4f45ad3b919284b4d4b56ed257b7f24af813709d7c6ebaf1"
+        },
+        "lenses": [
+          "compliance",
+          "correctness",
+          "missing",
+          "tests",
+          "craft"
+        ],
+        "policy": {},
+        "subject": "v1:sha256:1397144183e77f5aa23ee2c1a418c22597b6f0bc44a99cfff6be355657093403"
+      },
+      "holder": "codex:root/g1-commit-review-impl",
+      "input_fp": "v1:sha256:6c3fb59de6eb2648e04fb3995f69bcfb3b3e9160d3a4e5a79797b3b1a5ee9115",
+      "ok": true,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "f1b3b07d7331c0fb37c3efdf8b30bb3914480368",
+          "commit": "357d120d819e3e10e690c5e65df55ca7c9e67f54",
+          "path": ".zzzops/reviews/1/review_impl.md"
+        },
+        "summary": "Exact Git identity, universally forced fallback, and packaged grammar/cache behavior require correction."
+      },
+      "reason": "new",
+      "reviewed": {
+        "code": {
+          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
+          "change": "a847d6b33e2838c3ef77b4fe2a08c51bd0e4eb05",
+          "commit": "736dc2f86b7c6a62714eadbc6b4042a9c46f10c2",
+          "tree": "d8766808e7bf581a41a6c748226fc1491091d870"
+        }
+      },
+      "status": "done"
+    },
     "review_tests": {
       "attempt": 5,
       "correction_runs": 4,

@@ -16,6 +16,7 @@ import { extractorStamp, readExtractCache, writeExtractCache } from "../graph/ex
 import type { GraphV1 } from "../graph/types.js";
 import { loadConservativeGraph, readCommittedSnapshot } from "./coordinator.js";
 import { preserveCandidates, type CandidateFact } from "./facts.js";
+import { trustedCacheDirectory, secureNewWindowsCacheDirectory } from "./cache-security.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 function git(dir: string, args: string[]): Buffer {
@@ -37,7 +38,7 @@ interface Gap { revision: "from" | "to"; path: string | null; kind: string; deta
 /** Hash the grammar and runtime bytes actually shipped/loaded, not an npm lock
  * file (the latter is absent in installed packages). Missing assets are included
  * as explicit markers, so later installation cannot reuse their old cache. */
-function grammarIdentity(): string {
+export function grammarIdentity(): string {
   const hash = createHash("sha256");
   const req = createRequire(import.meta.url);
   const add = (name: string, load: () => Uint8Array) => {
@@ -54,6 +55,9 @@ function grammarIdentity(): string {
   try { for (const name of readdirSync(queryDir).filter(n => n.endsWith(".scm")).sort()) add(`query:${name}`, () => readFileSync(join(queryDir,name))); }
   catch { hash.update("<missing-query-dir>"); }
   for (const module of ["web-tree-sitter", "web-tree-sitter/web-tree-sitter.wasm", "web-tree-sitter-depth", "web-tree-sitter-depth/tree-sitter.wasm"]) add(`runtime:${module}`, () => readFileSync(req.resolve(module)));
+  // Breadth parsing dynamically imports the ESM entry, which is distinct from
+  // the CJS export returned by createRequire.resolve("web-tree-sitter").
+  add("runtime:web-tree-sitter:esm", () => readFileSync(fileURLToPath(import.meta.resolve("web-tree-sitter"))));
   return hash.digest("hex");
 }
 /** Raw per-file facts only. Navigation and resolved graph caches are never read. */
@@ -61,17 +65,19 @@ function extractionCache(repo: string, version: string, grammar: string): string
   try {
     const stamp = extractorStamp(); if (!stamp) return null;
     const home = realpathSync(homedir());
+    if (!trustedCacheDirectory(home,"parent")) return null;
     const parent = join(home, ".cache"); mkdirSync(parent, {mode:0o700,recursive:true});
-    const parentStat = lstatSync(parent);
-    if (!parentStat.isDirectory() || parentStat.isSymbolicLink() || (process.getuid && parentStat.uid !== process.getuid()) || (parentStat.mode & 0o022) !== 0) return null;
-    const base = join(parent, "trail-impact"); mkdirSync(base, {mode:0o700,recursive:true});
-    const st = lstatSync(base);
-    if (!st.isDirectory() || st.isSymbolicLink() || (process.getuid && st.uid !== process.getuid()) || (st.mode & 0o077) !== 0) return null;
+    if (!trustedCacheDirectory(parent,"parent")) return null;
+    const base = join(parent, "trail-impact");
+    let created = false;
+    try { mkdirSync(base, {mode:0o700}); created = true; }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error; }
+    if (created && !secureNewWindowsCacheDirectory(base)) return null;
+    if (!trustedCacheDirectory(base,"private")) return null;
     const key = createHash("sha256").update(realpathSync(repo)).update("\0").update(stamp).update("\0").update(version)
       .update("\0").update(process.platform).update("\0").update(process.arch).update("\0").update(process.versions.node).update("\0").update(grammar).digest("hex");
     const out = join(base, key); mkdirSync(out, {mode:0o700,recursive:true});
-    const outStat = lstatSync(out);
-    if (!outStat.isDirectory() || outStat.isSymbolicLink() || (process.getuid && outStat.uid !== process.getuid()) || (outStat.mode & 0o077) !== 0) return null;
+    if (!trustedCacheDirectory(out,"private")) return null;
     return out;
   } catch { return null; }
 }
@@ -227,11 +233,10 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   if (changes.length) {
     const oldGraph = await graphFor(repo, from, "from", gaps, version, grammar);
     const newGraph = await graphFor(repo, to, "to", gaps, version, grammar);
-    affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
-    // Existing navigation extraction and resolution deliberately omit unresolved
-    // calls and do not model all dependency kinds. They can inform impact but
-    // cannot justify exclusions until completeness is demonstrated.
+    // Existing navigation resolution cannot justify excluding unmodeled
+    // dynamic calls, resources or test-runner inputs.
     for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:"Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled", scope:null});
+    affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
   } else if (treeEntries(repo,from.tree).length > 0) {
     // A pinned tree compared with itself has no source changes. Analyze it
     // nonetheless: inaccessible or unsupported inputs must remain visible, and

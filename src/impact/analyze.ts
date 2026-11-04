@@ -5,7 +5,7 @@ import { lstatSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, renameSy
 import { homedir, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildGraph } from "../graph/build.js";
+import { buildGraph, tierOf } from "../graph/build.js";
 import { readGraph } from "../graph/write.js";
 import { extractorStamp, readExtractCache, writeExtractCache } from "../graph/extract-cache.js";
 import type { GraphV1 } from "../graph/types.js";
@@ -85,7 +85,7 @@ function compareWorktree(repo: string, from: Endpoint, captured: CapturedTree): 
   return changes;
 }
 /** Materialize blobs by object ID, never following links or checking out over user files. */
-function materialize(repo: string, tree: string, root: string, revision: "from" | "to", gaps: Gap[]): void {
+function materialize(repo: string, tree: string, root: string, revision: "from" | "to", gaps: Gap[], paths: string[]): void {
   const records = git(repo, ["ls-tree", "-r", "-z", "--full-tree", tree]).toString("utf8").split("\0");
   for (const record of records) {
     if (!record) continue;
@@ -97,6 +97,7 @@ function materialize(repo: string, tree: string, root: string, revision: "from" 
     if (type === "commit") throw new Error(`required submodule snapshot is unavailable: ${path}`);
     if (mode === "120000") { gaps.push({revision, path, kind:"symbolic_link", detail:"symbolic-link targets are not modeled", scope:null}); continue; }
     if (mode !== "100644" && mode !== "100755") throw new Error(`unsupported file mode for ${path}`);
+    paths.push(path);
     const target = join(root, ...path.split("/"));
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, git(repo, ["cat-file", "blob", oid]), { mode: mode === "100755" ? 0o755 : 0o644 });
@@ -106,14 +107,16 @@ async function graphFor(repo: string, tree: string, revision: "from" | "to", gap
   const temp = mkdtempSync(join(tmpdir(), "trail-impact-"));
   try {
     const root = join(temp, "tree"), out = join(temp, "graph");
+    const inputPaths: string[] = [];
     mkdirSync(root);
     if (captured) {
       for (const [path, file] of captured.files) {
         if (file.mode === "120000") { gaps.push({revision,path,kind:"symbolic_link",detail:"symbolic-link targets are not modeled",scope:null}); continue; }
+        inputPaths.push(path);
         const target = join(root, ...path.split("/"));
         mkdirSync(dirname(target), { recursive:true }); writeFileSync(target, file.bytes, {mode:file.mode === "100755" ? 0o755 : 0o644});
       }
-    } else materialize(repo, tree, root, revision, gaps);
+    } else materialize(repo, tree, root, revision, gaps, inputPaths);
     try {
       const rawCache = extractionCache(repo, version);
       if (rawCache) writeExtractCache(out, readExtractCache(rawCache));
@@ -146,8 +149,14 @@ async function graphFor(repo: string, tree: string, revision: "from" | "to", gap
       for (const error of result.errors) gaps.push({revision,path:null,kind:"index_failure",detail:error,scope:null});
       if (result.nativeFallback) gaps.push({revision,path:null,kind:"parser_fallback",detail:"A depth parser was unavailable",scope:null});
       for (const path of result.undecodable) gaps.push({revision,path,kind:"unsupported_encoding",detail:"Source could not be decoded for extraction",scope:null});
-      for (const fact of result.candidateFacts) gaps.push({revision,path:fact.path,kind:"unresolved_call",scope:null,
-        detail:`Call ${fact.name} from ${fact.source} is not exhaustively resolved; recorded candidates are possibilities, not a complete target set`,
+      const indexedPaths = new Set(result.graph.nodes.filter(n => n.kind === "file").map(n => n.path));
+      for (const path of inputPaths) {
+        const tier = tierOf(path);
+        if ((tier.lang || tier.generic || tier.container) && !indexedPaths.has(path))
+          gaps.push({revision,path,kind:"unindexed_source",detail:"Recognized source was not represented in the snapshot graph",scope:null});
+      }
+      for (const fact of result.candidateFacts) gaps.push({revision,path:fact.path,kind:fact.relation === "calls" ? "unresolved_call" : "unresolved_reference",scope:null,
+        detail:`${fact.relation} ${fact.name} from ${fact.source} is not exhaustively resolved; recorded candidates are possibilities, not a complete target set`,
         source:fact.source,relation:fact.relation,name:fact.name,candidates:fact.candidates,candidate_basis:fact.basis});
       return result.graph;
     } catch (error) {

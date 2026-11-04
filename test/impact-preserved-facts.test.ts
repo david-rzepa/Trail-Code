@@ -36,6 +36,15 @@ test("unknown calls remain explicit even when no defensible candidate exists", (
   assert.deepEqual(result.edges,[]);
 });
 
+test("relative named references retain all matching extension variants", () => {
+  const nodes = [caller,node("lib.ts#Thing","Thing","class","lib.ts"),node("lib.tsx#Thing","Thing","class","lib.tsx"),node("other.ts#Thing","Thing","class","other.ts")];
+  const raw: RawEdge[] = [{source:caller.id,file:"a.ts",relation:"references",name:"Thing",specifier:"./lib.js"}];
+  const result = preserveCandidates(nodes,raw);
+  assert.deepEqual(result.facts[0].candidates,["lib.ts#Thing","lib.tsx#Thing"]);
+  assert.equal(result.facts[0].basis,"module-specifier");
+  assert.ok(result.edges.every(e => e.relation === "references"));
+});
+
 test("real impact report retains ambiguous and unresolved call facts after warm cache", () => {
   const dir = mkdtempSync(join(tmpdir(),"impact-facts-"));
   const git = (...args:string[]) => {
@@ -46,7 +55,9 @@ test("real impact report retains ambiguous and unresolved call facts after warm 
     git("init","-b","main"); git("config","user.name","Test"); git("config","user.email","test@example.invalid");
     writeFileSync(join(dir,"a.ts"),"function same() {}\nfunction same() {}\nexport function caller() { same(); missing(); }\n");
     writeFileSync(join(dir,"bad.ts"),Buffer.from([0xfe,0xff,0x00,0x66]));
-    git("add","."); git("commit","-m","before"); const from = git("rev-parse","HEAD");
+    writeFileSync(join(dir,".gitignore"),"excluded.ts\n");
+    writeFileSync(join(dir,"excluded.ts"),"export const overlooked = 1;\n");
+    git("add","."); git("add","-f","excluded.ts"); git("commit","-m","before"); const from = git("rev-parse","HEAD");
     writeFileSync(join(dir,"a.ts"),"function same() { return 1; }\nfunction same() {}\nexport function caller() { same(); missing(); }\n");
     git("add","."); git("commit","-m","after"); const to = git("rev-parse","HEAD");
     const invoke = () => {
@@ -61,6 +72,7 @@ test("real impact report retains ambiguous and unresolved call facts after warm 
     const missing = first.analysis_gaps.find((g:any) => g.revision === "to" && g.kind === "unresolved_call" && g.name === "missing");
     assert.deepEqual(missing.candidates,[]);
     assert.ok(first.analysis_gaps.some((g:any) => g.kind === "unsupported_encoding" && g.path === "bad.ts"));
+    assert.ok(first.analysis_gaps.some((g:any) => g.kind === "unindexed_source" && g.path === "bad.ts"));
     assert.equal(first.analysis_status,"incomplete");
     assert.ok(first.required_fallback_scopes.some((s:any) => s.kind === "full_profile"));
   } finally { rmSync(dir,{recursive:true,force:true}); }

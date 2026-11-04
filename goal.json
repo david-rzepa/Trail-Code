@@ -187,6 +187,35 @@
       "reason": "stale",
       "status": "done"
     },
+    "implement": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T22:22:44Z",
+      "fp_parts": {
+        "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
+        "inputs": {
+          "base": "v1:sha256:c17f2f3e7e9837983b445a232a40ccd115e28b930a54a7cd667136e2810ea9bf",
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
+          "tests": "v1:sha256:5839adf7febe0d4b8bbfc290609837c328cee3495a16534342b7d97b22c8c5f9"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g2-implement",
+      "input_fp": "v1:sha256:624a45d1d52bf06584c5a788f49010dfd3343ea7d351facdbae7a3c015f98392",
+      "ok": true,
+      "output": {
+        "code": {
+          "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
+          "change": "d3af4fb28ec0c777aef803daef5d15a2e8d70bb4",
+          "commit": "bd7b15389392532f45d9ee1867dd799486d06714",
+          "tree": "c90185221ab4c3087b72fc3564dc204090264849"
+        },
+        "summary": "Added commit-to-commit test verification with independently checked model requirements, real Go and Node selective runners, full-workflow fallback, and chained private local receipts. The required contract suite passed 27/27 and the expanded run passed 31/31; after two final CLI reporting fixes, targeted tests and the project build passed. Linux was tested; macOS and Windows receipt ACL handling and process behavior remain unverified on those platforms."
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "review_design": {
       "attempt": 7,
       "correction_runs": 6,

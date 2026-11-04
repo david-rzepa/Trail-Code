@@ -1,3 +1,3 @@
 # Adversary re-review
 
-No material adversarial findings in the clarification. Missing sparse-only conditional context forbids sparse selection; a full run may establish a full-profile receipt only when its independently required workflow and receipt identity are complete. The design also requires separate negative coverage for incomplete full-run identity. This preserves fallback without treating missing evidence as permission to skip tests.
+No new material adversarial findings. The added multilingual release evidence exercises real Go and Node execution, independently validates context and bounded cross-scope mappings, and requires fallback for unknown or unsupported behavior. It retains receipt forgery checks and does not conflate reduced test counts with correctness or speed.

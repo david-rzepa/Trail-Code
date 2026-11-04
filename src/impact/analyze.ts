@@ -200,14 +200,14 @@ async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" 
     }
   } finally { rmSync(temp, { recursive: true, force: true }); }
 }
-async function nodeStaticModel(repo: string, endpointValue: Endpoint): Promise<StaticModel | null> {
+async function nodeStaticModel(repo: string, endpointValue: Endpoint, revision: "from" | "to", gaps: Gap[]): Promise<StaticModel | null> {
   try {
     const files = new Map<string,Buffer>();
     for (const entry of treeEntries(repo,endpointValue.tree)) {
       if (entry.mode !== "100644" && entry.mode !== "100755") return null;
       files.set(entry.path,git(repo,["cat-file","blob",entry.oid]));
     }
-    return await certifyNodeStatic(files);
+    return await certifyNodeStatic(files, path => gaps.push({revision,path,kind:"parse_error",detail:"Source contains parser errors or missing tokens",scope:null}));
   } catch { return null; }
 }
 /** Attach certified static file imports to the graph before reverse traversal. */
@@ -275,8 +275,10 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
     // V1 retains its established conservative behavior. V2 may report a
     // conditional file-level graph only after certifying both pinned trees.
     const configChanged = changes.some(c => [c.old_path,c.new_path].some(p => p === "package.json" || p === "tsconfig.json"));
-    const oldModel = schemaVersion === 2 && !configChanged ? await nodeStaticModel(repo,from) : null;
-    const newModel = schemaVersion === 2 && !configChanged ? await nodeStaticModel(repo,to) : null;
+    const oldCandidate = schemaVersion === 2 ? await nodeStaticModel(repo,from,"from",gaps) : null;
+    const newCandidate = schemaVersion === 2 ? await nodeStaticModel(repo,to,"to",gaps) : null;
+    const oldModel = configChanged ? null : oldCandidate;
+    const newModel = configChanged ? null : newCandidate;
     if (oldModel && newModel && oldGraph && newGraph) {
       try {
         addStaticImports(oldGraph,oldModel); addStaticImports(newGraph,newModel);

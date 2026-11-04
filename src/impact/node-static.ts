@@ -175,19 +175,24 @@ function configValid(files:ReadonlyMap<string,Buffer>):boolean {
   } catch { return false; }
 }
 /** Certify only flat ESM dependency semantics; unsupported constructs return null. */
-export async function certifyNodeStatic(files:ReadonlyMap<string,Buffer>): Promise<StaticModel | null> {
-  if (!files.has("package.json") || !files.has("tsconfig.json") || !configValid(files)) return null;
+export async function certifyNodeStatic(files:ReadonlyMap<string,Buffer>, onParseError?: (path:string) => void): Promise<StaticModel | null> {
   const paths=new Set([...files.keys()].filter(filePath));
-  if (!paths.size || [...files.keys()].some(p => !paths.has(p) && !["package.json","tsconfig.json"].includes(p))) return null;
   await warmDepthGrammars(["typescript"]);if (!depthReady("typescript")) return null;
   const decoder=new TextDecoder("utf-8",{fatal:true}), imports=new Map<string,string[]>(), builtins=new Set<string>();
+  let valid=true;
   try {
     for (const path of [...paths].sort()) {
       const source=decoder.decode(files.get(path)!);
-      const result=parseDepth("typescript",source,root=>sourceFile(root,path,paths));
-      if (!result) return null;
+      const result=parseDepth("typescript",source,root=>{
+        // Both native and WASM report descendant ERROR and missing-token nodes
+        // through hasError. Never certify a recovered parse tree.
+        if (root.hasError || root.isMissing) { onParseError?.(path); return null; }
+        return sourceFile(root,path,paths);
+      });
+      if (!result) { valid=false; continue; }
       imports.set(path,result.imports);for (const b of result.builtins) builtins.add(b);
     }
   } catch { return null; }
+  if (!valid || !paths.size || !files.has("package.json") || !files.has("tsconfig.json") || !configValid(files) || [...files.keys()].some(p => !paths.has(p) && !["package.json","tsconfig.json"].includes(p))) return null;
   return {imports,builtins:[...builtins].sort()};
 }

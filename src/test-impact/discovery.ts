@@ -12,6 +12,8 @@ export interface DiscoveredComparison {
   /** Each independently established Go package boundary maps to its dependents. */
   scopes: Map<string, string[]>;
   requiredScopes: string[];
+  /** Resolve any analyzer-reported file through the independently rebuilt graph. */
+  dependentUnits(revision: "from" | "to", path: string): string[] | null;
 }
 
 function git(cwd: string, args: string[]): Buffer {
@@ -64,7 +66,8 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
       // The conventional fixture runner only discovers files directly in test/.
       if ([...after.keys()].some(p => p.endsWith('.test.ts') && !inventory.includes(p))) return null;
       const paths = new Set([...closure(changed, a), ...closure(changed, b)]);
-      return { model: { id: 'node-typescript-static-esm', version: '3', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort() }, inventory, affected: inventory.filter(p => paths.has(p)), scopes: new Map(), requiredScopes: [] };
+      return { model: { id: 'node-typescript-static-esm', version: '3', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort() }, inventory, affected: inventory.filter(p => paths.has(p)), scopes: new Map(), requiredScopes: [],
+        dependentUnits: (revision, path) => {const files=revision==='from'?before:after, model=revision==='from'?a:b;if(!files.has(path))return null;const reached=closure(new Set([path]),model);return inventory.filter(p=>reached.has(p));} };
     }
     const a = await certifyGoStatic(before, () => {}), b = await certifyGoStatic(after, () => {});
     if (!a || !b || a.moduleName !== b.moduleName || a.goVersion !== b.goVersion) return null;
@@ -81,6 +84,7 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
       const previous = scopes.get(key) ?? [];
       scopes.set(key, [...new Set([...previous, ...inventory.filter(u => [...reached].some(p => p.endsWith('.go') && unit(p) === u))])].sort());
     }
-    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('.go') && unit(p) === u)), scopes, requiredScopes: [...requiredScopes].sort() };
+    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('.go') && unit(p) === u)), scopes, requiredScopes: [...requiredScopes].sort(),
+      dependentUnits: (revision, path) => {const files=revision==='from'?before:after, model=revision==='from'?a:b;if(!files.has(path))return null;const reached=closure(new Set([path]),model);return inventory.filter(u=>[...reached].some(p=>p.endsWith('.go')&&unit(p)===u));} };
   } catch { return null; }
 }

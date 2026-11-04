@@ -34,6 +34,12 @@ test('public Go profile executes only affected packages after a full baseline',{
     put('plain/plain.go','package plain\nfunc Value() int { return 1 + 0 }\n');const c=commit('change package without tests');
     const plain=verify(b,c);assert.equal(plain.selection_strategy,'selective');assert.equal(plain.verification_status,'validated');
     assert.deepEqual(plain.execution_units,['./plain']);
+    put('.git/info/exclude','plain/testdata/\n');
+    put('plain/testdata/fuzz/FuzzValue/corpus','go test fuzz v1\nstring(\"uncommitted\")\n');
+    const unsafe=spawnSync(process.execPath,['--import',tsx,cli,'verify','--profile','go','--from',b,'--to',c,'--json'],{cwd:dir,encoding:'utf8'});
+    assert.notEqual(unsafe.status,0);const unsafeReport=JSON.parse(unsafe.stdout);
+    assert.ok(unsafeReport.checkout.go_runner_inputs.uncommitted.includes('plain/testdata/fuzz/FuzzValue/corpus'));
+    assert.ok(!unsafeReport.receipt_id,'ignored Go testdata must not establish committed evidence');
   }finally{rmSync(dir,{recursive:true,force:true});}
 });
 

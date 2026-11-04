@@ -5,7 +5,7 @@ import { readCurrentVersion } from '../cli-meta.js';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, realpathSync, lstatSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { discoverComparison } from './discovery.js';
 import { validateModelRequirements } from './model-registry.js';
@@ -74,6 +74,43 @@ function actualInventory(cwd:string, model:'node'|'go'):string[] {
   const result=spawnSync('go',['list','-f','{{.Dir}}','./...'],{cwd,encoding:'utf8'});
   if(result.status!==0) throw Error('Go target discovery failed');
   return result.stdout.trim().split('\n').filter(Boolean).map(p=>p===cwd?'.':`./${p.slice(cwd.length+1).replaceAll('\\','/')}`).sort();
+}
+/** Inspect precisely the files Go says it will compile or embed, including
+ * Git-ignored files. This is a start-of-run checkout check, not monitoring. */
+function goRunnerInputs(cwd:string, commit:string): {complete:boolean; uncommitted:string[]} {
+  try {
+    const root=realpathSync(git(cwd,'rev-parse','--show-toplevel'));
+    const tracked=spawnSync('git',['--no-replace-objects','ls-tree','-r','-z','--name-only','--full-tree',commit],{cwd,encoding:'utf8',maxBuffer:64*1024*1024});
+    if(tracked.status!==0)return {complete:false,uncommitted:[]};
+    const committed=new Set(tracked.stdout.split('\0').filter(Boolean));
+    const fields=['GoFiles','CgoFiles','TestGoFiles','XTestGoFiles','CFiles','CXXFiles','MFiles','HFiles','FFiles','SFiles','SwigFiles','SwigCXXFiles','SysoFiles','EmbedFiles','TestEmbedFiles','XTestEmbedFiles'];
+    const format='{{printf "%q" .Dir}}'+fields.map(field=>`{{range .${field}}}{{printf "\\t%q" .}}{{end}}`).join('');
+    const listed=spawnSync('go',['list','-f',format,'./...'],{cwd,encoding:'utf8',maxBuffer:64*1024*1024});
+    if(listed.status!==0)return {complete:false,uncommitted:[]};
+    const uncommitted=new Set<string>();
+    for(const line of listed.stdout.split(/\r?\n/).filter(Boolean)) {
+      const [directory,...names]=line.split('\t').map(token=>JSON.parse(token));
+      if(typeof directory!=='string'||names.some(name=>typeof name!=='string'))return {complete:false,uncommitted:[]};
+      const inspect=(absolute:string):boolean=>{
+        const path=relative(root,absolute);
+        if(!path||isAbsolute(path)||path==='..'||path.startsWith(`..${sep}`))return false;
+        const gitPath=path.split(sep).join('/');
+        if(!committed.has(gitPath)||lstatSync(absolute).isSymbolicLink())uncommitted.add(gitPath);
+        return true;
+      };
+      for(const name of names)if(!inspect(resolve(directory,name)))return {complete:false,uncommitted:[]};
+      // Go automatically reads fuzz corpora under testdata even when Git
+      // ignores them; go list does not report those files as source inputs.
+      const testdata=join(directory,'testdata');
+      const scan=(path:string):boolean=>{
+        const stat=lstatSync(path);
+        if(stat.isSymbolicLink()||!stat.isDirectory())return inspect(path);
+        return readdirSync(path).every(entry=>scan(join(path,entry)));
+      };
+      if(existsSync(testdata)&&!scan(testdata))return {complete:false,uncommitted:[]};
+    }
+    return {complete:true,uncommitted:[...uncommitted].sort()};
+  } catch {return {complete:false,uncommitted:[]};}
 }
 function fileDigest(path:string):string|null {try{return hash(readFileSync(path).toString('base64'));}catch{return null;}}
 const require=createRequire(import.meta.url);
@@ -197,6 +234,14 @@ export async function verify(request:Request,hooks:Hooks={}) {
     let inventory:string[]=[];let inventoryComplete=false;
     if(profile.model) try {inventory=actualInventory(cwd,profile.model);inventoryComplete=true;} catch { report.fallback_reasons.push('Runner target discovery incomplete'); }
     report.inventory=inventory;report.execution_units=inventory;
+    if(profile.model==='go' && head===to.commit) {
+      const inputs=goRunnerInputs(cwd,to.commit);report.checkout.go_runner_inputs=inputs;
+      if(!inputs.complete||inputs.uncommitted.length) {
+        report.fallback_reasons.push(!inputs.complete?'Go runner inputs could not be inspected':'Go runner would use inputs outside the target commit');
+        if(!args.plan){report.exit_code=1;report.verification_status='incomplete';}
+        return report;
+      }
+    }
     if(profile.model==='node'&&!profile.fullCommand) {const loader=loaderFor(cwd);report.workflow.full=loader?[process.execPath,'--import',loader,'--test',...inventory]:null;}
     const repo=realpathSync(git(cwd,'rev-parse','--git-common-dir').startsWith('/')?git(cwd,'rev-parse','--git-common-dir'):resolve(cwd,git(cwd,'rev-parse','--git-common-dir')));
     let stateRoot=request.stateRoot;
@@ -221,6 +266,7 @@ export async function verify(request:Request,hooks:Hooks={}) {
       const aid=impact?.analysis_identity;
       const analyzerIdentity=aid?.analyzer_version===analyzerVersion && aid.grammar_identity===grammarIdentity() && aid.extractor_identity===(extractorStamp()??'unavailable') && aid.resolver_identity===(extractorStamp()??'unavailable') && aid.policy_identity===(profile.model==='go'?'conditional-go-static-v2':'conditional-node-static-v3') && aid.mode==='conservative';
       let valid=analysis.code===0 && identity && analyzerIdentity && impact?.schema_version===2 && impact.analysis_status==='conditional' && discovered!==null && validateModelRequirements(impact.supported_model,impact.context_requirements,discovered.model) && JSON.stringify(inventory)===JSON.stringify(discovered.inventory);
+      const analyzerUnits=new Set<string>();
       if(valid && (!Array.isArray(impact.analysis_gaps)||!Array.isArray(impact.required_fallback_scopes)||!Array.isArray(impact.affected)||!Array.isArray(impact.changes))) valid=false;
       if(valid) {
         if(discovered!.requiredScopes.some(scope=>!impact.analysis_gaps.some((gap:any)=>gap.scope===scope)))valid=false;
@@ -231,6 +277,12 @@ export async function verify(request:Request,hooks:Hooks={}) {
           const expectedTree=gap.revision==='from'?from.tree:gap.revision==='to'?to.tree:null;
           const boundary=gap.boundary;
           if(!expectedTree||gap.kind!=='opaque_embedded_resource'||!discovered!.requiredScopes.includes(gap.scope)||!boundary||boundary.kind!=='go_package'||boundary.tree!==expectedTree||`go-package:${boundary.module}:${boundary.package_path}`!==gap.scope||JSON.stringify(boundary.model)!==JSON.stringify({id:'go-static-packages',version:'2'}))valid=false;
+        }
+        for(const item of impact.affected) {
+          if(!item || typeof item!=='object' || !['from','to'].includes(item.revision) || typeof item.path!=='string' || !item.path || !(item.entity===null || typeof item.entity==='string') || !Array.isArray(item.reasons) || !item.reasons.length || item.reasons.some((reason:any)=>!reason || !['changed','dependency'].includes(reason.kind) || typeof reason.detail!=='string')) {valid=false;continue;}
+          const units=discovered!.dependentUnits(item.revision,item.path);
+          if(units===null) {valid=false;continue;}
+          for(const unit of units)analyzerUnits.add(unit);
         }
         const named=new Set(impact.affected.filter((item:any)=>typeof item?.path==='string').map((item:any)=>profile.model==='go' && item.path.endsWith('.go') ? (item.path.includes('/') ? `./${item.path.slice(0,item.path.lastIndexOf('/'))}` : '.') : item.path));
         if(discovered!.affected.some(unit=>!named.has(unit)))valid=false;
@@ -269,7 +321,7 @@ export async function verify(request:Request,hooks:Hooks={}) {
         report.requirements.push({id:`dependency:${dependency}`,valid:pass,collector_version:1,observed_digest:raw.observed});if(!pass)valid=false;
       }
       if(valid && baseline && !args.all) {
-        const selected=new Set(discovered!.affected);
+        const selected=new Set([...discovered!.affected,...analyzerUnits]);
         for(const scope of impact.required_fallback_scopes) for(const unit of discovered!.scopes.get(scope.scope)??[])selected.add(unit);
         report.execution_units=inventory.filter(unit=>selected.has(unit));report.selection_strategy='selective';
       } else report.fallback_reasons.push('Conditional model or execution evidence did not establish a safe sparse selection');

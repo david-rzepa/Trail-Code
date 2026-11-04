@@ -334,11 +334,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 3,
-      "carried_by": "base",
-      "correction_runs": 1,
+      "attempt": 4,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T21:41:35Z",
+      "finished_at": "2026-11-04T21:46:52Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -350,7 +349,7 @@
       "frozen": [
         "test/test-impact-verification-contract.test.ts"
       ],
-      "holder": "codex:root/g2-multilingual-tests2",
+      "holder": "codex:root/g2-test-correction3",
       "input_fp": "v1:sha256:5ea89816a5ba42f93e9b3f02151eb2f1f760bf2c56e315df9fb211531ce90738",
       "ok": true,
       "output": {
@@ -360,33 +359,31 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 8586,
-              "id_or_scope": "test/test-impact-verification-contract.test.ts (23 Node/Go cases)",
-              "observation": "Incomplete red observation: the Node analyzer fixture passes and real Node and Go baseline/changed runner fixture setup and the Go bounded-resource analyzer run; 22 cases stop at import of the unimplemented G2 verification module, so G2 assertions have not executed."
+              "duration_ms": 5083,
+              "id_or_scope": "test/test-impact-verification-contract.test.ts (27 Node/Go cases)",
+              "observation": "Incomplete red observation: the Node analyzer case passed, and real Node/Go runner setup and Go analysis ran. The remaining 26 cases stopped at the missing G2 verification module, including all new receipt and CLI cases; no new G2 behavior executed."
             }
           ],
-          "checkpoint": "f63b4c29f71801828c6aa5e760a57c1ed755c970",
+          "checkpoint": "6934d7bf9fb6ff302d8eb25dc810a1830b856daa",
           "commands": [
             {
               "cmd": "PATH=/tmp/trail-g1-go/go/bin:$PATH node --import tsx --test test/test-impact-verification-contract.test.ts",
-              "duration_ms": 8665,
+              "duration_ms": 5128,
               "exit": 1
             }
           ],
-          "summary": "Measured with Go 1.27.3 on PATH. One case passed and 22 failed before G2 behavior could run; this is fixture setup and early failure, not evidence that G2 behavior passes.",
-          "total_ms": 8665
+          "summary": "Go 1.27.3 on PATH; 1 pass, 26 missing-module failures before implementation. Fixture setup and early failure only, not a G2 behavioral verification.",
+          "total_ms": 5128
         },
         "responses": {
-          "review_tests:1:1": "fixed: Added post-collection fault injection for independent missing and incompatible context, target/profile/inventory binding and incomplete discovery, plus real Go build and platform environment changes.",
-          "review_tests:1:2": "fixed: Added predecessor-chain, copied checkout evidence, unsafe symlink store, failed and cancelled execution, interrupted and concurrent receipt publication cases.",
-          "review_tests:1:3": "fixed: Added production-entry subprocess plan and JSON check, original full-workflow checks, fixture setup/runner/gate ordering and child-output capture, cancellation and stable-input reporting. Full production execution awaits implementation.",
-          "review_tests:1:4": "fixed: Added inverse change, new test discovery, removed Go source, import rebinding, mixed-language, unverified scope, explicitly classified docs and unknown resource cases."
+          "review_tests:1:2": "fixed: Added reuse rejection for a different profile, corrupt predecessor while preserving the selective child, and deterministic receipt-store replacement before read. Existing tests cover missing predecessor, forged copied evidence, symlink, failure, cancellation, interrupted publication and concurrent publishing. An anchored safe directory descriptor may continue using the original store, but the replacement must not be read or written.",
+          "review_tests:1:3": "fixed: Added subprocess tests invoking the production CLI on a real Git fixture that copies the repository full runner unchanged, executing fallback and build gate, checking child logs separate from JSON, failure exit, cancellation and no reusable cancelled receipt. Existing tests cover preparation ordering, plan output, preflight and stable-input reporting. These new paths cannot execute until the G2 module exists."
         },
         "tests": {
           "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
-          "change": "74fdabd339139520c4e3f1b5cc08685ed445ee72",
-          "commit": "e60fa56de8613b28cb59c716cc1b62b1c69d85e2",
-          "tree": "9613e1af5101b3ac31f7bda48994af10685667f2"
+          "change": "ea4fdc1c3a8ed443530b0894f3e0943dcc6967b2",
+          "commit": "6934d7bf9fb6ff302d8eb25dc810a1830b856daa",
+          "tree": "35dfc0e7218f9ae66cd4f60be0595413ad932aef"
         }
       },
       "reason": "reopened",

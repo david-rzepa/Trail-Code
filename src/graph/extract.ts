@@ -679,8 +679,10 @@ function walk(node: SyntaxNode, ctx: WalkCtx, out: NodeV1[], edges: RawEdge[], m
   // captured as a (harmlessly unresolvable, but wrong) `calls` edge instead.
   const callTypes = CALL_TYPES[ctx.lang];
   if (isImport(node, ctx.lang)) {
-    const spec = importSpecifier(node, ctx.lang);
-    if (spec) edges.push({ source: ctx.rel, relation: "imports", specifier: spec, file: ctx.rel });
+    const specs = ctx.lang === "python" && node.type === "import_statement"
+      ? node.namedChildren.map(c => c.type === "aliased_import" ? c.namedChildren.find(x => x.type === "dotted_name")?.text : c.type === "dotted_name" ? c.text : undefined).filter((s):s is string => !!s)
+      : [importSpecifier(node, ctx.lang)].filter((s):s is string => !!s);
+    for (const spec of specs) edges.push({ source: ctx.rel, relation: "imports", specifier: spec, file: ctx.rel });
     // Imported identifiers are declarations, not uses. The import-binding pass
     // above already recorded them, so do not descend and emit false references.
     return;
@@ -2444,6 +2446,7 @@ function tsReceiver(fn: SyntaxNode): string | undefined {
 const R_IMPORT_CALLS = new Set(["library", "require", "source"]);
 
 function isImport(node: SyntaxNode, lang: Language): boolean {
+  if ((lang === "typescript" || lang === "tsx") && node.type === "export_statement" && node.childForFieldName("source")) return true;
   // Go: match the per-import leaf, so single (`import "fmt"`) and grouped
   // (`import ( … )`) forms each yield one edge as the walk recurses into the list.
   if (lang === "go") return node.type === "import_spec";

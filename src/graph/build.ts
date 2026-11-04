@@ -128,6 +128,11 @@ function applyMinSubstanceGuard(scopes: ScopeV1[], nodes: NodeV1[]): ScopeV1[] {
 }
 
 export interface GraphBuildOptions {
+  /** Observe raw, pre-resolution facts for conservative analysis. Navigation
+   * resolution remains unchanged. The callback must not mutate the facts. */
+  onRawFacts?: (nodes: readonly NodeV1[], edges: readonly RawEdge[]) => void;
+  /** Report inputs the navigation pipeline cannot decode to conservative callers. */
+  onUndecodableInput?: (path: string) => void;
   /** Override the output dir (default: `<root>/.context`). */
   contextDir?: string;
   /** Replay unchanged files from the extraction cache instead of re-parsing them
@@ -303,6 +308,7 @@ export async function buildGraph(
       return;
     }
     if (source === null) {
+      opts.onUndecodableInput?.(rel);
       // Unsupported encoding (UTF-16BE) — a skip, never an error: recorded with
       // an empty entry so the freshness probe doesn't treat it as new every run.
       entries[rel] = { size: f.size, mtimeMs: f.mtimeMs, hash: "", nodes: [], rawEdges: [] };
@@ -354,6 +360,7 @@ export async function buildGraph(
     files: entries,
   });
 
+  opts.onRawFacts?.(nodes, rawEdges);
   const edges = resolveEdges(nodes, rawEdges, { goModules: readGoModules(root, repoFiles) });
 
   // Guard 5 (minimum-substance): node counts aren't known until nodes are

@@ -108,31 +108,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T01:04:13Z",
+      "finished_at": "2026-11-04T17:32:38Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "review_design:5:1",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:4165cb79bd938ec1bc92abe81f4740f320596b8d9bf947b5c1922308f9db6d52",
-          "doc": "v1:blob:9406acaa0a2efcacd6bd0583042ca4228edc9a46",
-          "review": "v1:sha256:b6ac3b4d70f73a702e6bb0d43e778c18904c8d0cba3efe5050334b7fab1820d6",
+          "adversary": "v1:sha256:0e9946c5893f76ea4a00eee0c4989c70e766d7430f704d91062cdf3386924a8b",
+          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
+          "review": "v1:sha256:b2b1aacd7d993642b85c778de99a5debc5b4e66363ccb1e401041132fb1a71d7",
           "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-commit-filter",
-      "input_fp": "v1:sha256:2974eac1e40fc73cddd9fb179d4989c8385b1b85fb8ebb1e8869b5c3ab379ff3",
+      "holder": "codex:root/g2-normal-filter",
+      "input_fp": "v1:sha256:b162ee17dd11533a90c938ddd5320747af4ea0a7196d47149c1c53347e5598f9",
       "ok": true,
       "output": {
-        "summary": "The adversarial review approved; the design review found one material gap in the viability of a portable execution-identity mechanism. This finding reopens design. No non-material notes require verdicts.",
+        "summary": "Both reviews approve the owner-directed stable-input execution model. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

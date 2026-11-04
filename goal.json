@@ -136,31 +136,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 11,
-      "correction_runs": 10,
+      "attempt": 12,
+      "correction_runs": 11,
       "findings": [],
-      "finished_at": "2026-11-04T19:11:55Z",
+      "finished_at": "2026-11-04T19:14:41Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "review_design:11:1",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:d1a510bf57bc43027c77939a863a0173b9bd899eab9685ccf70e97bb16617b99",
-          "doc": "v1:blob:5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
-          "review": "v1:sha256:354c5ff99256b48439cc0a601e485ecadb646eac00b584577d4f683f2f219e8f",
+          "adversary": "v1:sha256:6e43e318c08fc607a0e97db0dada1264016fbfa48834104e02cc9b45512c9293",
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
+          "review": "v1:sha256:ce602e085e36fb199156ee0ff078c1027f6c7a3a26938a77f922be406e241466",
           "spec": "v1:sha256:a325a50fefccbdcf4afbe6f9596c2568dbe228071d37a46ed7ee580e3d25e79c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-multilingual-filter2",
-      "input_fp": "v1:sha256:3b5c61e02b19907887ddcd0609a1ecbe2d3f3b85eee4482f262bb65f6e2c409b",
+      "holder": "codex:root/g1-multilingual-filter3",
+      "input_fp": "v1:sha256:c8ce5d5563c8a78cf73cbd717159f537cc57a5b26ea9e702d1dba699a051a3d8",
       "ok": true,
       "output": {
-        "summary": "Adversarial review resolved the execution-model conflict. The design review raised one material finding requiring a concrete non-Node sparse-selection acceptance floor. It reopens design. No non-material notes require verdicts.",
+        "summary": "Both reviews approve the minimum Go sparse-selection acceptance slice; the prior finding is resolved. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

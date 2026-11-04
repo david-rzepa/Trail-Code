@@ -226,32 +226,36 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T22:22:44Z",
+      "finished_at": "2026-11-04T23:07:26Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
           "base": "v1:sha256:c17f2f3e7e9837983b445a232a40ccd115e28b930a54a7cd667136e2810ea9bf",
           "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
-          "tests": "v1:sha256:5839adf7febe0d4b8bbfc290609837c328cee3495a16534342b7d97b22c8c5f9"
+          "tests": "v1:sha256:3f19ccbfc7b4eaeadbc7f52c76a574506bfb2645ed9e009dda48dbd7399c155f"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-implement",
-      "input_fp": "v1:sha256:624a45d1d52bf06584c5a788f49010dfd3343ea7d351facdbae7a3c015f98392",
+      "holder": "codex:root/g2-implement2",
+      "input_fp": "v1:sha256:83d4afb4235d97770de877773e9a17ec9690fed217c67e861b7d435a3067490f",
       "ok": true,
       "output": {
         "code": {
           "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
-          "change": "d3af4fb28ec0c777aef803daef5d15a2e8d70bb4",
-          "commit": "bd7b15389392532f45d9ee1867dd799486d06714",
-          "tree": "c90185221ab4c3087b72fc3564dc204090264849"
+          "change": "2b291c82eb5dc54f2abd8cae76a783411ef3fee9",
+          "commit": "00e927683a864f9c3d75c80364ec3e7beb53b4cd",
+          "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434"
         },
-        "summary": "Added commit-to-commit test verification with independently checked model requirements, real Go and Node selective runners, full-workflow fallback, and chained private local receipts. The required contract suite passed 27/27 and the expanded run passed 31/31; after two final CLI reporting fixes, targeted tests and the project build passed. Linux was tested; macOS and Windows receipt ACL handling and process behavior remain unverified on those platforms."
+        "responses": {
+          "review_impl:1:1": "fixed: The initial Go runner input check compares Go-discovered source, test, compiler and embedded files against the target commit and also inspects testdata, rejecting untracked, ignored or symlinked inputs without mid-run monitoring.",
+          "review_impl:1:2": "fixed: Every affected entry must have a valid shape and reference a file in its named committed revision; its independently reconstructed dependent units are added to the selective scope, while malformed or unmappable entries force full fallback."
+        },
+        "summary": "Go checkout preflight now detects uncommitted and Git-ignored compiler inputs, embedded files, and testdata before a run can create verification evidence. Analyzer-reported affected entries are validated and mapped through the independently rebuilt dependency graph, so their dependent test units are included in selective execution. All four required regression tests, four additional targeted tests, and the project build passed; Windows and macOS behavior remains unverified on those platforms."
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "review_design": {

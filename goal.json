@@ -12,36 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:37:53Z",
+      "finished_at": "2026-11-04T01:03:17Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
-          "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
+          "doc": "v1:blob:9406acaa0a2efcacd6bd0583042ca4228edc9a46",
+          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "policy": {},
-        "subject": "v1:sha256:8424e0e4facd4f5fb65145192b4360fb95de89689cc85bfad8b3956fe72b4dc3"
+        "subject": "v1:sha256:432dc9b8adab34dc5a395a74e48cfa3a84d839a1220f85d67bc858a8207395a1"
       },
-      "holder": "codex:root/g2-adversary-4",
-      "input_fp": "v1:sha256:b82cb37153d49666782ac85d98530ba4866dd3bd35460807ac34d1a9a90434e0",
+      "holder": "codex:root/g2-commit-adversary",
+      "input_fp": "v1:sha256:45079b0ab131a70ca54a06c62c134c4bcb638a5edf22b23ab1c0b44a8d0a1c44",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "093ea85928871ee448783c430f1d97b4f2777a5e",
-          "commit": "f98ecf837d7f08966481eb84cde4430f1f7b19e0",
+          "blob": "fbcf82f57a12805a4e34ad77dfd003eaec187ffe",
+          "commit": "e33df8afff6c154afc33015fbf7862d56e326ff0",
           "path": ".zzzops/reviews/2/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the dependency test-seam alignment."
+        "summary": "No material adversarial findings in the committed-endpoints redesign."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "73315b825dffade0616fb58ff448e6ebffc293e7",
-          "commit": "fd059c7baca14a72445f090df0db9a7c7637fec5"
+          "blob": "9406acaa0a2efcacd6bd0583042ca4228edc9a46",
+          "commit": "c4e4ba233324745759235aa04fe78d6cdc1d5c47"
         }
       },
       "status": "done"

@@ -11,6 +11,7 @@ import { extractorStamp, readExtractCache, writeExtractCache } from "../graph/ex
 import type { GraphV1 } from "../graph/types.js";
 import { captureBtrfsWorktree, type CapturedTree } from "./worktree.js";
 import { loadConservativeGraph } from "./coordinator.js";
+import { preserveCandidates, type CandidateFact } from "./facts.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 function git(dir: string, args: string[]): Buffer {
@@ -29,7 +30,7 @@ function endpoint(dir: string, requested: string): Endpoint {
 }
 interface Change { kind: "added" | "removed" | "modified"; old_path: string | null; new_path: string | null; old_entities: string[]; new_entities: string[] }
 interface Affected { revision: "from" | "to"; path: string; entity: string | null; reasons: {kind: "changed" | "dependency"; detail: string}[] }
-interface Gap { revision: "from" | "to"; path: string | null; kind: string; detail: string; scope: null }
+interface Gap { revision: "from" | "to"; path: string | null; kind: string; detail: string; scope: null; source?: string; relation?: string; name?: string; candidates?: string[]; candidate_basis?: string }
 /** Raw per-file facts only. Navigation and resolved graph caches are never read. */
 function extractionCache(repo: string, version: string): string | null {
   try {
@@ -116,16 +117,24 @@ async function graphFor(repo: string, tree: string, revision: "from" | "to", gap
     try {
       const rawCache = extractionCache(repo, version);
       if (rawCache) writeExtractCache(out, readExtractCache(rawCache));
+      let candidateFacts: CandidateFact[] = [];
+      let undecodable: string[] = [];
       const identity = {snapshot:captured?.fingerprint ?? `git-tree:${tree}`,mode:"conservative",policy:"conservative-v1",version:`${version}:${extractorStamp() ?? "uncached"}`};
       const loaded = await loadConservativeGraph({identity, cache:{
         // Resolution is deliberately rerun: only raw facts are reused.
         async read() { return null; },
         async refresh(key) {
-          const result = await buildGraph(root, {contextDir:out,graphOnly:true,reuse:!!rawCache});
+          let candidateEdges: GraphV1["edges"] = [];
+          const result = await buildGraph(root, {contextDir:out,graphOnly:true,reuse:!!rawCache,
+            onUndecodableInput(path) { undecodable.push(path); },
+            onRawFacts(nodes, raw) { const preserved = preserveCandidates(nodes, raw); candidateFacts = preserved.facts; candidateEdges = preserved.edges; }});
           const graph = readGraph(result.graphPath);
           if (!graph) throw new Error("graph output was not readable");
+          const keys = new Set(graph.edges.map(e => `${e.source}\0${e.relation}\0${e.target}`));
+          for (const edge of candidateEdges) if (!keys.has(`${edge.source}\0${edge.relation}\0${edge.target}`)) graph.edges.push(edge);
+          graph.meta.edgeCount = graph.edges.length;
           if (rawCache && result.errors.length === 0) writeExtractCache(rawCache, readExtractCache(out));
-          return {identity:key,value:{graph, errors:result.errors, nativeFallback:!!result.nativeFallback}};
+          return {identity:key,value:{graph, errors:result.errors, nativeFallback:!!result.nativeFallback, candidateFacts, undecodable}};
         },
         async publish(entry) {
           const stage = join(temp,"graph.tmp"), destination = join(temp,"graph-current.json");
@@ -133,9 +142,13 @@ async function graphFor(repo: string, tree: string, revision: "from" | "to", gap
         },
       }});
       if (loaded.status !== "current") throw new Error("conservative graph refresh or publication failed");
-      const result = loaded.value as {graph:GraphV1;errors:string[];nativeFallback:boolean};
+      const result = loaded.value as {graph:GraphV1;errors:string[];nativeFallback:boolean;candidateFacts:CandidateFact[];undecodable:string[]};
       for (const error of result.errors) gaps.push({revision,path:null,kind:"index_failure",detail:error,scope:null});
       if (result.nativeFallback) gaps.push({revision,path:null,kind:"parser_fallback",detail:"A depth parser was unavailable",scope:null});
+      for (const path of result.undecodable) gaps.push({revision,path,kind:"unsupported_encoding",detail:"Source could not be decoded for extraction",scope:null});
+      for (const fact of result.candidateFacts) gaps.push({revision,path:fact.path,kind:"unresolved_call",scope:null,
+        detail:`Call ${fact.name} from ${fact.source} is not exhaustively resolved; recorded candidates are possibilities, not a complete target set`,
+        source:fact.source,relation:fact.relation,name:fact.name,candidates:fact.candidates,candidate_basis:fact.basis});
       return result.graph;
     } catch (error) {
       gaps.push({ revision, path:null, kind:"index_failure", detail: `Snapshot graph could not be built: ${error instanceof Error ? error.message : String(error)}`, scope:null });

@@ -388,3 +388,91 @@ test("v2 Go deletion reaches surviving tests through old cross-package imports o
   assert.ok(affected(out, "consumer/consumer_test.go", "from") || full(out), "old A-to-consumer graph must cover the surviving consumer tests or require full fallback");
   assert.ok(affected(out, "a/a_test.go", "from") || full(out), "surviving package tests must be selected or covered by full fallback");
 }));
+
+test("Go standard-library imports remain selective when package A changes", () => fixture(dir => {
+  goProject(dir);
+  file(dir, "a/a.go", `package a
+import (
+  "strconv"
+  "strings"
+)
+func Price(x int) int { n, _ := strconv.Atoi(strings.TrimSpace(" 2 ")); return x * n }
+`);
+  const a = commit(dir, "Go package uses standard libraries");
+  file(dir, "a/a.go", `package a
+import (
+  "strconv"
+  "strings"
+)
+func Price(x int) int { n, _ := strconv.Atoi(strings.TrimSpace("\\t2 ")); return x * n }
+`);
+  const b = commit(dir, "preserving change to A");
+  const out = run(dir, a, b, 2);
+  assert.equal(out.analysis_status, "conditional", "standard library imports must not unconditionally disable Go selection");
+  assert.ok(!full(out));
+  assert.ok(affected(out, "a/a_test.go"));
+  assert.ok(affected(out, "consumer/consumer_test.go"));
+  assert.ok(!affected(out, "b/b_test.go"));
+}));
+
+const goTool = spawnSync("go", ["version"], { encoding: "utf8", timeout: 10_000 });
+const goVersion = /go(\d+)\.(\d+)/.exec(goTool.stdout ?? "");
+const goReady = goTool.status === 0 && !!goVersion && (+goVersion[1] > 1 || (+goVersion[1] === 1 && +goVersion[2] >= 22));
+test("Go fuzz corpus README change selects the owner or full fallback and reproduces a real failure", { skip: goReady ? false : "Go 1.22 or newer is not installed", timeout: 180_000 }, () => fixture(dir => {
+  file(dir, "go.mod", "module example.test/fuzzcorpus\n\ngo 1.22\n");
+  file(dir, "a/parse.go", "package a\n\nfunc Parse(s string) bool { return s != \"bad\" }\n");
+  file(dir, "a/parse_test.go", `package a
+import "testing"
+func FuzzParse(f *testing.F) {
+ f.Fuzz(func(t *testing.T, s string) { if !Parse(s) { t.Fatalf("bad seed: %q", s) } })
+}
+`);
+  file(dir, "a/testdata/fuzz/FuzzParse/README.md", 'go test fuzz v1\nstring("ok")\n');
+  file(dir, "b/b.go", "package b\n\nfunc Value() int { return 1 }\n");
+  file(dir, "b/b_test.go", "package b\n\nimport \"testing\"\n\nfunc TestValue(t *testing.T) { if Value() != 1 { t.Fatal(\"bad value\") } }\n");
+  const before = commit(dir, "passing fuzz corpus");
+  const goEnv = { ...process.env, GOPROXY: "off", GOSUMDB: "off", GOTOOLCHAIN: "local" };
+  const execute = () => spawnSync("go", ["test", "./..."], { cwd: dir, env: goEnv, encoding: "utf8", timeout: 120_000 });
+  const good = execute();
+  assert.equal(good.status, 0, `the original full Go suite must pass: ${good.stderr}\n${good.stdout}`);
+  file(dir, "a/testdata/fuzz/FuzzParse/README.md", 'go test fuzz v1\nstring("bad")\n');
+  const after = commit(dir, "failing fuzz seed");
+  const bad = execute();
+  assert.notEqual(bad.status, 0, "the real full Go suite must fail after the seed change");
+  assert.match(`${bad.stdout}\n${bad.stderr}`, /bad seed|FuzzParse/, "failure must come from the fuzz seed");
+  const out = run(dir, before, after, 2);
+  assert.ok(out.changes.some((c: Json) => c.old_path === "a/testdata/fuzz/FuzzParse/README.md"), "the corpus path must remain in changes");
+  assert.ok(affected(out, "a/parse_test.go") || full(out), "a README-named fuzz corpus is a test input, so its owner must be included or full fallback required");
+}));
+
+test("Python raw imports retain missing-module provenance or dependent coverage with full fallback", () => fixture(dir => {
+  file(dir, "pyproject.toml", "[project]\nname = \"sample\"\nversion = \"1.0.0\"\n");
+  file(dir, "pkg/__init__.py", "");
+  file(dir, "pkg/core.py", "def value():\n    return 1\n");
+  file(dir, "tests/test_core.py", "from pkg.core import value\n\ndef test_value():\n    assert value() == 1\n");
+  const a = commit(dir, "Python imports");
+  file(dir, "pkg/core.py", "from pkg.unavailable import missing\n\ndef value():\n    return missing()\n");
+  const b = commit(dir, "unresolved Python import");
+  const out = run(dir, a, b, 2);
+  const gap = out.analysis_gaps.find((g: Json) => g.revision === "to" && g.path === "pkg/core.py" && JSON.stringify(g).includes("pkg.unavailable"));
+  assert.ok(gap, "an unresolved Python raw import must be recorded at its source and revision");
+  assert.ok((gap.scope === null && full(out)) || (typeof gap.scope === "string" && out.required_fallback_scopes.some((f: Json) => f.kind === "scope" && f.scope === gap.scope)), "unresolved import needs justified fallback");
+  assert.ok(affected(out, "tests/test_core.py") || full(out), "Python import-time dependents cannot disappear");
+}));
+
+test("mixed Node-to-Python subprocess dependencies include the caller or fall back", () => fixture(dir => {
+  file(dir, "package.json", JSON.stringify({ name: "cross-language", private: true, type: "module" }));
+  file(dir, "tsconfig.json", JSON.stringify({ compilerOptions: { module: "NodeNext", moduleResolution: "NodeNext", target: "ES2022" } }));
+  file(dir, "src/run.ts", "import { spawnSync } from 'node:child_process';\nexport function run() { return spawnSync('python3', ['scripts/calculate.py']); }\n");
+  file(dir, "tests/run.ts", "import { run } from '../src/run.js';\nexport function testRun() { return run(); }\n");
+  file(dir, "scripts/calculate.py", "print(1)\n");
+  const a = commit(dir, "Node calls Python");
+  file(dir, "scripts/calculate.py", "print(2)\n");
+  const b = commit(dir, "change Python subprocess");
+  const out = run(dir, a, b, 2);
+  assert.ok(affected(out, "tests/run.ts") || full(out), "cross-language subprocess dependencies must be modeled or use full fallback");
+  if (!affected(out, "tests/run.ts")) {
+    assert.equal(out.analysis_status, "incomplete");
+    assert.ok(out.analysis_gaps.some((g: Json) => g.scope === null));
+  }
+}));

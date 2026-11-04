@@ -106,23 +106,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 12,
-      "correction_runs": 9,
-      "findings": [
-        {
-          "id": "design:reopen:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "open",
-          "target": "design",
-          "target_attempt": 12,
-          "target_fp": "v1:sha256:7ba656b8df88d7d15cd9cddc60f9c3ef561e62d9684abe0dddcb925a42d2f4ad",
-          "text": "Use Trail-code multilingual graph/extraction as the general basis for useful conservative selection. The current whole-repository Node/TypeScript syntax whitelist and global fallback for ordinary files make PR #1 fail the user goal. Define practical file/build-target relationships, explicit per-language coverage and justified bounded scope fallback while retaining full fallback when dependencies cannot be bounded. Preserve the owner-approved context contract and commit-only scope.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T17:15:12Z",
+      "attempt": 13,
+      "correction_runs": 10,
+      "findings": [],
+      "finished_at": "2026-11-04T19:04:22Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -131,19 +118,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-design3",
+      "holder": "codex:root/g1-multilingual-design",
       "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "commit": "9f2c1070538df1cdbe3952e62f9bfdc39517fbb4",
+          "blob": "7f147521938cbeea607e7eec549cbbd37be958c5",
+          "commit": "bc06a3a9ae31498ebeb2ac75118446c3ab08f550",
           "path": ".zzzops/reviews/1/design.md"
         },
         "responses": {
-          "review_design:8:1": "fixed: Replaced fabricated expected execution values with machine-readable registered predicates, concrete inventory and baseline descriptors and independent G2 binding; added standalone-to-G2 success and forged/mismatched evidence tests."
+          "design:reopen:1": "fixed: Replaced the Node-only admission rule with versioned per-language/build coverage and conservative fact preservation, complete file/target closure, bounded dependent scopes with full fallback when unbounded, and representative multilingual sparse and adversarial fixtures."
         },
-        "summary": "Separate standalone analyzer predicates and commit-derived parameters from runtime facts collected by G2. Bind and validate the actual profile, inventory and baseline through independently registered collectors before using a conditional sparse result."
+        "summary": "Extend the conditional model to reuse Trail-code’s multilingual graph while retaining imports, ambiguous candidates and explicit per-construct coverage. Use independently justified dependent-scope fallback and require full fallback for unbounded gaps, with real multi-ecosystem selective fixtures and commit-tree analysis independent of checkout state."
       },
       "reason": "reopened",
       "status": "done"

@@ -40,6 +40,35 @@ function invoke(dir: string, ...args: string[]) {
     env: { ...process.env, HOME: dir, USERPROFILE: dir, NO_COLOR: "1" },
   });
 }
+/** Independently validate the safety relation between gaps, status and fallback. */
+function assertGapFallback(out: Json): void {
+  assert.ok(["complete", "bounded", "incomplete"].includes(out.analysis_status));
+  assert.ok(Array.isArray(out.analysis_gaps));
+  assert.ok(Array.isArray(out.required_fallback_scopes));
+  const gaps: Json[] = out.analysis_gaps;
+  const fallbacks: Json[] = out.required_fallback_scopes;
+  const full = fallbacks.some(s => s.kind === "full_profile" && s.scope === null);
+  for (const gap of gaps) {
+    if (gap.scope === null) {
+      assert.ok(full, "unbounded gap requires full-profile fallback");
+    } else {
+      assert.ok(typeof gap.scope === "string" && gap.scope.length > 0);
+      assert.ok(full || fallbacks.some(s => s.kind === "scope" && s.scope === gap.scope),
+        `bounded gap ${gap.scope} requires a matching dependent scope or full fallback`);
+    }
+  }
+  const unbounded = gaps.some(g => g.scope === null);
+  if (out.analysis_status === "complete") assert.equal(gaps.length, 0, "complete status cannot contain a gap");
+  if (out.analysis_status === "bounded") {
+    assert.ok(gaps.length > 0, "bounded status requires a gap");
+    assert.equal(unbounded, false, "unbounded gaps require incomplete status");
+  }
+  if (out.analysis_status === "incomplete") {
+    assert.ok(unbounded, "incomplete status requires an unbounded gap");
+    assert.ok(full, "incomplete status requires full-profile fallback");
+  }
+}
+
 function report(dir: string, from: string, to: string): Json {
   const r = invoke(dir, "--from", from, "--to", to, "--json");
   assert.equal(r.status, 0, `impact failed: ${r.stderr}\n${r.stdout}`);
@@ -87,9 +116,7 @@ function report(dir: string, from: string, to: string): Json {
     assert.ok(typeof scope.reason === "string" && scope.reason.length > 0);
     assert.ok(scope.kind === "full_profile" ? scope.scope === null : typeof scope.scope === "string" && scope.scope.length > 0);
   }
-  assert.ok(["complete", "bounded", "incomplete"].includes(out.analysis_status));
-  if (out.analysis_status === "complete") assert.equal(out.analysis_gaps.length, 0);
-  if (out.analysis_status === "incomplete") assert.ok(out.required_fallback_scopes.some((s: Json) => s.kind === "full_profile"));
+  assertGapFallback(out);
   return out;
 }
 
@@ -265,3 +292,17 @@ test("navigation graph and later refresh cannot substitute for the conservative 
   assert.ok(out.changes.some((c: Json) => c.kind === "modified" && c.old_path === "src/nav.ts"));
   assert.ok(out.affected.some((x: Json) => x.path === "src/caller.ts") || out.required_fallback_scopes.some((x: Json) => x.kind === "full_profile"));
 }));
+
+
+test("gap/fallback consistency rejects missing or contradictory bounded scopes", () => {
+  const bounded = { analysis_status: "bounded", analysis_gaps: [{ scope: "package:payments" }], required_fallback_scopes: [{ kind: "scope", scope: "package:payments" }] };
+  assert.doesNotThrow(() => assertGapFallback(bounded));
+  assert.throws(() => assertGapFallback({ ...bounded, required_fallback_scopes: [] }), /bounded gap/);
+  assert.throws(() => assertGapFallback({ ...bounded, required_fallback_scopes: [{ kind: "scope", scope: "package:unrelated" }] }), /bounded gap/);
+  assert.doesNotThrow(() => assertGapFallback({ ...bounded, required_fallback_scopes: [{ kind: "full_profile", scope: null }] }));
+  assert.throws(() => assertGapFallback({ ...bounded, analysis_status: "complete" }), /complete status/);
+  assert.throws(() => assertGapFallback({ ...bounded, analysis_gaps: [{ scope: null }], required_fallback_scopes: [{ kind: "full_profile", scope: null }] }), /unbounded gaps/);
+  assert.throws(() => assertGapFallback({ ...bounded, analysis_status: "incomplete" }), /unbounded gap/);
+  assert.throws(() => assertGapFallback({ analysis_status: "incomplete", analysis_gaps: [{ scope: null }], required_fallback_scopes: [] }), /unbounded gap/);
+  assert.doesNotThrow(() => assertGapFallback({ analysis_status: "incomplete", analysis_gaps: [{ scope: null }], required_fallback_scopes: [{ kind: "full_profile", scope: null }] }));
+});

@@ -69,7 +69,7 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
     const a = await certifyGoStatic(before, () => {}), b = await certifyGoStatic(after, () => {});
     if (!a || !b || a.moduleName !== b.moduleName || a.goVersion !== b.goVersion) return null;
     const unit = (p: string) => { const dir = posix.dirname(p); return dir === '.' ? '.' : `./${dir}`; };
-    const inventory = [...new Set([...after.keys()].filter(p => p.endsWith('_test.go')).map(unit))].sort();
+    const inventory = [...new Set([...after.keys()].filter(p => p.endsWith('.go')).map(unit))].sort();
     const paths = new Set([...closure(changed, a), ...closure(changed, b)]);
     const scopes = new Map<string, string[]>();
     const requiredScopes = new Set<string>();
@@ -79,8 +79,8 @@ export async function discoverComparison(cwd: string, from: string, to: string, 
       const key = `go-package:${source.moduleName}:${dir}`;
       if ([...source.resources].some(([resource, owner]) => owner === dir && changed.has(resource))) requiredScopes.add(key);
       const previous = scopes.get(key) ?? [];
-      scopes.set(key, [...new Set([...previous, ...inventory.filter(u => [...reached].some(p => p.endsWith('_test.go') && unit(p) === u))])].sort());
+      scopes.set(key, [...new Set([...previous, ...inventory.filter(u => [...reached].some(p => p.endsWith('.go') && unit(p) === u))])].sort());
     }
-    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('_test.go') && unit(p) === u)), scopes, requiredScopes: [...requiredScopes].sort() };
+    return { model: { id: 'go-static-packages', version: '2', complete: true, dependencies: [...new Set([...a.builtins, ...b.builtins])].sort(), goVersion: a.goVersion }, inventory, affected: inventory.filter(u => [...paths].some(p => p.endsWith('.go') && unit(p) === u)), scopes, requiredScopes: [...requiredScopes].sort() };
   } catch { return null; }
 }

@@ -80,6 +80,40 @@
       },
       "status": "done"
     },
+    "approve_merge": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T23:36:51Z",
+      "fp_parts": {
+        "def": "v1:sha256:a2d3367f8c6fe8d79f2275e7ae90c04deb746148accdf26f5bfd54ee7ecb28e3",
+        "inputs": {
+          "code": "v1:sha256:aea190279243f187391e20c34125eb183559bd5f8ac0ded0fa89a43f0dbe47d4"
+        },
+        "policy": {},
+        "subject": "v1:sha256:fccef48352d596df1fea5a4eebb7cbd4c651c892cfca9f706276d2638df72feb"
+      },
+      "holder": "human",
+      "input_fp": "v1:sha256:df32270df9def4b911226422f46c67e6d9a8ced2b2040ff1ac873282b0813e9b",
+      "ok": true,
+      "output": {
+        "decided_at": "2026-11-04T23:36:51Z",
+        "decided_by": "Dave",
+        "decision": "approved",
+        "quote": "Approve merge",
+        "summary": "Approve merging PR #2, adding the reviewed test runner, planning, and receipts, into test-impact."
+      },
+      "reason": "new",
+      "reviewed": {
+        "code": {
+          "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
+          "change": "2b291c82eb5dc54f2abd8cae76a783411ef3fee9",
+          "commit": "00e927683a864f9c3d75c80364ec3e7beb53b4cd",
+          "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434"
+        }
+      },
+      "status": "done"
+    },
     "base": {
       "attempt": 3,
       "correction_runs": 2,

@@ -61,6 +61,40 @@
       },
       "status": "done"
     },
+    "approve_design": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T00:09:42Z",
+      "fp_parts": {
+        "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
+        "inputs": {
+          "doc": "v1:blob:a239731b95eff6a51c41ae0253dafae3a2604cfa",
+          "filter": "v1:sha256:9195943d03556633f319d1f91300131845be3549fea1862ab6f986333d66b5b5",
+          "summary": "v1:sha256:54c0874a13eade5bada2598d16ed63ea10a6e332862be024b92419bd7a20a3c7"
+        },
+        "policy": {},
+        "subject": "v1:sha256:17ce4f012c140e131d8ca99f986cd168f372a00b72ad15ed839d7c45427a334f"
+      },
+      "holder": "human",
+      "input_fp": "v1:sha256:cd8b660990c46663f4413a86d67fc5f7493827e3755237974d1b585f3d5dc852",
+      "ok": true,
+      "output": {
+        "decided_at": "2026-11-04T00:09:42Z",
+        "decided_by": "Dave",
+        "decision": "approved",
+        "quote": "Approved",
+        "summary": "Approved the repository setup and maintenance skill design."
+      },
+      "reason": "new",
+      "reviewed": {
+        "doc": {
+          "blob": "a239731b95eff6a51c41ae0253dafae3a2604cfa",
+          "commit": "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5"
+        }
+      },
+      "status": "done"
+    },
     "design": {
       "attempt": 3,
       "correction_runs": 2,

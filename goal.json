@@ -12,36 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T17:36:11Z",
+      "finished_at": "2026-11-04T19:25:34Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:d85b2764b6579d5b71e082132aa4603451027f68",
-          "spec": "v1:sha256:4c09c0e14d1d9afa3eb6eb3ec78cf97526cb6a678043498b26e32577528407e3"
+          "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "spec": "v1:sha256:14cb5b049de9d9505c204a32bf6a504f43f645ce6870f68fb36cb056c1837796"
         },
         "policy": {},
-        "subject": "v1:sha256:a7ec18d01abe464cfa322efc956da9d6ec63eec0394b0f7a1fe3ffa23cfe9a7e"
+        "subject": "v1:sha256:17c1d4f9c36423d8307f20a3630e5d2d1d32a35ecd37156f5655b05f9af2b925"
       },
-      "holder": "codex:root/g3-normal-adversary",
-      "input_fp": "v1:sha256:eaa0b5ae9a89d9a975f0dfa52ca257e51133a12881283334c563b938ed7efb2d",
+      "holder": "codex:root/g3-multilingual-adversary",
+      "input_fp": "v1:sha256:42668008f7ce1ee7bfada98dd25509a7d99ae881473db83defcb86ac6904f739",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "d32f03b7ca8fd473ae7bb53ed9c8f2637132d3a8",
-          "commit": "5460cbb0f513985f27c332605ddc61b9893fe007",
+          "blob": "f3463f66aa2b37f9ab69f8d42f82f4a98f11b9c4",
+          "commit": "2bb11477eb441c0545e6cebee361ca873249933b",
           "path": ".zzzops/reviews/3/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the owner-directed ordinary execution integration."
+        "summary": "No material adversarial findings in multilingual setup and Go adapter integration."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "d85b2764b6579d5b71e082132aa4603451027f68",
-          "commit": "f4ea95d0e8dfbbdcc38150009a108bb8a53feb67"
+          "blob": "ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "commit": "38dbd2c818c6be92e6362e3bf0a320f8380b689a"
         }
       },
       "status": "done"

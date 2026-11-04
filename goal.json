@@ -12,36 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T17:44:08Z",
+      "finished_at": "2026-11-04T19:29:35Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:0442cc456e673992864369a02b67d48806decd5e",
-          "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
+          "doc": "v1:blob:3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "spec": "v1:sha256:97beaf135607fc6f7f9c557a0d92b8722af6e800cf2c3420f8515a334055d95b"
         },
         "policy": {},
-        "subject": "v1:sha256:de41c740fa4ae43db5fad37b3b1e3519ba67d2c251d8562d9f0f60238d465033"
+        "subject": "v1:sha256:489d87944e735cf42bd20410d8881208f30d8f8c2ed35475ddf443562ca11a81"
       },
-      "holder": "codex:root/g4-normal-adversary2",
-      "input_fp": "v1:sha256:c3a1a2b430d609209a62d181997beefe7694eff36f515d66c1d0a812bd494467",
+      "holder": "codex:root/g4-multilingual-adversary",
+      "input_fp": "v1:sha256:8f835a92f425a21f2fe99482202a91af9b3b2be5e37beed841b00b37a497d9b8",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "9cf72be671aad4ae2632004ddc4d579143f42f2f",
-          "commit": "fa4dcfc44c7eb52589bcb925760707cd201a9a7d",
+          "blob": "bdd543def33f49e16b468229ea7f9d90dba0e1a2",
+          "commit": "af5065d84fa2337a04242ece1d3468b74f8cb8e4",
           "path": ".zzzops/reviews/4/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the sparse-only versus full-run context distinction."
+        "summary": "No material adversarial findings in multilingual release-gate changes."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "0442cc456e673992864369a02b67d48806decd5e",
-          "commit": "adc5d4c2d046eb360e65f781375d66eeed623fb3"
+          "blob": "3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "commit": "314d2c02f3679f496eb1c5dd2b3b47595e056536"
         }
       },
       "status": "done"

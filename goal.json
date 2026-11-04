@@ -265,51 +265,51 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [
         {
-          "id": "review_tests:1:3",
+          "id": "review_tests:4:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "resolved",
+          "status": "open",
           "target": "test_design",
-          "target_attempt": 5,
-          "target_fp": "v1:sha256:21a223d9482eca3ceb468360f1c3a92468879ac4011f2348ad690017ba780610",
-          "text": "The dynamic behavior assertion accepts any dependency reason on the changed file even if the dynamic target and its dependents are omitted. An unsound gap-free analysis can pass. Require a justified modeled relationship covering candidate targets or an explicit gap with appropriate fallback (full profile for unbounded global lookup), and test status/gap/fallback consistency.",
+          "target_attempt": 7,
+          "target_fp": "v1:sha256:8cddf8945b561f95ce99eb76101536c4a9b61251d7bbddc0bb834dbc9605545a",
+          "text": "Unsafe-symlink fixtures check only that sentinel bytes are not printed or changed. An analyzer could follow and parse an external target, then report a gap/full fallback without echoing the bytes, and the tests would pass despite the design prohibiting external bytes in snapshot analysis. Add a deterministic read trap or equivalent test at the production materialization/object-read boundary that detects attempted external reads (including chained/path-component escapes), and a real Git sentinel case showing external target changes cannot affect the analysis; verify cleanup containment.",
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T00:15:51Z",
+      "finished_at": "2026-11-04T01:09:59Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "tests": "v1:sha256:85b0ea5b5d40a6054ec6a82d36f134f2baae5b8e4a7d3e4c808754efcebbf89b"
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "tests": "v1:sha256:6d20089bbe38b941be5f4739ef0a43e2034775d8db9951bc9ae49cafabc510e8"
         },
         "policy": {},
-        "subject": "v1:sha256:2f17629d2ea7082a9ee2bcb98132f83a088f1c7d0d616c289a0d6861c8d00a22"
+        "subject": "v1:sha256:8cddf8945b561f95ce99eb76101536c4a9b61251d7bbddc0bb834dbc9605545a"
       },
-      "holder": "codex:root/g1-review-tests-3",
-      "input_fp": "v1:sha256:6a5555c8201be8cb99adc3f5fe1dc79e2631886c053579d30b3390abc2208eed",
-      "ok": true,
+      "holder": "codex:root/g1-commit-review-tests",
+      "input_fp": "v1:sha256:01b105ca460562843f129805733a93631f7032372bb21fb6e8280fdf1c34e758",
+      "ok": false,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "44658d32b59b06f6ff12056cc51fd16684c80a8e",
-          "commit": "a1b839fb406803701b12941597ed10acc96cf568",
+          "blob": "64848827502e3255eb0e7b23543b344adf056cc6",
+          "commit": "62c8686d1162d6a487107c2e6b988218d6850f66",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Bounded gap/fallback consistency is now covered; prior findings are resolved."
+        "summary": "Commit-only coverage is sound except it does not detect external reads through unsafe committed symlinks."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "6a56625510091df0e815548495ed124d8df9c2d8",
-          "commit": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
-          "tree": "ac84ad57833d0a2e456c754e22d1673c0c200b8e"
+          "change": "eb781f12b77ad47412f4515d2ac4c0ea866205cf",
+          "commit": "640fa111a9a450d2e09c3a5a8c4870d8f0c9e052",
+          "tree": "205d3c860663f922c3527ea93a14101a4aa06575"
         }
       },
       "status": "done"

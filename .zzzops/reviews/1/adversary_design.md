@@ -1,3 +1,3 @@
 # Adversary re-review
 
-The execution-model conflict is resolved. The revised design requires practical target preflight and honest stable-input reporting, while explicitly not requiring continuous observation or proof of unchanged runner inputs. Analysis still reads immutable committed objects with contained symlink handling. The multilingual additions retain unbounded fallback and require independently justified scope boundaries covering outside dependents. No new material adversarial findings.
+No new material adversarial findings. The minimum Go slice requires explicit toolchain, tags, platform, package and test dependency identities and only bounds unsupported imports, cgo, generated or embedded inputs where the dependent boundary is justified; otherwise it requires full fallback. The required positive sparse fixture does not remove those safeguards and also exercises deletion and import changes.

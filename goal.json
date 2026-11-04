@@ -162,17 +162,17 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 1,
+      "attempt": 2,
       "blocked": {
         "category": "decision",
-        "instructions": "Partial implementation is committed at 380bc17 on the goal work branch. Both frozen suites pass (15 CLI tests, 27 coordinator tests) and npm run build passes. Continue implementation before declaring success: (1) worktree capture supports only a repository rooted at a Btrfs subvolume where safe deletion is allowed; this host lacks user_subvol_rm_allowed, so successful real production capture could not be verified, and ordinary worktrees on other filesystems remain unavailable; implement and verify another genuinely coherent capture backend or arrange a suitable environment. Never use before/after hashing or best-effort watchers as proof. (2) Current analysis retains upstream navigation graph edges and safely reports an unbounded full-profile fallback for all nonempty snapshots, but does not yet preserve unresolved or multiple plausible candidates with detailed provenance as required by the approved design. Extend conservative extraction/resolution and directly validate complete graph and gap contracts. (3) Verify snapshot identity, isolation, stale cache invalidation and actual native worktree operation on a supported platform. Do not treat the frozen tests passing or unconditional fallback as completion.",
-        "reason": "Partial implementation is committed at 380bc17 on the goal work branch. Both frozen suites pass (15 CLI tests, 27 coordinator tests) and npm run build passes. Continue implementation before declaring ",
-        "repeats": 1,
+        "instructions": "Partial checkpoints 477e974 and 55d7e59 preserve raw local/receiver and relative-import candidates with source/name/relation/basis, explicit unresolved gaps, and unsupported/unindexed source reporting; new five-test suite and original 15+27 tests and npm run build pass. Do not treat the goal complete. Remaining: (1) ordinary worktree capture cannot establish coherent snapshots on this host: repository is not a Btrfs subvolume, parent /home subvolume is owned by root, and mount lacks user_subvol_rm_allowed. Simple inotify or before/after hashing does not reliably observe mmap writes or all nested paths; do not promote it as complete. Implement and verify a valid capture backend or arrange a suitable supported platform. (2) Current candidate preservation covers only explicit relative-module, local and same-file receiver evidence; cross-file dispatch, inheritance and multiple languages remain incomplete; graph analysis still forces full-profile fallback for nonempty trees. Extend extraction and conservative resolution with justified candidates and gaps and validate end-to-end before claiming completion. (3) Verify real production snapshot capture and identity on a supported environment; tests currently permit explicit unavailable. Full fallback and passing tests alone are not completion.",
+        "reason": "Partial checkpoints 477e974 and 55d7e59 preserve raw local/receiver and relative-import candidates with source/name/relation/basis, explicit unresolved gaps, and unsupported/unindexed source reporting",
+        "repeats": 2,
         "waiting_for": "agent"
       },
-      "correction_runs": 0,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T00:32:10Z",
+      "finished_at": "2026-11-04T00:44:15Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
@@ -182,11 +182,11 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-implement-1",
+      "holder": "codex:root/g1-implement-2",
       "input_fp": "v1:sha256:6aa7d9fdbc702f5a45f08257835a94eaac8d23d8e3b9501af0ceb5bce76d87b9",
       "ok": false,
       "output": null,
-      "reason": "new",
+      "reason": "retry",
       "status": "blocked"
     },
     "review_design": {

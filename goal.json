@@ -315,15 +315,15 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 6,
-      "correction_runs": 4,
+      "attempt": 7,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T00:15:06Z",
+      "finished_at": "2026-11-04T01:09:01Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff"
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea"
         },
         "policy": {}
       },
@@ -331,8 +331,8 @@
         "test/conservative-impact-contract.test.ts",
         "test/impact-coordinator-safety.test.ts"
       ],
-      "holder": "codex:root/g1-test-design-6",
-      "input_fp": "v1:sha256:10ba7d179c19f4f02691af68f52f5d3975d8b241640557853a2f1ad8f8b80304",
+      "holder": "codex:root/g1-commit-tests",
+      "input_fp": "v1:sha256:e97ad0ab41d76b6916b3678a00a26bdd7746e12a01ac35f59dd8a1e76ba5b902",
       "ok": true,
       "output": {
         "commands": [
@@ -342,43 +342,40 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 12359,
+              "duration_ms": 18268,
               "id_or_scope": "test/conservative-impact-contract.test.ts",
-              "observation": "14 fail because impact command is absent; the bounded-gap/fallback validator scenario passes (including deliberate invalid reports)"
+              "observation": "passed: 22 real-CLI tests including committed checkout isolation, worktree rejection and symlink cases against the existing implementation"
             },
             {
-              "duration_ms": 162,
+              "duration_ms": 116,
               "id_or_scope": "test/impact-coordinator-safety.test.ts",
-              "observation": "incomplete: coordinator module absent so behavioral assertions cannot yet execute"
+              "observation": "failing: 6 cache cases pass; 5 new committed snapshot fault tests reach assertions but the new readCommittedSnapshot seam is not implemented"
             }
           ],
-          "checkpoint": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
+          "checkpoint": "640fa111a9a450d2e09c3a5a8c4870d8f0c9e052",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 12437,
-              "exit": 1
+              "duration_ms": 18295,
+              "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 224,
+              "duration_ms": 143,
               "exit": 1
             }
           ],
-          "summary": "Measured separate runs at the committed checkpoint. The bounded-gap safety assertion is exercised; analyzer and internal seam behaviors remain red pending implementation.",
-          "total_ms": 12661
-        },
-        "responses": {
-          "review_tests:1:3": "fixed: Shared report checks now validate each bounded gap is accompanied by its applicable scope or full fallback, each unbounded gap has full fallback, and status agrees with gaps. A targeted bounded-gap scenario demonstrates rejection of absent and unrelated fallbacks, contradictory status and unbounded cases, as well as acceptance of full fallback."
+          "summary": "Separate observed runs at the committed checkpoint; snapshot seam behavior is red pending implementation.",
+          "total_ms": 18438
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "6a56625510091df0e815548495ed124d8df9c2d8",
-          "commit": "77c1afba7cb78374ddd0b543cd8bfeac00445a4d",
-          "tree": "ac84ad57833d0a2e456c754e22d1673c0c200b8e"
+          "change": "eb781f12b77ad47412f4515d2ac4c0ea866205cf",
+          "commit": "640fa111a9a450d2e09c3a5a8c4870d8f0c9e052",
+          "tree": "205d3c860663f922c3527ea93a14101a4aa06575"
         }
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     }
   },

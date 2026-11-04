@@ -612,10 +612,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 12,
-      "correction_runs": 10,
+      "attempt": 13,
+      "correction_runs": 11,
       "findings": [],
-      "finished_at": "2026-11-04T17:43:55Z",
+      "finished_at": "2026-11-04T17:48:21Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -630,7 +630,7 @@
         "test/impact-coordinator-safety.test.ts",
         "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-context-tests",
+      "holder": "codex:root/g1-context-tests2",
       "input_fp": "v1:sha256:d73f549202049e4ff885476a244b012b67130dcf3255e484fe81ae1ec5833028",
       "ok": true,
       "output": {
@@ -643,45 +643,48 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 3763,
+              "duration_ms": 3011,
               "id_or_scope": "test/impact-conditional-contract.test.ts",
-              "observation": "failing: five real-CLI tests enter their assertions but explicit --schema-version is not implemented yet"
+              "observation": "synthetic malformed-report checker passes; five real CLI cases fail because --schema-version is not implemented"
             }
           ],
-          "checkpoint": "c8f3bd1f2b7838c6c6ed10048224f01491ae595c",
+          "checkpoint": "b26dee40e82ce71315c3b036f0f9f49bed00bc1d",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 31679,
+              "duration_ms": 27649,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 126,
+              "duration_ms": 123,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
-              "duration_ms": 10356,
+              "duration_ms": 8266,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-conditional-contract.test.ts",
-              "duration_ms": 3798,
+              "duration_ms": 3039,
               "exit": 1
             }
           ],
-          "summary": "Four measured targeted commands at committed checkpoint; the three preexisting suites pass and the new conditional v2 suite is red pending implementation. G2 independently validates context, evidence and receipts.",
-          "total_ms": 45959
+          "summary": "Four targeted commands measured at checkpoint: three existing suites pass; conditional suite has one passing schema-validator test and five expected red implementation tests.",
+          "total_ms": 39077
+        },
+        "responses": {
+          "review_tests:9:1": "fixed: Added version-aware assertions to every real v2 CLI report, checking analysis identity, exact commit/tree/fingerprint binding, mandatory arrays and typed change, affected, gap, fallback and requirement records, and status consistency. Repeated conditional analysis checks deterministic ordering; added malformed synthetic cases to exercise the checker."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "366a6450257219a479a319abe42816ac4d511274",
-          "commit": "c8f3bd1f2b7838c6c6ed10048224f01491ae595c",
-          "tree": "663c58dd3ad7eba59a15b1f99b8f1861538ba351"
+          "change": "80aec9930fb226a14ca1185bdf0c050c30cc451c",
+          "commit": "b26dee40e82ce71315c3b036f0f9f49bed00bc1d",
+          "tree": "ff378d3bebc4f75d242f52b7d3f4f3748565ba94"
         }
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     }
   },

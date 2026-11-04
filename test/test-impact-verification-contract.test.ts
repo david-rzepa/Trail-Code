@@ -73,11 +73,25 @@ function fixture(model:Model):Fixture {
 }
 function cleanup(f:Fixture) {rmSync(f.dir,{recursive:true,force:true});rmSync(f.state,{recursive:true,force:true});}
 function checkout(f:Fixture,rev:string) {git(f.dir,'checkout','--detach',rev);}
+function goResourceFixture():Fixture {
+  const f=fixture('go');checkout(f,f.a);
+  put(f.dir,'a/a.go','package a\nimport _ "embed"\n//go:embed data.txt\nvar data string\nfunc Value() int { return 1 }\n');
+  put(f.dir,'a/data.txt','before\n');f.a=commit(f.dir,'baseline embedded input');
+  put(f.dir,'a/data.txt','after\n');f.b=commit(f.dir,'change embedded input');return f;
+}
 function analyze(f:Fixture,from=f.a,to=f.b):Result {
   const child=command(f.dir,process.execPath,['--import',tsx,analyzer,'impact','--from',from,'--to',to,'--schema-version','2','--json']);
   assert.equal(child.status,0,child.stderr);return JSON.parse(child.stdout);
 }
 function hasGo():boolean {const result=spawnSync('go',['version'],{encoding:'utf8'});return result.status===0;}
+function realFullRun(f:Fixture) {
+  const environment={...process.env};delete environment.NODE_TEST_CONTEXT;
+  const executable=f.model==='go'?'go':process.execPath;
+  const argv=f.model==='go'?['test','./...']:['--import',tsx,'--test',...f.all];
+  const result=spawnSync(executable,argv,{cwd:f.dir,encoding:'utf8',timeout:120_000,env:environment});
+  assert.equal(result.error,undefined,`${executable}: ${result.error}`);
+  return result;
+}
 /** This is deliberately private: config and hooks are injected only by tests. */
 async function verify(f:Fixture,args:string[], options:{mutate?:(report:Result)=>void; seen?:string[][]}={}):Promise<Result> {
   const module=await import(engineFile);
@@ -107,7 +121,10 @@ test('v2 Node analyzer supplies a real conditional changed-tree fixture',()=>{
 
 test('Node execution uses a successful full baseline, then runs the affected target only',async()=>{
   const f=fixture('node');try {
-    assert.equal(analyze(f).analysis_status,'conditional');await establishBaseline(f);
+    assert.equal(analyze(f).analysis_status,'conditional');
+    checkoutBaseline(f);const baseline=realFullRun(f);assert.equal(baseline.status,0,baseline.stderr);
+    checkout(f,f.b);const changed=realFullRun(f);assert.equal(changed.status,0,changed.stderr);
+    await establishBaseline(f);
     const seen:string[][]=[];const result=await verify(f,['--from',f.a,'--to',f.b,'--json'],{seen});
     assert.equal(result.selection_strategy,'selective');assert.equal(result.execution_status,'passed');
     assert.ok(result.receipt_id,'successful selective verification should chain a receipt');
@@ -122,6 +139,8 @@ test('Go execution runs changed package and dependents but excludes an independe
     const impact=analyze(f);assert.equal(impact.analysis_status,'conditional',JSON.stringify(impact.analysis_gaps));
     assert.ok(impact.affected.some((x:Result)=>x.path==='consumer/consumer_test.go'));
     assert.ok(!impact.affected.some((x:Result)=>x.path==='b/b_test.go'));
+    checkoutBaseline(f);const baseline=realFullRun(f);assert.equal(baseline.status,0,baseline.stderr);
+    checkout(f,f.b);const changed=realFullRun(f);assert.equal(changed.status,0,changed.stderr);
     await establishBaseline(f);const seen:string[][]=[];const result=await verify(f,['--from',f.a,'--to',f.b,'--json'],{seen});
     assert.equal(result.selection_strategy,'selective');assert.equal(result.execution_status,'passed');
     for(const target of f.impacted) assert.ok(units(result).includes(target),`missing ${target}`);
@@ -129,6 +148,21 @@ test('Go execution runs changed package and dependents but excludes an independe
     assert.ok(seen.some(argv=>argv.some(x=>x===f.impacted[0])),'go test must execute the changed package');
     assert.ok(seen.some(argv=>argv.some(x=>x===f.impacted[1])),'go test must execute a dependent package');
     assert.ok(!seen.some(argv=>argv.includes(f.independent)),'unrelated package must not execute');
+  }finally{cleanup(f);}
+});
+
+test('a bounded Go resource gap selects dependents outside its package without forcing all packages', {skip:!hasGo()},async()=>{
+  const f=goResourceFixture();try {
+    const impact=analyze(f);assert.equal(impact.analysis_status,'conditional',JSON.stringify(impact.analysis_gaps));
+    assert.ok(impact.required_fallback_scopes.some((x:Result)=>x.kind==='scope' && x.scope==='go-package:example.test/fixture:a'));
+    assert.ok(!impact.required_fallback_scopes.some((x:Result)=>x.kind==='full_profile'));
+    assert.ok(impact.affected.some((x:Result)=>x.path==='consumer/consumer_test.go'));
+    await establishBaseline(f);const seen:string[][]=[];
+    const result=await verify(f,['--from',f.a,'--to',f.b,'--json'],{seen});
+    assert.equal(result.selection_strategy,'selective');assert.equal(result.execution_status,'passed');
+    for(const target of f.impacted) assert.ok(units(result).includes(target),`missing bounded dependent ${target}`);
+    assert.ok(!units(result).includes(f.independent));
+    assert.ok(!seen.some(argv=>argv.includes(f.independent)),'bounded fallback must not execute unrelated packages');
   }finally{cleanup(f);}
 });
 
@@ -157,8 +191,10 @@ test('missing, duplicate, forged or unknown conditional requirements cannot excl
     assert.deepEqual(ids.filter(id=>pristine.context_requirements.some((r:Result)=>r.id===id)),ids);
     const mutations:Array<[string,(r:Result)=>void]> = ids.map(id=>[`omit ${id}`,r=>{r.context_requirements=r.context_requirements.filter((x:Result)=>x.id!==id);}]);
     mutations.push(['duplicate requirement',r=>{r.context_requirements.push(structuredClone(r.context_requirements[0]));}],
+      ['omit triggered node dependency',r=>{r.context_requirements=r.context_requirements.filter((x:Result)=>x.id!=='dependency:node:test');}],
       ['unknown model',r=>{r.supported_model.version='unknown';}],
       ['weaker collector',r=>{r.context_requirements[0].evidence_kind='analyzer_assertion';}],
+      ['weakened predicate',r=>{r.context_requirements[0].predicate={op:'always_true'};}],
       ['unknown requirement',r=>{r.context_requirements.push({id:'unrecognized',kind:'plugin',evidence_kind:'unknown',predicate:{op:'accept'}});}],
       ['wrong target identity',r=>{r.comparison.to.commit=f.a;}]);
     for(const [label,mutate] of mutations){const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{mutate});
@@ -170,5 +206,15 @@ test('target mismatch cannot run tests or claim a passing receipt',async()=>{
   const f=fixture('node');try {const seen:string[][]=[];
     const report=await verify(f,['--from',f.a,'--to',f.a,'--all','--json'],{seen});
     assert.notEqual(report.verification_status,'validated');assert.ok(!report.receipt_id);assert.ok(!seen.some(a=>a.includes('--test')));
+  }finally{cleanup(f);}
+});
+
+test('an unbounded analyzer gap or a conservative v1 report cannot justify a sparse plan',async()=>{
+  const f=fixture('node');try {await establishBaseline(f);
+    const transforms:Array<(r:Result)=>void>=[
+      r=>{r.analysis_gaps.push({revision:'to',path:'src/a.ts',kind:'dynamic_load',scope:null,detail:'unbounded'});r.required_fallback_scopes=[{kind:'full_profile',scope:null,reason:'unbounded'}];r.analysis_status='incomplete';},
+      r=>{r.schema_version=1;delete r.supported_model;delete r.context_requirements;r.analysis_status='incomplete';r.analysis_gaps=[{revision:'to',path:null,kind:'unmodeled_dependencies',scope:null,detail:'unknown'}];r.required_fallback_scopes=[{kind:'full_profile',scope:null,reason:'unknown'}];},
+    ];
+    for(const mutate of transforms){const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{mutate});full(report);assert.ok(!report.receipt_id);}
   }finally{cleanup(f);}
 });

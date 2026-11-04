@@ -10,51 +10,51 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [
         {
-          "id": "adversary_design:5:1",
-          "impact": "A malicious or unexpected commit can disclose or modify local data, and untracked external inputs can make a conservative report unsound.",
+          "id": "adversary_design:7:1",
+          "impact": "An incomplete or spoofed conditional report could cause affected tests to be skipped because the consumer never checks a context dependency.",
           "material": true,
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "resolved",
+          "status": "open",
           "target": "design",
-          "target_attempt": 8,
-          "target_fp": "v1:sha256:83d8a8f1e060ab27f505815b4b130195f5099defa9896168e9d7267a0be396c6",
-          "text": "The commit-only design permits materializing Git tree entries while preserving modes but does not constrain symlink dereferencing or filesystem containment. A committed source symlink to an absolute or parent-relative path can make a naive analyzer read outside the claimed snapshot (including private local files) or let materialization/write/cleanup escape the temporary root; external target bytes also are not covered by the snapshot identity. Require safe no-follow or proven contained, explicitly pinned resolution and unbounded gaps when link dependencies cannot be modeled; protect writes and cleanup, and test absolute/relative/link-chain escapes against external sentinels.",
+          "target_attempt": 10,
+          "target_fp": "v1:sha256:98222739c65cc672770c55eb6b9bed77ed05d320c9506cdfd3dad6eb11b7c260",
+          "text": "The v2 contract says requirements are mandatory and missing requirements fail closed, but defines only the kinds and values that the schema permits, not an independently defined complete requirement set and evidence binding for each allowlisted model/version and relevant input. A malformed report can omit a loader/hook requirement while retaining a nonempty unique requirements list, or substitute a weaker evidence kind; a consumer checking only present entries has no way to recognize the omission and may select sparsely without establishing the required context. Require an independent, versioned model contract for required IDs/kinds and admissible evidence bindings, including requirements triggered by discovered input; compare the report against it and fall back on missing, substituted, inconsistent or unknown entries. Test removal, evidence-kind substitution and omission of input-triggered requirements.",
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T00:58:05Z",
+      "finished_at": "2026-11-04T17:08:45Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "doc": "v1:blob:b683c036a3e28d46c81e0a54afde8f49e3d2855e",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {},
-        "subject": "v1:sha256:ad72273520fed21274d5d24e18df777c58f91d2c59509b05c7bd899425f06bc7"
+        "subject": "v1:sha256:628f75fcbd8499e46f901cab78a68f617660fc7559e6d61c1601e775d7d5c3b2"
       },
-      "holder": "codex:root/g1-commit-adversary2",
-      "input_fp": "v1:sha256:063c24ee64defcacdd0e6ee71fb98f4320fe749df2d562c5645bd0a09a5b423a",
+      "holder": "codex:root/g1-context-adversary",
+      "input_fp": "v1:sha256:186a05c2f1ec0736fb9dcfe738054369331e0478bee67f43e9c6a4ab5a47ec0f",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "74fdc89ef469d26d949380e768967b37bfcddee5",
-          "commit": "cc4fb098752c5bffa2707e5a6419b543a956e519",
+          "blob": "6e1d70752a7fb76841a454f7770b1ff8bdbf2d94",
+          "commit": "e262c399145340b03e10bab1c54b323693bd303f",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "Committed-snapshot symlink containment is specified and the prior finding is resolved."
+        "summary": "Bind conditional requirement completeness to an independent model contract before allowing sparse execution."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c"
+          "blob": "b683c036a3e28d46c81e0a54afde8f49e3d2855e",
+          "commit": "9cc2a43cba388e30e9c8d069719a346e1136be1c"
         }
       },
       "status": "done"

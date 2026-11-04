@@ -322,10 +322,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T23:45:04Z",
+      "finished_at": "2026-11-04T23:48:10Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -337,7 +337,7 @@
       "frozen": [
         "test/test-impact-setup-contract.test.ts"
       ],
-      "holder": "codex:root/g3-test-design2",
+      "holder": "codex:root/g3-test-design3",
       "input_fp": "v1:sha256:0b21ca4bcd070a280b246164dec9287fdc609bdc75a4ec186f2f317fbbd3f3ac",
       "ok": true,
       "output": {
@@ -347,33 +347,30 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 8356,
+              "duration_ms": 10071,
               "id_or_scope": "test/test-impact-setup-contract.test.ts",
-              "observation": "All 14 tests fail. One measured real npm build/pack then found missing packaged asset; the others stop at absent setup entry point, so post-implementation test execution and timings remain unmeasured."
+              "observation": "All 14 cases fail red before full setup is available. The package test successfully builds, packs, and performs a clean offline install using the existing npm cache, then fails because the installed setup asset does not exist; configuration and execution remain unmeasured."
             }
           ],
-          "checkpoint": "3526e2dd48a17c2b42e0fb48be84d079753d31a7",
+          "checkpoint": "61a73e80599d7533bc29aec1a61b9a26cbc239be",
           "commands": [
             {
               "cmd": "PATH=/tmp/trail-g1-go/go/bin:$PATH node --import tsx --test test/test-impact-setup-contract.test.ts",
-              "duration_ms": 8514,
+              "duration_ms": 10228,
               "exit": 1
             }
           ],
-          "summary": "Red evidence is intentionally incomplete because the setup asset is not yet implemented. Re-run after implementation; full Trail-code fallback case runs the existing repository suite and may take tens of minutes.",
-          "total_ms": 8514
+          "summary": "The packaged install reaches the missing-asset assertion using an isolated installation and home. Other feature and fixture execution timings are incomplete until the setup implementation exists. Offline installation requires populated npm cache.",
+          "total_ms": 10228
         },
         "responses": {
-          "review_tests:1:1": "fixed: Test bodies append independent markers so Go dependent and unrelated test execution is observed directly; a pinned Trail-code fixture preserves the original npm test command, requires an explicit full plan, and executes full fallback. These paths remain unmeasured until setup exists.",
-          "review_tests:1:2": "fixed: Fresh npm package test builds, packs, unpacks and invokes setup asset; maintenance tests check unchanged rerun, user edits, added project and changed original command; tests require incompatible helper and malformed configuration to fail without passing evidence. Deliberate generated-content edit is preserved or setup stops.",
-          "review_tests:1:3": "fixed: Added failed Go discovery and mixed-language boundary tests that require a gap, rejection, or nonselective plan; generated adapter tests check mismatched endpoints and test failure propagation without validation. Missing model/context predicate validation remains exercised by G2 helper contract tests, rather than injecting fake analyzer evidence into production setup.",
-          "review_tests:1:4": "fixed: Malicious README and CI content is exercised in an otherwise normal setup and full run, checks both test bodies execute and no injected command runs, and includes a consistent AGENTS.md instruction. Symlink destination rejection is tested independently."
+          "review_tests:1:2": "fixed: Package fixture builds and packs the distribution, installs it into a clean directory with a separate HOME and no lifecycle scripts, invokes the installed setup asset against a separate Go repository, verifies generated paths do not reference the development checkout, commits its integration and requires its adapter to execute all real Go test bodies through the installed helper. Existing tests cover maintenance and failed setup. The installation ran successfully before reaching the expected missing asset failure; later behavior remains unmeasured."
         },
         "tests": {
           "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
-          "change": "525e55122c774002ed46179f167f84dc1796360c",
-          "commit": "3526e2dd48a17c2b42e0fb48be84d079753d31a7",
-          "tree": "a1b56331321f8fd55faf57039d44ed10bad8aa0b"
+          "change": "4868cd1f9533e45b94b586a084fcd6c9afedfaec",
+          "commit": "61a73e80599d7533bc29aec1a61b9a26cbc239be",
+          "tree": "7df19db5d024141c549e971f05a534464caafa7b"
         }
       },
       "reason": "reopened",

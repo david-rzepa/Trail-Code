@@ -121,10 +121,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 8,
-      "correction_runs": 5,
+      "attempt": 9,
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-04T00:54:30Z",
+      "finished_at": "2026-11-04T00:57:10Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -133,18 +133,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-commit-design-2",
+      "holder": "codex:root/g1-commit-design-3",
       "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "e6a1b1620717362d7fc8639267e7ca655272da68",
-          "commit": "2f883c1ae68c06490174c89b36940c30821b9e67",
+          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c",
           "path": ".zzzops/reviews/1/design.md"
         },
-        "summary": "Adapt conservative impact analysis to explicit committed endpoints, reading immutable Git trees with portable mechanisms and clearly rejecting worktree targets. Preserve exact target identity, fail closed on unavailable inputs, and leave execution-time mutation protection to the adapter."
+        "responses": {
+          "adversary_design:5:1": "fixed: Define no-follow or same-tree proven link resolution, unbounded fallback for unsupported or escaping dependencies, root-contained creation and cleanup, and sentinel tests for absolute, relative and chained escapes."
+        },
+        "summary": "Require safe handling of committed symlinks and root-contained materialization, with conservative gaps where link dependencies cannot be proven inside the pinned tree. Add escape, link-chain and cleanup tests without changing the portable commit-only scope."
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

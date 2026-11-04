@@ -204,30 +204,35 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 11,
-      "correction_runs": 10,
+      "attempt": 12,
+      "correction_runs": 11,
       "findings": [],
-      "finished_at": "2026-11-04T19:47:37Z",
+      "finished_at": "2026-11-04T20:41:01Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
           "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
-          "tests": "v1:sha256:22cee2312f025b59011cecdd28fc575b6f03a975137b3cfd5e33103f9a248634"
+          "tests": "v1:sha256:5ed1e190ea242a0e640e7d9d52b3b033f9c76bbb03bd553be14f5b6548a4173d"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-multilingual-implement",
-      "input_fp": "v1:sha256:fc676a414eb481fa1635fa924035f9f672daa9693938eac1e4f9207776920ea4",
+      "holder": "codex:root/g1-multilingual-fix",
+      "input_fp": "v1:sha256:5f3965fc1e5142eb9e94917804602117b04d3f23f9416a9bc27947c800a07c33",
       "ok": true,
       "output": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "ceef65cb3a569e809f6ccb6148163e30f8c4025f",
-          "commit": "aacc7388d18a83ca62efc473f4d834cd3c20ddf4",
-          "tree": "8ea22b3ec5032925dc2b60b39d89c8b48014192f"
+          "change": "5be617847f95fcdb487ca61540b52483b9d4b6f4",
+          "commit": "333923c91f7b1a52457987f11301848fb1f1626c",
+          "tree": "f63a5a92f843af1671e5850264710703d722be03"
         },
-        "summary": "Add versioned Go package dependency model and broaden the TypeScript model, with reusable raw import facts rebuilt from pinned bytes, revision-specific reverse closure and bounded package-and-dependent fallback for changed exact embedded inputs. All frozen suites passed (29 conservative, 11 coordinator, 3 installed package, 17 v2), plus eight model tests and build. Real Go execution passed the baseline; an intentional A regression failed selected A and consumer tests and the full suite while independent B passed. Scope is intentionally limited: Go cgo, external modules, build tags and unmodeled inputs fall back; Python and mixed-language dependencies remain unsupported. G2 must independently validate the new exact model versions, runtime requirements and bounded package scopes before any sparse execution. Windows ACL host validation remains outstanding."
+        "responses": {
+          "review_impl:5:1": "fixed: Any tracked path under testdata produces an unbounded gap even if named README.md or referenced by an embed. The frozen real Go fuzz test demonstrates a passing corpus changed to a failing seed and confirms full fallback.",
+          "review_impl:5:2": "fixed: Preserve raw import intents and candidates with source and revision provenance, including Python multi-imports and TypeScript re-exports; extractor changes invalidate raw-fact caches. Merge certified Go package and resource edges with the shared snapshot graph and traverse the combined reverse closure. Unmodeled relationships remain unbounded gaps.",
+          "review_impl:5:3": "fixed: Accept and emit runtime dependency requirements for strings and strconv and for selected pure formatting operations of fmt; reject unsupported or aliased fmt operations and unknown imports. The frozen independent-package Go standard-library fixture remains selective, and Go fallback diagnostics identify the Go model."
+        },
+        "summary": "Prevent tracked Go testdata, including fuzz corpus files named README.md, from being treated as irrelevant. Preserve raw multilingual import candidates and re-exports, merge Go package and resource relations into the shared graph, and support restricted standard-library dependencies with model version bumps. Required suites passed 29/11/3/21 (the Go fuzz test ran with a real Go toolchain), plus additional model and raw-fact tests and build. Unknown inputs, unsafe fmt operations, unsupported stdlib packages, Python execution and mixed-language dependencies remain fail-closed; G2 must independently validate the new models and scope boundaries."
       },
       "reason": "stale",
       "status": "done"

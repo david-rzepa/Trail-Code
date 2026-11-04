@@ -121,10 +121,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 11,
-      "correction_runs": 8,
+      "attempt": 12,
+      "correction_runs": 9,
       "findings": [],
-      "finished_at": "2026-11-04T17:11:55Z",
+      "finished_at": "2026-11-04T17:15:12Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -133,19 +133,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-design2",
+      "holder": "codex:root/g1-context-design3",
       "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "189cac32eaba18fa6ae71003df76a52e9f20abd2",
-          "commit": "53ba3ec0b8b635009362b87ca9f46ab74587e89c",
+          "blob": "e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "commit": "9f2c1070538df1cdbe3952e62f9bfdc39517fbb4",
           "path": ".zzzops/reviews/1/design.md"
         },
         "responses": {
-          "adversary_design:7:1": "fixed: Added a model-version registry defining singleton requirements, independently discovered triggers, admissible collectors and execution bindings, exact-set comparison and fail-closed tests for missing, substituted or omitted requirements."
+          "review_design:8:1": "fixed: Replaced fabricated expected execution values with machine-readable registered predicates, concrete inventory and baseline descriptors and independent G2 binding; added standalone-to-G2 success and forged/mismatched evidence tests."
         },
-        "summary": "Define an independently trusted, versioned model registry with complete mandatory and input-triggered requirement sets and fixed evidence bindings. G2 derives and compares the full set before allowing conditional sparse selection."
+        "summary": "Separate standalone analyzer predicates and commit-derived parameters from runtime facts collected by G2. Bind and validate the actual profile, inventory and baseline through independently registered collectors before using a conditional sparse result."
       },
       "reason": "reopened",
       "status": "done"

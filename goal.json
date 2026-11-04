@@ -121,10 +121,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 9,
-      "correction_runs": 6,
+      "attempt": 10,
+      "correction_runs": 7,
       "findings": [],
-      "finished_at": "2026-11-04T00:57:10Z",
+      "finished_at": "2026-11-04T17:07:02Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -133,19 +133,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-commit-design-3",
+      "holder": "codex:root/g1-context-design",
       "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c",
+          "blob": "b683c036a3e28d46c81e0a54afde8f49e3d2855e",
+          "commit": "9cc2a43cba388e30e9c8d069719a346e1136be1c",
           "path": ".zzzops/reviews/1/design.md"
         },
         "responses": {
-          "adversary_design:5:1": "fixed: Define no-follow or same-tree proven link resolution, unbounded fallback for unsupported or escaping dependencies, root-contained creation and cleanup, and sentinel tests for absolute, relative and chained escapes."
+          "implement:8:1": "fixed: Specified v2 CLI selection, conditional status, model and requirements schema, supported Node/TypeScript boundaries, evidence and fail-closed G2 validation, v1 compatibility, and sparse/adversarial acceptance fixtures; recorded Dave’s approval."
         },
-        "summary": "Require safe handling of committed symlinks and root-contained materialization, with conservative gaps where link dependencies cannot be proven inside the pinned tree. Add escape, link-chain and cleanup tests without changing the portable commit-only scope."
+        "summary": "Add an explicitly requested schema v2 with conditional impact, a versioned supported Node/TypeScript model and machine-readable context requirements. Require G2 to validate every requirement against independent evidence or use full fallback, while preserving conservative v1 behavior."
       },
       "reason": "reopened",
       "status": "done"

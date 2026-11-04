@@ -1,3 +1,3 @@
-# Re-review: full fallback and receipts
+# Re-review: multilingual end-to-end validation
 
-Resolved `review_design:2:1`. The revised matrix distinguishes missing evidence needed only for conditional sparse selection from missing full-run or receipt-identity evidence. It permits a successful full fallback receipt only when the latter requirements are satisfied and requires separate tests for both cases. No new material issue in the change.
+The updated release gates require completed sparse execution with independent full comparisons for real Node/TypeScript and Go targets, not just plans or fallbacks. They exercise language/build boundaries, external dependents, context validation, build tags and unsupported inputs, and measure both real adapters. Prior receipt distinctions and the owner's normal-runner stable-input scope remain intact. No material issue in this change.

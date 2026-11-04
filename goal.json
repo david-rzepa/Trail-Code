@@ -162,25 +162,42 @@
       "status": "done"
     },
     "filter_impl": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-04T18:55:55Z",
+      "finished_at": "2026-11-04T20:23:03Z",
       "fp_parts": {
-        "candidates": [],
+        "candidates": [
+          [
+            "review_impl:5:1",
+            true
+          ],
+          [
+            "review_impl:5:2",
+            true
+          ],
+          [
+            "review_impl:5:3",
+            true
+          ],
+          [
+            "review_impl:5:4",
+            true
+          ]
+        ],
         "def": "v1:sha256:5fab78ee7a74554d9897b964ee764247bd55068d6c3b2a64932fad9704979c4b",
         "inputs": {
-          "code": "v1:sha256:4dc21de67e21082766705f421d9db025d339ed068caa9ceba578cd3c26ee5fc8",
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "review": "v1:sha256:a574b565b02e8c529692995571c3c4b4e1dce2bae2eb669f156d1c53b505c706"
+          "code": "v1:sha256:3fc9fd59454a5c87e9b3c36b797d6b2fbbe2e379b2f2e6cd1b51c561e67860c6",
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
+          "review": "v1:sha256:aa15071c63846f46950c805bc34267a8a29806335814898654d4a1dedf6969da"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-v2-filter-impl2",
-      "input_fp": "v1:sha256:7405afcd40920aa97e7e4117262744f520fc4d963dfa8005efa67f5725a2797c",
+      "holder": "codex:root/g1-multilingual-filter-impl",
+      "input_fp": "v1:sha256:32fa8c6d4e62728a5fc831d7ba844dc7ac56221f670483d7af39e7d180ccca51",
       "ok": true,
       "output": {
-        "summary": "Implementation re-review resolved both malformed-tree implementation and regression-test findings. No open findings or notes require verdicts.",
+        "summary": "Implementation review found four material issues involving implicit Go fuzz corpus dependencies, the approved shared multilingual graph pipeline, ordinary Go standard-library imports, and regression coverage. They reopen implementation and test design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

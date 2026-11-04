@@ -152,35 +152,31 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 10,
-      "correction_runs": 9,
+      "attempt": 11,
+      "correction_runs": 10,
       "findings": [],
-      "finished_at": "2026-11-04T19:07:04Z",
+      "finished_at": "2026-11-04T19:11:55Z",
       "fp_parts": {
         "candidates": [
           [
-            "adversary_design:10:1",
-            true
-          ],
-          [
-            "review_design:10:1",
+            "review_design:11:1",
             true
           ]
         ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:56398c86b700d0ddd0068b338bef4d972fbb081c798963d3ada398492be13fca",
-          "doc": "v1:blob:7f147521938cbeea607e7eec549cbbd37be958c5",
-          "review": "v1:sha256:72670a771c301062bb0e4d0bf17daa757ed5b6829753c101cc94b964ae346180",
-          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
+          "adversary": "v1:sha256:d1a510bf57bc43027c77939a863a0173b9bd899eab9685ccf70e97bb16617b99",
+          "doc": "v1:blob:5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
+          "review": "v1:sha256:354c5ff99256b48439cc0a601e485ecadb646eac00b584577d4f683f2f219e8f",
+          "spec": "v1:sha256:a325a50fefccbdcf4afbe6f9596c2568dbe228071d37a46ed7ee580e3d25e79c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-multilingual-filter",
-      "input_fp": "v1:sha256:2b4582487cecb26b1c18bdda2efc6f5c4b893be470f3b27934c143a29e6228e4",
+      "holder": "codex:root/g1-multilingual-filter2",
+      "input_fp": "v1:sha256:3b5c61e02b19907887ddcd0609a1ecbe2d3f3b85eee4482f262bb65f6e2c409b",
       "ok": true,
       "output": {
-        "summary": "Both reviews identify material inconsistencies between the multilingual design and the owner-approved ordinary stable-input execution model. These findings reopen design. No non-material notes require verdicts.",
+        "summary": "Adversarial review resolved the execution-model conflict. The design review raised one material finding requiring a concrete non-Node sparse-selection acceptance floor. It reopens design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

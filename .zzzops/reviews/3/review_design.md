@@ -1,3 +1,3 @@
-# Re-review: committed endpoints and normal runner execution
+# Re-review: multilingual setup
 
-The changes align generated adapters with the owner-directed committed-only and stable-input scope, retain ordinary Git preflight and honest reporting, and preserve the original full command. Conditional v2 requirements are independently checked by the versioned helper registry; unknown or incomplete evidence forbids sparse selection. The updated tests cover supported sparse execution, malformed requirements, baseline compatibility and endpoint behavior without claiming continuous mutation detection. No new material issue in the change.
+The revised setup inspects and validates actual Go package discovery and execution, preserves the full module command, and requires a real conditional sparse run as well as the Node integration. Mixed-language boundaries and bounded fallbacks require verified dependent mappings rather than directory assumptions, while unsupported behavior broadens safely. The normal committed-target preflight and stable-input scope remain intact. No new material finding in the change.

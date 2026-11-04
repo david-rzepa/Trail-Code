@@ -407,63 +407,38 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 3,
-      "correction_runs": 2,
-      "findings": [
-        {
-          "id": "review_tests:1:2",
-          "note": null,
-          "response": "fixed: Added predecessor-chain, copied checkout evidence, unsafe symlink store, failed and cancelled execution, interrupted and concurrent receipt publication cases.",
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 3,
-          "target_fp": "v1:sha256:af47694d0656cf648afd66074ed85554183070fd2af55d683e6a3fcaff006a25",
-          "text": "Exercise receipt compatibility, complete predecessor-chain validation, failed/partial/cancelled execution, forged tracked evidence, unsafe store paths, partial writes and concurrent publication; invalid evidence must not justify selective execution or a passing receipt.",
-          "upheld": false
-        },
-        {
-          "id": "review_tests:1:3",
-          "note": null,
-          "response": "fixed: Added production-entry subprocess plan and JSON check, original full-workflow checks, fixture setup/runner/gate ordering and child-output capture, cancellation and stable-input reporting. Full production execution awaits implementation.",
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 3,
-          "target_fp": "v1:sha256:af47694d0656cf648afd66074ed85554183070fd2af55d683e6a3fcaff006a25",
-          "text": "Exercise the production entry point and real repository workflow, including preparation, order, logs, gates, nonrecursive full fallback, JSON isolation and failure/cancellation; verify honest ordinary checkout preflight and stable-input reporting.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T21:48:11Z",
+      "attempt": 4,
+      "correction_runs": 3,
+      "findings": [],
+      "finished_at": "2026-11-04T23:00:47Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
-          "tests": "v1:sha256:5839adf7febe0d4b8bbfc290609837c328cee3495a16534342b7d97b22c8c5f9"
+          "tests": "v1:sha256:3f19ccbfc7b4eaeadbc7f52c76a574506bfb2645ed9e009dda48dbd7399c155f"
         },
         "policy": {},
-        "subject": "v1:sha256:5a4b71fe5009eb101bf2c6055afd415731522d5921c3069d6622f4f76b85d29c"
+        "subject": "v1:sha256:485ea2f4b935f936bb06ef1a390b517b118261cd2fb442fe0e0ad918becd306f"
       },
-      "holder": "codex:root/g2-test-review3",
-      "input_fp": "v1:sha256:2fed9dd67bd1b9731ab72f1861fb34757fdb7995d9ac1b6833e25fe5eeb4ff67",
+      "holder": "codex:root/g2-review-tests2",
+      "input_fp": "v1:sha256:58b7dc4cc0fda2b65255e544660737545da7980cedde13220ba732da8b9cfa38",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "13efe8817893b8fee392f23b1468711c7f60155f",
-          "commit": "f2cd9010affd45da4a2795ffd963c11a1e2d944a",
+          "blob": "63fc1297d12d8174b06d8324c0a01ddcec62e1d8",
+          "commit": "a14e7d2c7f81359f3e331f6775b91c94dee4b17a",
           "path": ".zzzops/reviews/2/review_tests.md"
         },
-        "summary": "The revised tests cover receipt compatibility and corruption, store replacement, and production CLI execution and failure behavior; completed behavior remains to be verified after implementation."
+        "summary": "The four targeted regressions exercise real Go runnable inputs and affected-entry validation; all currently expose implementation defects that must be corrected."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "8ec0c6fb58ebadc43602db38ea643e37e63d4560",
-          "change": "ea4fdc1c3a8ed443530b0894f3e0943dcc6967b2",
-          "commit": "6934d7bf9fb6ff302d8eb25dc810a1830b856daa",
-          "tree": "35dfc0e7218f9ae66cd4f60be0595413ad932aef"
+          "change": "b61484fcefe6eb4c4ad3be838657148895a17cfa",
+          "commit": "d2a2bac91db730a9558d7af44a350b277b39f354",
+          "tree": "3f1d0063335fbbc83cb51a8bc8699e751fa729c4"
         }
       },
       "status": "done"

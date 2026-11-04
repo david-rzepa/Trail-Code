@@ -313,8 +313,8 @@
       "status": "done"
     },
     "review_impl": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "review_impl:1:1",
@@ -324,7 +324,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 5,
           "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
@@ -337,12 +337,12 @@
           "lens": "compliance",
           "material": true,
           "note": null,
-          "response": null,
-          "rounds": 1,
+          "response": "disputed: Identical populated Git trees now analyze inputs and return complete when no actual gaps exist. Changed trees still require unbounded fallback because callbacks, resources, dynamic dispatch and cross-file resolution remain unmodeled; treating those relationships as complete would violate the approved design. No unsupported scope is claimed.",
+          "rounds": 2,
           "status": "open",
           "target": "implement",
-          "target_attempt": 5,
-          "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
+          "target_attempt": 6,
+          "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
           "text": "src/impact/analyze.ts unconditionally emits an unbounded gap for every changed tree and every identical nonempty tree. Implement justified supported completeness or bounded scopes, including a valid unchanged populated tree, rather than always forcing full-profile fallback.",
           "upheld": false
         },
@@ -354,7 +354,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "implement",
           "target_attempt": 5,
           "target_fp": "v1:sha256:e3261c6fac6b4e0d5513aefaa577956a02584e1a4b5bd43dc592f8725d6d9351",
@@ -369,22 +369,52 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 8,
           "target_fp": "v1:sha256:452c91b64eb8a79df5c662602854c03e7b5d506aa992429c206b2019f217d34f",
           "text": "test/conservative-impact-contract.test.ts checks valid empty only for empty repositories and lacks replacement-ref and actual packed-install checks. Add regression coverage for immutable commit/tree/blob IDs under Git replacements, unchanged populated trees without fabricated full fallback, and installed package grammar identity/cache reuse.",
           "upheld": false
+        },
+        {
+          "id": "review_impl:2:1",
+          "impact": "A changed ESM parser runtime can retain the same grammar identity and cache key, replaying extraction facts from a different runtime.",
+          "lens": "correctness",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 6,
+          "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
+          "text": "src/impact/analyze.ts grammarIdentity hashes createRequire.resolve(\"web-tree-sitter\"), the CJS entrypoint, but src/graph/wasm-runtime.ts dynamically imports the distinct ESM entrypoint web-tree-sitter.js for breadth/container parsing. Hash the actual loaded runtime or otherwise version all parsing inputs.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:2:2",
+          "impact": "The required extraction cache is unavailable on a supported platform, hurting repeated-run performance and breaking the packaged distribution test there.",
+          "lens": "correctness",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 6,
+          "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
+          "text": "src/impact/analyze.ts extractionCache tests POSIX group/other mode bits on all platforms. On Windows libuv synthesizes those bits for ordinary writable directories and does not model NTFS ACL privacy, so the parent check rejects cache creation and the packed cache test fails. Use a Windows-appropriate secure cache design and verify on Windows.",
+          "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T02:08:21Z",
+      "finished_at": "2026-11-04T02:50:36Z",
       "fp_parts": {
         "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "code": "v1:sha256:2f5d4d3c54e0f2567b941a2696fa3a29c9d3306de47ebe34d51b81a79fcd57a1",
+          "code": "v1:sha256:21f59dbead91aab9b0e6ce14afbcce8070aa1df4a1fee8d09c753b63482edb90",
           "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:8362cf3cf678387c4f45ad3b919284b4d4b56ed257b7f24af813709d7c6ebaf1"
+          "tests": "v1:sha256:ca6b7b7f85963f5eefbbde93978d6d9b5bc0ad26b1479f46a40fa251e6c97950"
         },
         "lenses": [
           "compliance",
@@ -394,27 +424,27 @@
           "craft"
         ],
         "policy": {},
-        "subject": "v1:sha256:1397144183e77f5aa23ee2c1a418c22597b6f0bc44a99cfff6be355657093403"
+        "subject": "v1:sha256:80c7e6e4787d1abeefc79d1eef2891802e4bc0f2eb1a843da0d90c2ac2506769"
       },
-      "holder": "codex:root/g1-commit-review-impl",
-      "input_fp": "v1:sha256:6c3fb59de6eb2648e04fb3995f69bcfb3b3e9160d3a4e5a79797b3b1a5ee9115",
+      "holder": "codex:root/g1-review-impl-2",
+      "input_fp": "v1:sha256:e443a7547a3fa79cdbc689ea4220e04ddb4b76546a20da983a068f32eff5a741",
       "ok": true,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "f1b3b07d7331c0fb37c3efdf8b30bb3914480368",
-          "commit": "357d120d819e3e10e690c5e65df55ca7c9e67f54",
+          "blob": "1b08ec1b098403cd63148d0d2d5848c2f531d855",
+          "commit": "c3272f1f00fcb10e209bc82520dee75c841ca6e9",
           "path": ".zzzops/reviews/1/review_impl.md"
         },
-        "summary": "Exact Git identity, universally forced fallback, and packaged grammar/cache behavior require correction."
+        "summary": "Changed comparisons still force full fallback; Windows cache permissions and the grammar runtime identity also require correction."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "a847d6b33e2838c3ef77b4fe2a08c51bd0e4eb05",
-          "commit": "736dc2f86b7c6a62714eadbc6b4042a9c46f10c2",
-          "tree": "d8766808e7bf581a41a6c748226fc1491091d870"
+          "change": "d1b89621476b0308e7e7ac60a4bb52c605e9b547",
+          "commit": "40105ba4506ea364410f8fc9872ad772ea7ba8ec",
+          "tree": "9598388b5df746158cb642c6c5744e095401eaca"
         }
       },
       "status": "done"

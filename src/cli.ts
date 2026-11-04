@@ -1067,6 +1067,26 @@ grouped(program.command("impact"), GROUP.ci)
     }
   });
 
+grouped(program.command("verify"), GROUP.ci)
+  .description("Plan and run tests against two explicit committed endpoints")
+  .option("--from <commit>", "comparison source commit", (value: string, previous: string[] = []) => [...previous, value], [])
+  .option("--to <commit>", "comparison target commit", (value: string, previous: string[] = []) => [...previous, value], [])
+  .option("--profile <name>", "select the built-in node or go profile")
+  .option("--all", "run the complete configured workflow")
+  .option("--plan", "show the plan without executing tests")
+  .option("--json", "emit a JSON verification report")
+  .action(async (opts: {from:string[];to:string[];profile?:string;all?:boolean;plan?:boolean;json?:boolean}) => {
+    const { verify } = await import("./test-impact/verification.js");
+    const argv = [...opts.from.flatMap(value=>["--from",value]), ...opts.to.flatMap(value=>["--to",value]), ...(opts.profile ? ["--profile",opts.profile] : []), ...(opts.all ? ["--all"] : []), ...(opts.plan ? ["--plan"] : []), "--json"];
+    const controller = new AbortController();
+    const cancel = () => controller.abort();
+    process.once("SIGINT", cancel); process.once("SIGTERM", cancel);
+    try {
+      const result = await verify({cwd:process.cwd(),argv}, {signal:controller.signal,onChildOutput:(_stream,text)=>process.stderr.write(text)});
+      console.log(JSON.stringify(result)); process.exitCode = result.exit_code;
+    } finally { process.off("SIGINT",cancel); process.off("SIGTERM",cancel); }
+  });
+
 grouped(program.command("blast"), GROUP.ci)
   .description(
     "Blast radius of a diff: what depends on the lines this change touched ($0, no LLM). " +

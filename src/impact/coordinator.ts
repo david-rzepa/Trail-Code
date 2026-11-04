@@ -1,36 +1,27 @@
-import { createHash } from "node:crypto";
-
-/** Internal interfaces: capture backends must establish complete observation before enumeration. */
-interface CaptureBackend {
-  acquire(): Promise<{ strategy: "observed" | "immutable"; identity: string }>;
-  observe(): Promise<{ covered: boolean }>;
-  enumerate(): Promise<string[]>;
-  read(path: string): Promise<string>;
-  seal(): Promise<{ covered: boolean; events: unknown[] }>;
+/** Internal, injected Git snapshot and conservative cache boundaries. */
+type TreeEntry = { path: string; mode: string; oid: string };
+interface GitReader {
+  resolve(ref: string): Promise<{ commit: string; tree: string }>;
+  readTree(tree: string): Promise<TreeEntry[]>;
+  readBlob(oid: string): Promise<unknown>;
+}
+interface TreeMaterializer {
+  writeTree(entries: Array<TreeEntry & { bytes: unknown }>): Promise<unknown>;
   cleanup(): Promise<void>;
 }
-export async function captureWorktree({ backend, maxAttempts = 1 }: { backend: CaptureBackend; maxAttempts?: number }) {
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    try {
-      const snapshot = await backend.acquire();
-      if (snapshot.strategy !== "immutable" && snapshot.strategy !== "observed") continue;
-      if (snapshot.strategy === "observed" && !(await backend.observe()).covered) continue;
-      const files: Record<string, string> = Object.create(null) as Record<string, string>;
-      for (const path of (await backend.enumerate()).sort()) {
-        const value = await backend.read(path);
-        if (typeof value !== "string") throw new Error("capture read failed");
-        files[path] = value;
-      }
-      const sealed = await backend.seal();
-      if (snapshot.strategy === "observed" && (!sealed.covered || sealed.events.length !== 0)) continue;
-      const hash = createHash("sha256");
-      for (const path of Object.keys(files)) hash.update(JSON.stringify([path, files[path]]));
-      return { status: "captured" as const, files: { ...files }, fingerprint: hash.digest("hex"), snapshotIdentity: snapshot.identity };
-    } catch {
-      // Any loss of observation, enumeration or read invalidates this attempt.
-    } finally { await backend.cleanup(); }
-  }
-  return { status: "unavailable" as const };
+export async function readCommittedSnapshot({git, materializer, ref}: {git: GitReader; materializer: TreeMaterializer; ref: string}) {
+  let materializing = false;
+  try {
+    const {commit, tree} = await git.resolve(ref);
+    if (!commit || !tree) throw new Error("missing immutable identity");
+    const records = await git.readTree(tree);
+    const entries = [];
+    for (const entry of records) entries.push({...entry, bytes: await git.readBlob(entry.oid)});
+    materializing = true;
+    const value = await materializer.writeTree(entries);
+    return {status: "captured" as const, commit, tree, fingerprint: `git-tree:${tree}`, value};
+  } catch { return {status: "unavailable" as const}; }
+  finally { if (materializing) await materializer.cleanup(); }
 }
 
 type CacheIdentity = { snapshot: string; mode: string; policy: string; version: string };

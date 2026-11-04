@@ -1,16 +1,15 @@
 /** Conservative exact-endpoint impact. Unmodeled constructs always require full fallback. */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { lstatSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { constants, closeSync, lstatSync, mkdtempSync, mkdirSync, openSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { join, relative, isAbsolute, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGraph, tierOf } from "../graph/build.js";
 import { readGraph } from "../graph/write.js";
 import { extractorStamp, readExtractCache, writeExtractCache } from "../graph/extract-cache.js";
 import type { GraphV1 } from "../graph/types.js";
-import { captureBtrfsWorktree, type CapturedTree } from "./worktree.js";
-import { loadConservativeGraph } from "./coordinator.js";
+import { loadConservativeGraph, readCommittedSnapshot } from "./coordinator.js";
 import { preserveCandidates, type CandidateFact } from "./facts.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
@@ -20,9 +19,8 @@ function git(dir: string, args: string[]): Buffer {
   return p.stdout;
 }
 interface Endpoint { requested: string; kind: "commit"; commit: string; tree: string; fingerprint: string }
-interface WorktreeEndpoint { requested: "worktree"; kind: "worktree"; fingerprint: string }
 function endpoint(dir: string, requested: string): Endpoint {
-  if (!requested || requested === "worktree") throw new Error("invalid commit endpoint");
+  if (!requested || requested === "worktree") throw new Error("worktree endpoints are unsupported; provide a commit");
   const commit = git(dir, ["rev-parse", "--verify", "--end-of-options", `${requested}^{commit}`]).toString().trim();
   const tree = git(dir, ["rev-parse", "--verify", "--end-of-options", `${commit}^{tree}`]).toString().trim();
   if (!OID.test(commit) || !OID.test(tree)) throw new Error("invalid resolved commit or tree identity");
@@ -62,67 +60,68 @@ function compare(dir: string, from: Endpoint, to: Endpoint): Change[] {
   }
   return changes.sort((a,b) => (a.old_path ?? a.new_path ?? "").localeCompare(b.old_path ?? b.new_path ?? ""));
 }
-function compareWorktree(repo: string, from: Endpoint, captured: CapturedTree): Change[] {
-  const old = new Map<string, { mode: string; oid: string }>();
-  for (const record of git(repo, ["ls-tree", "-r", "-z", "--full-tree", from.tree]).toString("utf8").split("\0")) {
-    if (!record) continue;
-    const tab = record.indexOf("\t"), m = /^(\d+) (blob|commit) ([0-9a-f]+)$/.exec(record.slice(0, tab));
-    const path = record.slice(tab + 1);
-    if (!m || !path || path.includes("\ufffd")) throw new Error("unsupported tree path");
-    if (m[2] === "commit") throw new Error(`required submodule snapshot is unavailable: ${path}`);
-    old.set(path, { mode: m[1], oid: m[3] });
-  }
-  const algorithm = git(repo, ["rev-parse", "--show-object-format"]).toString().trim();
-  if (algorithm !== "sha1" && algorithm !== "sha256") throw new Error("unsupported Git object format");
-  const changes: Change[] = [];
-  for (const path of [...new Set([...old.keys(), ...captured.files.keys()])].sort()) {
-    const before = old.get(path), after = captured.files.get(path);
-    const oid = after ? createHash(algorithm).update(`blob ${after.bytes.length}\0`).update(after.bytes).digest("hex") : "";
-    if (before && after && before.mode === after.mode && before.oid === oid) continue;
-    const kind = !before ? "added" : !after ? "removed" : "modified";
-    changes.push({kind, old_path: before ? path : null, new_path: after ? path : null, old_entities:[], new_entities:[]});
-  }
-  return changes;
-}
-/** Materialize blobs by object ID, never following links or checking out over user files. */
-function materialize(repo: string, tree: string, root: string, revision: "from" | "to", gaps: Gap[], paths: string[]): void {
+type CommittedEntry = { path: string; mode: string; oid: string };
+/** Git trees are the sole source of paths and bytes; link targets are never read. */
+function treeEntries(repo: string, tree: string): CommittedEntry[] {
   const records = git(repo, ["ls-tree", "-r", "-z", "--full-tree", tree]).toString("utf8").split("\0");
-  for (const record of records) {
-    if (!record) continue;
+  return records.filter(Boolean).map(record => {
     const tab = record.indexOf("\t");
     const match = /^(\d+) (blob|commit) ([0-9a-f]+)$/.exec(record.slice(0, tab));
     const path = record.slice(tab + 1);
-    if (!match || !path || path.includes("\ufffd") || path.split("/").some(p => !p || p === "." || p === ".." || p === ".git")) throw new Error("snapshot contains an unsupported path");
-    const [, mode, type, oid] = match;
-    if (type === "commit") throw new Error(`required submodule snapshot is unavailable: ${path}`);
-    if (mode === "120000") { gaps.push({revision, path, kind:"symbolic_link", detail:"symbolic-link targets are not modeled", scope:null}); continue; }
-    if (mode !== "100644" && mode !== "100755") throw new Error(`unsupported file mode for ${path}`);
+    if (!match || !path || path.includes("\ufffd") || path.split("/").some(p => !p || p === "." || p === ".." || p.toLowerCase() === ".git") || (process.platform === "win32" && (path.includes("\\") || path.includes(":")))) throw new Error("snapshot contains an unsupported path");
+    if (match[2] === "commit") throw new Error(`required submodule snapshot is unavailable: ${path}`);
+    if (!OID.test(match[3])) throw new Error("invalid blob identity");
+    if (!["100644", "100755", "120000"].includes(match[1])) throw new Error(`unsupported file mode for ${path}`);
+    return {path, mode:match[1], oid:match[3]};
+  });
+}
+/** Create only regular files beneath a private root; never create or follow links. */
+function materializeEntries(root: string, entries: Array<CommittedEntry & {bytes: unknown}>, revision: "from" | "to", gaps: Gap[], paths: string[]): void {
+  const rootPath = realpathSync(root);
+  for (const {path, mode, bytes} of entries) {
+    if (!Buffer.isBuffer(bytes)) throw new Error("invalid snapshot blob");
+    if (mode === "120000") { gaps.push({revision,path,kind:"symbolic_link",detail:"symbolic-link targets are not modeled",scope:null}); continue; }
+    const components = path.split("/"); let dir = rootPath;
+    for (const part of components.slice(0,-1)) {
+      dir = join(dir,part);
+      try { mkdirSync(dir, {mode:0o700}); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error; }
+      const st = lstatSync(dir);
+      if (!st.isDirectory() || st.isSymbolicLink()) throw new Error("snapshot materialization encountered an unsafe path component");
+      const resolved = realpathSync(dir), rel = relative(rootPath,resolved);
+      if (isAbsolute(rel) || rel === ".." || rel.startsWith(`..${sep}`)) throw new Error("snapshot materialization escaped its root");
+    }
+    const target = join(dir,components[components.length-1]);
+    const flags = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | (constants.O_NOFOLLOW ?? 0);
+    const fd = openSync(target, flags, mode === "100755" ? 0o700 : 0o600);
+    try { writeFileSync(fd,bytes); } finally { closeSync(fd); }
     paths.push(path);
-    const target = join(root, ...path.split("/"));
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, git(repo, ["cat-file", "blob", oid]), { mode: mode === "100755" ? 0o755 : 0o644 });
   }
 }
-async function graphFor(repo: string, tree: string, revision: "from" | "to", gaps: Gap[], version: string, captured?: CapturedTree): Promise<GraphV1 | null> {
+async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" | "to", gaps: Gap[], version: string): Promise<GraphV1 | null> {
   const temp = mkdtempSync(join(tmpdir(), "trail-impact-"));
   try {
     const root = join(temp, "tree"), out = join(temp, "graph");
     const inputPaths: string[] = [];
     mkdirSync(root);
-    if (captured) {
-      for (const [path, file] of captured.files) {
-        if (file.mode === "120000") { gaps.push({revision,path,kind:"symbolic_link",detail:"symbolic-link targets are not modeled",scope:null}); continue; }
-        inputPaths.push(path);
-        const target = join(root, ...path.split("/"));
-        mkdirSync(dirname(target), { recursive:true }); writeFileSync(target, file.bytes, {mode:file.mode === "100755" ? 0o755 : 0o644});
-      }
-    } else materialize(repo, tree, root, revision, gaps, inputPaths);
+    const snapshot = await readCommittedSnapshot({
+      ref: endpointValue.commit,
+      git: {
+        async resolve() { return {commit:endpointValue.commit, tree:endpointValue.tree}; },
+        async readTree(tree) { return treeEntries(repo,tree); },
+        async readBlob(oid) { return git(repo,["cat-file","blob",oid]); },
+      },
+      materializer: {
+        async writeTree(entries) { materializeEntries(root,entries,revision,gaps,inputPaths); },
+        async cleanup() { /* graph needs the temporary root until its build finishes */ },
+      },
+    });
+    if (snapshot.status !== "captured" || snapshot.commit !== endpointValue.commit || snapshot.tree !== endpointValue.tree) throw new Error("committed snapshot materialization failed");
     try {
       const rawCache = extractionCache(repo, version);
       if (rawCache) writeExtractCache(out, readExtractCache(rawCache));
       let candidateFacts: CandidateFact[] = [];
       let undecodable: string[] = [];
-      const identity = {snapshot:captured?.fingerprint ?? `git-tree:${tree}`,mode:"conservative",policy:"conservative-v1",version:`${version}:${extractorStamp() ?? "uncached"}`};
+      const identity = {snapshot:endpointValue.fingerprint,mode:"conservative",policy:"conservative-v1",version:`${version}:${extractorStamp() ?? "uncached"}`};
       const loaded = await loadConservativeGraph({identity, cache:{
         // Resolution is deliberately rerun: only raw facts are reused.
         async read() { return null; },
@@ -190,27 +189,20 @@ function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change
 }
 export async function analyzeImpact(repo: string, fromRef: string, toRef: string, version: string) {
   const from = endpoint(repo, fromRef);
-  const captured = toRef === "worktree" ? await captureBtrfsWorktree(git(repo, ["rev-parse", "--show-toplevel"]).toString().trim()) : undefined;
-  const to: Endpoint | WorktreeEndpoint = captured ? {requested:"worktree",kind:"worktree",fingerprint:captured.fingerprint} : endpoint(repo, toRef);
-  for (const tree of [from.tree, ...(to.kind === "commit" ? [to.tree] : [])]) {
-    const entries = git(repo, ["ls-tree", "-r", "-z", "--full-tree", tree]).toString("utf8").split("\0");
-    for (const entry of entries) {
-      if (entry.startsWith("160000 commit ")) throw new Error("required submodule snapshot is unavailable");
-      if (entry.includes("\ufffd")) throw new Error("snapshot contains an unsupported path encoding");
-    }
-  }
-  const changes = captured ? compareWorktree(repo, from, captured) : compare(repo, from, to as Endpoint);
+  const to = endpoint(repo, toRef);
+  for (const tree of [from.tree, to.tree]) treeEntries(repo,tree);
+  const changes = compare(repo, from, to);
   const gaps: Gap[] = [];
   let affected: Affected[] = [];
   if (changes.length) {
-    const oldGraph = await graphFor(repo, from.tree, "from", gaps, version);
-    const newGraph = await graphFor(repo, to.kind === "commit" ? to.tree : "", "to", gaps, version, captured);
+    const oldGraph = await graphFor(repo, from, "from", gaps, version);
+    const newGraph = await graphFor(repo, to, "to", gaps, version);
     affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
     // Existing navigation extraction and resolution deliberately omit unresolved
     // calls and do not model all dependency kinds. They can inform impact but
     // cannot justify exclusions until completeness is demonstrated.
     for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:"Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled", scope:null});
-  } else if ((captured && captured.files.size > 0) || (!captured && git(repo, ["ls-tree", "-r", "--name-only", from.tree]).length > 0)) {
+  } else if (git(repo, ["ls-tree", "-r", "--name-only", from.tree]).length > 0) {
     // Identical trees need no change closure, but unmodeled constructs still
     // prevent us from asserting completeness of dependency analysis.
     gaps.push({revision:"from",path:null,kind:"unmodeled_dependencies",detail:"Dependency analysis is not complete for all supported constructs",scope:null});

@@ -1050,7 +1050,7 @@ grouped(program.command("impact"), GROUP.ci)
   .description("Conservative impact of exact Git endpoints (no model calls)")
   .exitOverride((error) => { process.exit(error.code === "commander.helpDisplayed" ? 0 : 2); })
   .option("--from <commit>", "comparison source commit", (value: string, previous: string[] = []) => [...previous, value], [])
-  .option("--to <commit|worktree>", "comparison target", (value: string, previous: string[] = []) => [...previous, value], [])
+  .option("--to <commit>", "comparison target commit", (value: string, previous: string[] = []) => [...previous, value], [])
   .option("--json", "emit a versioned JSON impact report")
   .action(async (opts: { from: string[]; to: string[]; json?: boolean }) => {
     try {

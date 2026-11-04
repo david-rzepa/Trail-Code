@@ -108,26 +108,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T17:37:02Z",
+      "finished_at": "2026-11-04T19:26:32Z",
       "fp_parts": {
         "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:3c3a087a42efbb39b9949a6f7fc40f18756d7c4288e7b9c7f565c93b229be632",
-          "doc": "v1:blob:d85b2764b6579d5b71e082132aa4603451027f68",
-          "review": "v1:sha256:088d86ab93d31fa84b29959c0f783735f4b1d73e8a2733ae56678610b6a140b4",
-          "spec": "v1:sha256:4c09c0e14d1d9afa3eb6eb3ec78cf97526cb6a678043498b26e32577528407e3"
+          "adversary": "v1:sha256:fdf3e8bf9e99880023b958258945625581a16f6c1525663770c8dd543cc67982",
+          "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "review": "v1:sha256:8286b0809145f845f343d83567da6e7df3feba11d8efbe89e6de345c493a7f81",
+          "spec": "v1:sha256:14cb5b049de9d9505c204a32bf6a504f43f645ce6870f68fb36cb056c1837796"
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-normal-filter",
-      "input_fp": "v1:sha256:026fa4be87a4ec1383df07df1d4f0686465fbb9707253c18bca1ce922298c365",
+      "holder": "codex:root/g3-multilingual-filter",
+      "input_fp": "v1:sha256:f8b223d0456d9492e2b00ab51b7677df84ff916b112c3b9f8cdd47d6f702ed71",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve the committed-endpoint setup design and its independently validated conditional context. No open findings or notes require verdicts.",
+        "summary": "Both reviews approve the multilingual setup design and real Node and Go sparse execution. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

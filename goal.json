@@ -10,51 +10,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 11,
-      "correction_runs": 10,
-      "findings": [
-        {
-          "id": "adversary_design:10:1",
-          "impact": "Workers or acceptance gates may block the requested ordinary runner or falsely represent mutation protection as a requirement or proven guarantee.",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 13,
-          "target_fp": "v1:sha256:3d8247d33a71cbcf0ef5ff863ac4c6dfa18fe1799876aef9e95ac587285a8968",
-          "text": "The multilingual design says the execution layer must validate and protect target identity, and retains language requiring mutation protection and acceptance testing of execution-time mutation protection. This conflicts with the owner decision that ordinary test-runner behavior assumes stable inputs and does not require proof that a checkout did not change. Amend these cross-goal requirements to require the agreed ordinary preflight and honest stable-input reporting, without imposing continuous monitoring or proof. Preserve immutable committed-object analysis and independent context validation.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T19:11:09Z",
+      "attempt": 12,
+      "correction_runs": 11,
+      "findings": [],
+      "finished_at": "2026-11-04T19:14:00Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
           "spec": "v1:sha256:a325a50fefccbdcf4afbe6f9596c2568dbe228071d37a46ed7ee580e3d25e79c"
         },
         "policy": {},
-        "subject": "v1:sha256:84c41ac7a157ac6fadfb2a8cc98513f554fd70621ebe4af16adcf57f07e20827"
+        "subject": "v1:sha256:0cd4c8e7bb21e4a75ee2b221460a6fba94dede73cfd929fdf9f921c423a04b71"
       },
-      "holder": "codex:root/g1-multilingual-adversary2",
-      "input_fp": "v1:sha256:4326cd879e62b7e6010aa9736191ac0e79debaa35839af6011d024bce62534f9",
+      "holder": "codex:root/g1-multilingual-adversary3",
+      "input_fp": "v1:sha256:2e38c934922de4b643eb28235531485cc2568de6e66134c86ea66765400b07b7",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "306695e30a8eff9a9b22bdc7575f3c0e5f10419b",
-          "commit": "fddce8726e046ec76f2c56b05628a8784a337002",
+          "blob": "7bbf762eaf501707250d8389639321a016a0e3ba",
+          "commit": "e76cd3dbda3290bc11fe428a6292c2d79a586324",
           "path": ".zzzops/reviews/1/adversary_design.md"
         },
-        "summary": "The execution-model conflict is resolved; no new material adversarial findings."
+        "summary": "No material adversarial findings in the minimum Go sparse-selection slice."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
-          "commit": "c22993632ce908c0400ea9cf23b5ed27cd9cc5a4"
+          "blob": "324fdb329d40cf43af80eaa16978b161349ccd41",
+          "commit": "85a28e79d7201b9896585c13dac8e63f88882d99"
         }
       },
       "status": "done"

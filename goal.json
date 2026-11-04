@@ -219,35 +219,37 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T01:48:48Z",
+      "finished_at": "2026-11-04T02:33:23Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
           "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:8362cf3cf678387c4f45ad3b919284b4d4b56ed257b7f24af813709d7c6ebaf1"
+          "tests": "v1:sha256:ca6b7b7f85963f5eefbbde93978d6d9b5bc0ad26b1479f46a40fa251e6c97950"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-fix-tests",
-      "input_fp": "v1:sha256:32e6aceec6979c35829f79a224e6177c6902641e448b7f0e76f616b646ab70e2",
+      "holder": "codex:root/g1-review-fixes",
+      "input_fp": "v1:sha256:919a5606c71dd0aa8e9d7ec484f0ab74a710200a7cd55bc0111951d3d6849206",
       "ok": true,
       "output": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "a847d6b33e2838c3ef77b4fe2a08c51bd0e4eb05",
-          "commit": "736dc2f86b7c6a62714eadbc6b4042a9c46f10c2",
-          "tree": "d8766808e7bf581a41a6c748226fc1491091d870"
+          "change": "d1b89621476b0308e7e7ac60a4bb52c605e9b547",
+          "commit": "40105ba4506ea364410f8fc9872ad772ea7ba8ec",
+          "tree": "9598388b5df746158cb642c6c5744e095401eaca"
         },
         "responses": {
-          "run_tests:failed": "fixed: The same failures reproduce on integration baseline 6d852c6: global diff.mnemonicprefix changes upstream patch parsing, Go is absent, and fixed hook session IDs reuse state in the real HOME. Using GIT_CONFIG_GLOBAL=/dev/null, a fresh HOME/USERPROFILE, real Go 1.27.3, and two-CPU affinity, npm test passed 4,187 of 4,195 tests with eight skipped and zero failures; targeted 25 and 11 tests passed. No source or machine-wide settings were altered."
+          "review_impl:1:1": "fixed: Every analyzer Git subprocess uses --no-replace-objects; commit, tree and blob replacement-ref contract tests pass.",
+          "review_impl:1:2": "disputed: Identical populated Git trees now analyze inputs and return complete when no actual gaps exist. Changed trees still require unbounded fallback because callbacks, resources, dynamic dispatch and cross-file resolution remain unmodeled; treating those relationships as complete would violate the approved design. No unsupported scope is claimed.",
+          "review_impl:1:3": "fixed: Grammar identity hashes the actual depth and breadth grammars, queries and runtimes, including missing-asset markers, and keys extraction caches with that identity. The real offline npm tarball test confirms identity and warm cache reuse without package-lock."
         },
-        "summary": "Verified that the reported full-suite failures are environment-dependent baseline behavior, not a regression. With an isolated HOME, standard Git config, real Go, and bounded CPU affinity, the canonical suite passed 4,187 tests with eight skipped and no failures; both targeted contract suites also passed."
+        "summary": "Pin Git object reads against replacement refs, compute grammar and cache identity from shipped grammar and runtime bytes, and support valid unchanged populated comparisons while reusing compatible extraction facts. Changed comparisons remain conservatively full-fallback until dependency completeness can be proven."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "review_design": {

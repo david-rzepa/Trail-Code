@@ -210,6 +210,16 @@ function loadProfile(cwd:string):Profile {
   try {const p=JSON.parse(readFileSync(join(cwd,'.test-impact.json'),'utf8'));if(typeof p.name==='string' && ((['node','go'].includes(p.model) && p.fullCommand===undefined)||Array.isArray(p.fullCommand)) && (p.gates===undefined||Array.isArray(p.gates)))return p;}catch{}
   return {name:'default',fullCommand:['npm','test'],gates:[{argv:['npm','run','build']}]};
 }
+// This narrowly recognized npm workflow has the same test inventory and runner
+// as the Node model. Other scripts, including npm lifecycle hooks, require a
+// full run because their effects cannot be inferred from the test graph.
+function modeledNpmRunner(cwd:string, profile:Profile):boolean {
+  if(profile.model!=='node' || JSON.stringify(profile.fullCommand)!==JSON.stringify(['npm','test'])) return false;
+  try {
+    const p=JSON.parse(readFileSync(join(cwd,'package.json'),'utf8'));
+    return p?.scripts?.test==='node --import tsx --test test/*.test.ts' && !p.scripts.pretest && !p.scripts.posttest;
+  } catch { return false; }
+}
 function argumentsOf(argv:string[]) {
   let from='',to='',plan=false,all=false,profile:''|'node'|'go'='';
   for(let i=0;i<argv.length;i++) {
@@ -296,7 +306,7 @@ export async function verify(request:Request,hooks:Hooks={}) {
       const actualRuntime=profile.model==='node' ? nodeVersion>=20 && !!fileDigest(process.execPath) : !!goEnvironment && Number.isFinite(actualGo) && actualGo>=declaredGo && !!goToolchainIdentity(cwd);
       const simpleEnvironment=!process.env.NODE_OPTIONS && !process.env.NODE_PATH && (profile.model!=='go' || (!!goEnvironment && !goEnvironment.GOFLAGS && !process.env.GOOS && !process.env.GOARCH && !process.env.GOWORK && !goEnvironment.GOWORK && resolve(goEnvironment.GOMOD??'')===join(cwd,'go.mod')));
       const nodeLoader=loaderFor(cwd);
-      const simpleRunner=!!profile.model && !profile.fullCommand && !(profile.preparation?.length) && !(profile.gates?.length) && (profile.model==='go'||!!nodeLoader && !!loaderIdentity(cwd));
+      const simpleRunner=!!profile.model && (!profile.fullCommand || modeledNpmRunner(cwd,profile)) && !(profile.preparation?.length) && !(profile.gates?.length) && (profile.model==='go'||!!nodeLoader && !!loaderIdentity(cwd));
       const projectDependencies=profile.model==='node'?projectDependencyEvidence(cwd):{};
       const noExternal=(discovered?.model.dependencies??[]).every(d=>!d.startsWith('npm:')||!!projectDependencies?.[d]);
       const observations:Record<string,any>={

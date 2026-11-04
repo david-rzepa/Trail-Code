@@ -236,15 +236,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [
         {
           "id": "review_tests:1:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 1,
           "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
@@ -254,12 +254,12 @@
         {
           "id": "review_tests:1:2",
           "note": null,
-          "response": null,
+          "response": "fixed: Fresh npm package test builds, packs, unpacks and invokes setup asset; maintenance tests check unchanged rerun, user edits, added project and changed original command; tests require incompatible helper and malformed configuration to fail without passing evidence. Deliberate generated-content edit is preserved or setup stops.",
           "rounds": 1,
           "status": "open",
           "target": "test_design",
-          "target_attempt": 1,
-          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
+          "target_attempt": 2,
+          "target_fp": "v1:sha256:5067d45d7c0c171a532a5d7dd933edbd0df1b7af8e318a2f9f08e89430712ac9",
           "text": "Cover fresh packaged setup invocation and meaningful maintenance including changed workflows/projects, user edits/conflicts, helper incompatibility and no passing evidence on failed setup.",
           "upheld": false
         },
@@ -268,7 +268,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 1,
           "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
@@ -280,7 +280,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 1,
           "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
@@ -288,35 +288,35 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T23:40:44Z",
+      "finished_at": "2026-11-04T23:46:03Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
-          "tests": "v1:sha256:0d6a27691099b64b4c2b1481dbf08ffc79f5918c589e2fd1140a8db2368effd1"
+          "tests": "v1:sha256:87f7f1fca276b78eb32f197d89b1a006c7acfc570816d087d6d59bb6b6fa7977"
         },
         "policy": {},
-        "subject": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df"
+        "subject": "v1:sha256:a473b9e8fc7af0409dfdadb51d6ddbb46e05b59d10996b70bf598f49b1004e26"
       },
-      "holder": "codex:root/g3-review-tests",
-      "input_fp": "v1:sha256:0ab0fe7bfceb15ffb9599313009d4860a9306247038579c92aeeb077e1c1110d",
+      "holder": "codex:root/g3-review-tests2",
+      "input_fp": "v1:sha256:debb110871cfe336846003f492cc851da5c2024283d975a06659a4459373a173",
       "ok": false,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "2560bd14b249a5c25248734d674c7c9425949d0f",
-          "commit": "2891535dedd820d940a2237d23e276b0c603d580",
+          "blob": "43cae3ec7b5d3b5e852c31c86c97116a5e0b6da4",
+          "commit": "e08f5328556ebfabb56c1e1e938b42023ce58909",
           "path": ".zzzops/reviews/3/review_tests.md"
         },
-        "summary": "G3 tests need real execution evidence, packaged setup and maintenance coverage, fail-safe discovery, and an unmasked trust test; the exact setup CLI seam is not required by the approved design."
+        "summary": "Expanded tests address three prior findings; package verification still only invokes help and must exercise real setup and generated adapter from an installed distribution without the development checkout."
       },
-      "reason": "new",
+      "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
-          "change": "d3fe0b91a5757744cc6b1847aad817d5714077be",
-          "commit": "aaa32cf6b24174885061334407ff6b7a018cf324",
-          "tree": "e8b03ac6b2ab207ea588d756985c80d442a69cce"
+          "change": "525e55122c774002ed46179f167f84dc1796360c",
+          "commit": "3526e2dd48a17c2b42e0fb48be84d079753d31a7",
+          "tree": "a1b56331321f8fd55faf57039d44ed10bad8aa0b"
         }
       },
       "status": "done"

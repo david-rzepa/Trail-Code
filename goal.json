@@ -340,7 +340,7 @@
           "target_attempt": 6,
           "target_fp": "v1:sha256:7e880b49d1881f95366937dc4f2a4bda1534325c102bdf4cf91c0b1d0e7c5f08",
           "text": "src/impact/analyze.ts unconditionally emits an unbounded gap for every changed tree and every identical nonempty tree. Implement justified supported completeness or bounded scopes, including a valid unchanged populated tree, rather than always forcing full-profile fallback.",
-          "upheld": false
+          "upheld": true
         },
         {
           "id": "review_impl:1:3",

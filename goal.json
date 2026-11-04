@@ -106,33 +106,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 8,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-03T22:34:53Z",
+      "finished_at": "2026-11-04T00:54:30Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
           "dep_designs": "v1:sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-design-5",
-      "input_fp": "v1:sha256:fa7ca235d5a1fe1070071bbab6a617cf38064e1a8c086e6845244f541a67bb5f",
+      "holder": "codex:root/g1-commit-design-2",
+      "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "commit": "f6423531c156c582e98c82681f9691999e6149a6",
+          "blob": "e6a1b1620717362d7fc8639267e7ca655272da68",
+          "commit": "2f883c1ae68c06490174c89b36940c30821b9e67",
           "path": ".zzzops/reviews/1/design.md"
         },
-        "responses": {
-          "test_design:4:1": "fixed: Added an internal capture/backend and cache-store seam with deterministic barriers, event and cache fault injection, explicit success/unavailability assertions, and coverage of both snapshot and observed-live strategies."
-        },
-        "summary": "Specify a non-public injected capture and cache boundary for deterministic race and fault testing. Test both coherent snapshot and observed-live strategies while retaining production-wiring integration coverage."
+        "summary": "Adapt conservative impact analysis to explicit committed endpoints, reading immutable Git trees with portable mechanisms and clearly rejecting worktree targets. Preserve exact target identity, fail closed on unavailable inputs, and leave execution-time mutation protection to the adapter."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

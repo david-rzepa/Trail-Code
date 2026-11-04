@@ -81,10 +81,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T17:39:28Z",
+      "finished_at": "2026-11-04T17:42:44Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -93,18 +93,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g4-normal-design",
+      "holder": "codex:root/g4-normal-design2",
       "input_fp": "v1:sha256:6fcc3d0e169e91150d2b59a74386106e1e127b5d6e8898a311224c7214708190",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "9ab7f65348cd9d32bef2afaa04a78294a88476fc",
-          "commit": "14f1dabef2b41fdbeead7e9a45a1fa11c30ee67b",
+          "blob": "0442cc456e673992864369a02b67d48806decd5e",
+          "commit": "adc5d4c2d046eb360e65f781375d66eeed623fb3",
           "path": ".zzzops/reviews/4/design.md"
         },
-        "summary": "Align end-to-end release gates with committed-only endpoints and ordinary stable-input execution, explicitly deferring worktree and mutation-proof claims. Require both a real v2 conditional sparse case with independently validated context and negative coverage that forces full fallback for missing or altered requirements, alongside reproducible full-run comparisons and timing."
+        "responses": {
+          "review_design:2:1": "fixed: distinguish sparse-only eligibility gaps from missing full-run or receipt identity evidence and require separate fallback/receipt tests."
+        },
+        "summary": "Clarify receipt outcomes for missing conditional context: sparse-only gaps force full execution but allow a receipt when full-run evidence and receipt identity are valid; missing full-run identity prevents passing evidence. Require distinct tests for both paths."
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

@@ -235,6 +235,92 @@
       },
       "status": "done"
     },
+    "review_tests": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "review_tests:1:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
+          "text": "Prove actual selected and excluded test execution, including Go dependents, and exercise Trail-code setup with its original full npm test fallback; reported execution units alone can be fabricated.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:2",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
+          "text": "Cover fresh packaged setup invocation and meaningful maintenance including changed workflows/projects, user edits/conflicts, helper incompatibility and no passing evidence on failed setup.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:3",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
+          "text": "Add executable setup-level fallback/gap tests for discovery, unsupported or mixed/cross-project inputs and incomplete requirements, plus generated-adapter mismatch and failure propagation.",
+          "upheld": false
+        },
+        {
+          "id": "review_tests:1:4",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 1,
+          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
+          "text": "Separate malicious-content behavior from unsafe destination rejection so a normal setup actually processes untrusted data without executing it or weakening coverage; include legitimate project instructions.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T23:40:44Z",
+      "fp_parts": {
+        "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
+        "inputs": {
+          "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "tests": "v1:sha256:0d6a27691099b64b4c2b1481dbf08ffc79f5918c589e2fd1140a8db2368effd1"
+        },
+        "policy": {},
+        "subject": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df"
+      },
+      "holder": "codex:root/g3-review-tests",
+      "input_fp": "v1:sha256:0ab0fe7bfceb15ffb9599313009d4860a9306247038579c92aeeb077e1c1110d",
+      "ok": false,
+      "output": {
+        "decision": "changes_requested",
+        "report": {
+          "blob": "2560bd14b249a5c25248734d674c7c9425949d0f",
+          "commit": "2891535dedd820d940a2237d23e276b0c603d580",
+          "path": ".zzzops/reviews/3/review_tests.md"
+        },
+        "summary": "G3 tests need real execution evidence, packaged setup and maintenance coverage, fail-safe discovery, and an unmasked trust test; the exact setup CLI seam is not required by the approved design."
+      },
+      "reason": "new",
+      "reviewed": {
+        "tests": {
+          "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
+          "change": "d3fe0b91a5757744cc6b1847aad817d5714077be",
+          "commit": "aaa32cf6b24174885061334407ff6b7a018cf324",
+          "tree": "e8b03ac6b2ab207ea588d756985c80d442a69cce"
+        }
+      },
+      "status": "done"
+    },
     "test_design": {
       "attempt": 1,
       "carried_by": "base",

@@ -567,10 +567,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 8,
-      "correction_runs": 6,
+      "attempt": 9,
+      "correction_runs": 7,
       "findings": [],
-      "finished_at": "2026-11-04T01:12:46Z",
+      "finished_at": "2026-11-04T02:16:39Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -581,48 +581,60 @@
       },
       "frozen": [
         "test/conservative-impact-contract.test.ts",
-        "test/impact-coordinator-safety.test.ts"
+        "test/impact-coordinator-safety.test.ts",
+        "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-commit-tests2",
+      "holder": "codex:root/g1-regression-tests",
       "input_fp": "v1:sha256:e97ad0ab41d76b6916b3678a00a26bdd7746e12a01ac35f59dd8a1e76ba5b902",
       "ok": true,
       "output": {
         "commands": [
           "node --import tsx --test test/conservative-impact-contract.test.ts",
-          "node --import tsx --test test/impact-coordinator-safety.test.ts"
+          "node --import tsx --test test/impact-coordinator-safety.test.ts",
+          "node --import tsx --test test/impact-installed-package.test.ts"
         ],
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 3129,
-              "id_or_scope": "three external read-trap CLI cases (node --import tsx --test --test-name-pattern=production\\ analysis\\ never\\ reads test/conservative-impact-contract.test.ts)",
-              "observation": "passed: 3 actual production CLI runs with armed self-tested trap, before and after changing external sentinel contents"
+              "duration_ms": 3346,
+              "id_or_scope": "populated unchanged tree and commit/tree/blob replacement regressions",
+              "observation": "failing: all four reach the CLI and expose unconditional gaps or replacement-ref contamination"
+            },
+            {
+              "duration_ms": 8477,
+              "id_or_scope": "test/impact-installed-package.test.ts",
+              "observation": "failing: actual package packed and installed successfully, then reports unavailable grammar identity; subsequent cache-reuse assertion is not yet reached"
             }
           ],
-          "checkpoint": "6f7bfa43024f1e261cb4488f301835340245dc6a",
+          "checkpoint": "1215cf0b6ac06e066a517e6f13da788542a4311e",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 24021,
-              "exit": 0
+              "duration_ms": 24298,
+              "exit": 1
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 110,
+              "duration_ms": 103,
+              "exit": 0
+            },
+            {
+              "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
+              "duration_ms": 8501,
               "exit": 1
             }
           ],
-          "summary": "Measured full targeted commands separately at the submitted checkpoint; the safety suite has five preexisting red cases because the committed snapshot seam is not implemented. Measured changed cases separately with test-name filtering.",
-          "total_ms": 24131
+          "summary": "Measured all three target commands at the submitted checkpoint. The package test uses npm registry installation and has a bounded 240 s subprocess timeout.",
+          "total_ms": 32902
         },
         "responses": {
-          "review_tests:4:1": "fixed: Added a self-testing Node filesystem read trap for production CLI runs against absolute, chained, and path-component symlink escapes, failing on attempted external reads. Each real Git fixture changes the external sentinel between repeated analyses, checks identical outcomes, and verifies cleanup leaves the sentinel intact."
+          "review_impl:1:4": "fixed: Added independent commit, tree and blob Git replacement tests against the original report with cache cleared, a populated unchanged-tree no-fallback regression, and a real npm pack/install test checking grammar identity and persisted cache reads on the warm run."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "259f4a327eaecba5d0443085b909f668548187b2",
-          "commit": "6f7bfa43024f1e261cb4488f301835340245dc6a",
-          "tree": "6d135ff26abbd74efb639c037ca3287512b70939"
+          "change": "b4e2cedaa44d22661d94433f65324b38cdd8603e",
+          "commit": "1215cf0b6ac06e066a517e6f13da788542a4311e",
+          "tree": "6d1056ef5f03e545296ee441b5c4eadd9dc58453"
         }
       },
       "reason": "reopened",

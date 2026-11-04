@@ -275,3 +275,92 @@ for (const [description, malformed] of [
     }));
   }
 }
+
+/** A conventional Go module with independent packages and a cross-package caller.
+ * It is analyzed as committed source; executing go test belongs to the runner goal. */
+function goProject(dir: string): void {
+  file(dir, "go.mod", "module example.test/prices\n\ngo 1.22\n");
+  file(dir, "a/a.go", "package a\n\nfunc Price(x int) int { return x * 2 }\n");
+  file(dir, "a/a_test.go", "package a\n\nimport \"testing\"\n\nfunc TestPrice(t *testing.T) { if Price(2) != 4 { t.Fatal(\"bad price\") } }\n");
+  file(dir, "b/b.go", "package b\n\nfunc Name() string { return \"b\" }\n");
+  file(dir, "b/b_test.go", "package b\n\nimport \"testing\"\n\nfunc TestName(t *testing.T) { if Name() != \"b\" { t.Fatal(\"bad name\") } }\n");
+  file(dir, "consumer/consumer.go", "package consumer\n\nimport \"example.test/prices/a\"\n\nfunc Total() int { return a.Price(2) }\n");
+  file(dir, "consumer/consumer_test.go", "package consumer\n\nimport \"testing\"\n\nfunc TestTotal(t *testing.T) { if Total() != 4 { t.Fatal(\"bad total\") } }\n");
+}
+function affected(out: Json, path: string, revision?: "from" | "to"): boolean {
+  return out.affected.some((x: Json) => x.path === path && (!revision || x.revision === revision));
+}
+
+test("v2 Go model selects a changed package and cross-package dependents without B", () => fixture(dir => {
+  goProject(dir);
+  const a = commit(dir, "baseline Go module");
+  file(dir, "a/a.go", "package a\n\nfunc Price(x int) int { return x + x }\n");
+  const b = commit(dir, "change package a");
+  const out = run(dir, a, b, 2);
+  assert.equal(out.analysis_status, "conditional", "a conventional static Go module must have a working conditional slice");
+  assert.ok(!full(out), "the Go acceptance slice cannot be met by full-profile fallback");
+  assert.ok(affected(out, "a/a_test.go"), "same-package tests depend on changed Go source");
+  assert.ok(affected(out, "consumer/consumer.go"), "the importing package depends on A");
+  assert.ok(affected(out, "consumer/consumer_test.go"), "tests in a dependent package must be included");
+  assert.ok(!affected(out, "b/b_test.go"), "unrelated B package must remain outside the calculated impact");
+  assert.deepEqual(run(dir, a, b, 2), out, "Go model and requirement identities must be deterministic");
+}));
+
+test("v2 Go import deletion retains old package dependents", () => fixture(dir => {
+  goProject(dir);
+  const a = commit(dir, "before import removal");
+  file(dir, "consumer/consumer.go", "package consumer\n\nfunc Total() int { return 4 }\n");
+  const b = commit(dir, "remove package import");
+  const out = run(dir, a, b, 2);
+  assert.ok(affected(out, "consumer/consumer_test.go", "from") || affected(out, "consumer/consumer_test.go", "to") || full(out), "both endpoint graphs must preserve surviving dependent tests");
+  assert.ok(out.changes.some((c: Json) => c.old_path === "consumer/consumer.go" && c.new_path === "consumer/consumer.go"));
+}));
+
+test("v2 keeps unresolved Go import provenance and cannot silently narrow", () => fixture(dir => {
+  goProject(dir);
+  const a = commit(dir, "resolvable module");
+  file(dir, "consumer/consumer.go", "package consumer\n\nimport \"example.test/prices/missing\"\n\nfunc Total() int { return missing.Price(2) }\n");
+  const b = commit(dir, "introduce missing package");
+  const out = run(dir, a, b, 2);
+  const gaps = out.analysis_gaps.filter((g: Json) => g.path === "consumer/consumer.go" && g.revision === "to");
+  assert.ok(gaps.some((g: Json) => JSON.stringify(g).includes("example.test/prices/missing")), "retain the unresolved raw import and source revision");
+  assert.ok(gaps.some((g: Json) => g.scope === null && full(out)) || gaps.some((g: Json) => typeof g.scope === "string" && out.required_fallback_scopes.some((f: Json) => f.kind === "scope" && f.scope === g.scope)), "unknown import needs an unbounded or justified bounded fallback");
+  assert.notEqual(out.analysis_status, "complete");
+}));
+
+test("Go embedded resource changes retain cross-package dependents without unjustified global fallback", () => fixture(dir => {
+  goProject(dir);
+  file(dir, "a/a.go", "package a\n\nimport _ \"embed\"\n\n//go:embed price.txt\nvar priceData string\n\nfunc Price(x int) int { return x * 2 }\n");
+  file(dir, "a/price.txt", "first\n");
+  const a = commit(dir, "tracked embedded resource");
+  file(dir, "a/price.txt", "second\n");
+  const b = commit(dir, "change embedded resource");
+  const out = run(dir, a, b, 2);
+  assert.equal(out.analysis_status, "conditional", "a proven package boundary should support conditional scoped impact");
+  assert.ok(!full(out), "an embedded resource constrained to A's package cannot justify an unbounded global fallback");
+  assert.ok(affected(out, "a/a_test.go"), "A tests consume the resource-owning package");
+  assert.ok(affected(out, "consumer/consumer_test.go"), "a bounded package impact must include tests outside its scope");
+  assert.ok(!affected(out, "b/b_test.go"), "unrelated package B should not be selected");
+  for (const gap of out.analysis_gaps) {
+    assert.ok(typeof gap.scope === "string" && gap.scope.length > 0, "remaining uncertainty must have a justified bounded scope");
+    assert.ok(out.required_fallback_scopes.some((f: Json) => f.kind === "scope" && f.scope === gap.scope));
+    assert.ok(typeof gap.detail === "string" && gap.detail.length > 0);
+  }
+}));
+
+test("v2 practical TypeScript project handles ordinary functions and built-in test imports", () => fixture(dir => {
+  file(dir, "package.json", JSON.stringify({ name: "practical-ts", private: true, type: "module", scripts: { test: "tsx --test test/*.test.ts" }, devDependencies: { tsx: "^4.22.4", typescript: "^6.0.3" } }));
+  file(dir, "tsconfig.json", JSON.stringify({ compilerOptions: { module: "NodeNext", moduleResolution: "NodeNext", target: "ES2022", strict: true } }));
+  file(dir, "src/a.ts", "export interface Order { amount: number }\nexport function total(order: Order): number { const tax = 2; return order.amount + tax; }\n");
+  file(dir, "src/b.ts", "export function greeting(name: string): string { return `hello ${name}`; }\n");
+  file(dir, "test/a.test.ts", "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\nimport { total } from '../src/a.js';\ntest('total', () => assert.equal(total({ amount: 2 }), 4));\n");
+  file(dir, "test/b.test.ts", "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\nimport { greeting } from '../src/b.js';\ntest('greeting', () => assert.equal(greeting('Ada'), 'hello Ada'));\n");
+  const a = commit(dir, "ordinary TypeScript project");
+  file(dir, "src/a.ts", "export interface Order { amount: number }\nexport function total(order: Order): number { const tax = 2; return tax + order.amount; }\n");
+  const b = commit(dir, "change first target dependency");
+  const out = run(dir, a, b, 2);
+  assert.equal(out.analysis_status, "conditional");
+  assert.ok(!full(out));
+  assert.ok(affected(out, "test/a.test.ts"));
+  assert.ok(!affected(out, "test/b.test.ts"));
+}));

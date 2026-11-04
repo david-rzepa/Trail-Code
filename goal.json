@@ -1,6 +1,11 @@
 {
   "budget": 55,
-  "closed": null,
+  "closed": {
+    "at": "2026-11-04T23:36:58Z",
+    "by": "zzzops",
+    "note": "every terminal node is current",
+    "reason": "done"
+  },
   "depends_on": [
     1
   ],
@@ -311,6 +316,28 @@
           "tree": "6b96c09b8f66faf665a2a1440ee6a63c0b8c9434",
           "url": "https://github.com/david-rzepa/Trail-Code/pull/2"
         }
+      },
+      "reason": "new",
+      "status": "done"
+    },
+    "merge": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T23:36:58Z",
+      "fp_parts": {
+        "def": "v1:sha256:419e27874c23acb41b4a93f50e046ea22acb7c295474856cd3665d891f16a67a",
+        "inputs": {
+          "pr": "v1:sha256:70c7f6c219bec1cad6f6898f720da51f4a51f93543d25c2ca3a2ffb9a01c09d7"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g2-merge",
+      "input_fp": "v1:sha256:2af0b5da18a50a39b063510db47f82ea8563ee8e2689639017a9c365ffd6ba1c",
+      "ok": true,
+      "output": {
+        "merge_commit": "4713ed326e8b77b5eef711758ab29f31399fb522",
+        "merged_at": "2026-11-04T23:37:17Z"
       },
       "reason": "new",
       "status": "done"
@@ -676,6 +703,6 @@
   "schema": 1,
   "skip": {},
   "spec": "Implement the shared deterministic helper and a real repository adapter per docs/test-impact/design.md sections 2–5, 7–10 and 13–14. Require explicit exact endpoints and use a practical target preflight and the normal test-runner stable-input assumption. Discover and map actual runner targets, include changed tests, apply declared invalidation and full fallback rules, preserve original full workflows and gates, report separate impact, plan, execution and verification statuses, and implement compatible baseline receipts and receipt chaining. Missing or incompatible baseline expands execution to the full configured profile. Include meaningful acceptance tests for the snapshot, discovery, fallback, evidence, error and execution contracts. Select a representative project and runner through design; no model invocation in normal runs. The full design is binding. Work directly in this fork for an eventual upstream pull request; no separate product repository or subtree. Owner scope clarification: Initial release requires explicit committed Git endpoints only, and must work across platforms and filesystems with ordinary Git repositories, without Btrfs, privileged operations, special mounts or subvolumes. Worktree target support is deferred; reject it clearly rather than silently substituting a commit. Use ordinary test-runner execution with a stable-input assumption and a practical target preflight; do not require proof of checkout immutability, mutation monitoring, filesystem snapshots, or isolated checkout. Adapt the original worktree-specific acceptance cases accordingly.",
-  "state": "open",
+  "state": "closed",
   "title": "Build deterministic test planning, execution and evidence"
 }

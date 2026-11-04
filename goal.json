@@ -81,33 +81,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T17:42:44Z",
+      "finished_at": "2026-11-04T19:28:18Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:2e4c2f9eeeef05719a0ef34ece9fc750e3097f0e8685f3ecfb983f28869b2e51",
-          "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
+          "dep_designs": "v1:sha256:c781f7f999d58c85a827a38c599867e7aa889fd011d15c51309b9d3823561165",
+          "spec": "v1:sha256:97beaf135607fc6f7f9c557a0d92b8722af6e800cf2c3420f8515a334055d95b"
         },
         "policy": {}
       },
-      "holder": "codex:root/g4-normal-design2",
-      "input_fp": "v1:sha256:6fcc3d0e169e91150d2b59a74386106e1e127b5d6e8898a311224c7214708190",
+      "holder": "codex:root/g4-multilingual-design",
+      "input_fp": "v1:sha256:614c31faebedb1ea028e93fd2d2482af8c667435a82dc2322d752e647975b7c9",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "0442cc456e673992864369a02b67d48806decd5e",
-          "commit": "adc5d4c2d046eb360e65f781375d66eeed623fb3",
+          "blob": "3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "commit": "314d2c02f3679f496eb1c5dd2b3b47595e056536",
           "path": ".zzzops/reviews/4/design.md"
         },
-        "responses": {
-          "review_design:2:1": "fixed: distinguish sparse-only eligibility gaps from missing full-run or receipt identity evidence and require separate fallback/receipt tests."
-        },
-        "summary": "Clarify receipt outcomes for missing conditional context: sparse-only gaps force full execution but allow a receipt when full-run evidence and receipt identity are valid; missing full-run identity prevents passing evidence. Require distinct tests for both paths."
+        "summary": "Extend the committed-endpoint end-to-end release design to require actual sparse execution with independently validated v2 context for both Node/TypeScript and Go. Exercise Trail-code’s general multilingual graph and cross-build boundaries, preserving safe fallback for unmodeled behavior and the ordinary stable-input assumption."
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

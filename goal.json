@@ -151,31 +151,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T00:56:25Z",
+      "finished_at": "2026-11-04T01:00:09Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "adversary_design:5:1",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:66cc957713754b7c6b3290e3ca49a744fd47cb5f6f8361de563c491ef84dbb5a",
-          "doc": "v1:blob:e6a1b1620717362d7fc8639267e7ca655272da68",
-          "review": "v1:sha256:b85cce586ec2d21b79a6d4d2f6b0445260a001a1e0d74308b8f7620431ee2af9",
+          "adversary": "v1:sha256:f022e49945ee468c7e97285b945437c9e06cb91bdbb768f9e8b9b76a2a443732",
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "review": "v1:sha256:0b4bcc0f82a7ed6b1eff93b619ca215092542d72492d45d9cdca0c989c334464",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-portable-filter",
-      "input_fp": "v1:sha256:88ef846e80b305fd011ba4473b6aa3039994ec579a75e1b86314daf2e5b32bf5",
+      "holder": "codex:root/g1-commit-filter-2",
+      "input_fp": "v1:sha256:1474bff5a7165bc7cac6027a6ae36b524f72e58932f9dcbfa0efd6cb74913ddf",
       "ok": true,
       "output": {
-        "summary": "The general design review approved; the adversarial review found one material issue around containment and symlink handling for committed snapshots. The finding reopens design. No non-material notes require verdicts.",
+        "summary": "Both reviews approve the committed-snapshot symlink and containment boundaries; the prior finding is resolved. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

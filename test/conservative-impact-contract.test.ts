@@ -2,9 +2,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const cli = resolve("src/cli.ts");
 const tsx = import.meta.resolve("tsx");
@@ -371,3 +372,80 @@ test("a contained symlink never contributes bytes from outside the pinned tree",
   assert.ok(!JSON.stringify(out).includes("NOT_PINNED"));
   assert.ok(out.changes.some((c: Json) => c.new_path === "src/link.ts"));
 }));
+
+/** Intercept attempted Node filesystem reads of the external sentinel, including
+ * through a symlinked path. syncBuiltinESMExports patches named node:fs imports. */
+const READ_TRAP = `
+import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const target = fs.realpathSync.native(process.env.IMPACT_TRAP_TARGET);
+const marker = process.env.IMPACT_TRAP_MARKER;
+const write = fs.writeFileSync.bind(fs);
+const realpath = fs.realpathSync.native.bind(fs.realpathSync);
+function check(input) {
+  if (typeof input === 'number') return;
+  try {
+    const p = input instanceof URL ? fileURLToPath(input) : Buffer.isBuffer(input) ? input.toString() : input;
+    if (typeof p !== 'string') return;
+    const resolved = realpath(path.resolve(p));
+    if (resolved === target || resolved.startsWith(target + path.sep)) {
+      write(marker, 'external read attempted');
+      const error = new Error('external read trapped'); error.code = 'EACCES'; throw error;
+    }
+  } catch (error) { if (error && error.code === 'EACCES' && error.message === 'external read trapped') throw error; }
+}
+for (const name of ['readFileSync', 'openSync', 'createReadStream']) {
+  const original = fs[name]; fs[name] = function(p, ...args) { check(p); return original.call(this, p, ...args); };
+}
+for (const name of ['readFile', 'open']) {
+  const original = fs[name]; fs[name] = function(p, ...args) { check(p); return original.call(this, p, ...args); };
+}
+for (const name of ['readFile', 'open']) {
+  const original = fs.promises[name]; fs.promises[name] = async function(p, ...args) { check(p); return original.call(this, p, ...args); };
+}
+syncBuiltinESMExports();
+`;
+
+for (const kind of ["absolute", "chain", "component"] as const) {
+  test(`production analysis never reads an external target through a committed ${kind} link`, () => fixture(dir => {
+    const outside = mkdtempSync(join(tmpdir(), "impact-read-trap-"));
+    try {
+      const target = join(outside, "sentinel.ts"), marker = join(outside, "read-attempted"), preload = join(outside, "trap.mjs");
+      writeFileSync(target, "export const outside = 'FIRST_EXTERNAL_VALUE';\n");
+      writeFileSync(preload, READ_TRAP);
+      const env = { ...process.env, HOME: dir, USERPROFILE: dir, NO_COLOR: "1", IMPACT_TRAP_TARGET: target, IMPACT_TRAP_MARKER: marker };
+      const trapArgs = ["--import", pathToFileURL(preload).href];
+      // Prove the trap is armed: this direct read must be stopped and recorded.
+      const probe = spawnSync(process.execPath, [...trapArgs, "--eval", "require('node:fs').readFileSync(process.env.IMPACT_TRAP_TARGET)"], { cwd: dir, env, encoding: "utf8" });
+      assert.notEqual(probe.status, 0, `read trap did not stop its self-test: ${probe.stderr}`);
+      assert.equal(readFileSync(marker, "utf8"), "external read attempted");
+      rmSync(marker);
+      const a = commit(dir, "before link");
+      if (kind === "absolute") committedLink(dir, "link.ts", target);
+      else if (kind === "chain") { committedLink(dir, "link.ts", "other.ts"); committedLink(dir, "other.ts", target); }
+      else { committedLink(dir, "escape", outside); committedLink(dir, "link.ts", "escape/sentinel.ts"); }
+      git(dir, "commit", "-m", `add ${kind} link`);
+      const b = git(dir, "rev-parse", "HEAD");
+      const analyze = () => spawnSync(process.execPath, [...trapArgs, "--import", tsx, cli, "impact", "--from", a, "--to", b, "--json"], { cwd: dir, env, encoding: "utf8", timeout: 120_000 });
+      const first = analyze();
+      assert.ok(!existsSync(marker), "production analyzer attempted to read outside the committed tree");
+      if (first.status === 0) {
+        const out = JSON.parse(first.stdout);
+        assert.equal(out.analysis_status, "incomplete");
+        assert.ok(out.analysis_gaps.some((g: Json) => g.scope === null));
+        assert.ok(out.required_fallback_scopes.some((f: Json) => f.kind === "full_profile"));
+      } else {
+        assert.equal(first.status, 2, first.stderr);
+        assert.throws(() => JSON.parse(first.stdout));
+      }
+      writeFileSync(target, "export const outside = 'SECOND_EXTERNAL_VALUE';\n");
+      const second = analyze();
+      assert.ok(!existsSync(marker), "production analyzer attempted an external read after target mutation");
+      assert.equal(second.status, first.status);
+      assert.equal(second.stdout, first.stdout, "external target changes must not change committed-tree output");
+      assert.equal(readFileSync(target, "utf8"), "export const outside = 'SECOND_EXTERNAL_VALUE';\n", "cleanup changed the external sentinel");
+    } finally { rmSync(outside, { recursive: true, force: true }); }
+  }));
+}

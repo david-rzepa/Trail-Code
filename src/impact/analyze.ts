@@ -18,6 +18,7 @@ import { loadConservativeGraph, readCommittedSnapshot } from "./coordinator.js";
 import { preserveCandidates, type CandidateFact } from "./facts.js";
 import { trustedCacheDirectory, secureNewWindowsCacheDirectory } from "./cache-security.js";
 import { certifyNodeStatic, NODE_STATIC_MODEL, type StaticModel } from "./node-static.js";
+import { certifyGoStatic, GO_STATIC_MODEL, type GoModel } from "./go-static.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 function git(dir: string, args: string[]): Buffer {
@@ -35,7 +36,7 @@ function endpoint(dir: string, requested: string): Endpoint {
 }
 interface Change { kind: "added" | "removed" | "modified"; old_path: string | null; new_path: string | null; old_entities: string[]; new_entities: string[] }
 interface Affected { revision: "from" | "to"; path: string; entity: string | null; reasons: {kind: "changed" | "dependency"; detail: string}[] }
-interface Gap { revision: "from" | "to"; path: string | null; kind: string; detail: string; scope: null; source?: string; relation?: string; name?: string; candidates?: string[]; candidate_basis?: string }
+interface Gap { revision: "from" | "to"; path: string | null; kind: string; detail: string; scope: string | null; source?: string; relation?: string; name?: string; candidates?: string[]; candidate_basis?: string; boundary?: {kind:"go_package"; module:string; package_path:string; tree:string; model:typeof GO_STATIC_MODEL} }
 /** Hash the grammar and runtime bytes actually shipped/loaded, not an npm lock
  * file (the latter is absent in installed packages). Missing assets are included
  * as explicit markers, so later installation cannot reuse their old cache. */
@@ -210,6 +211,29 @@ async function nodeStaticModel(repo: string, endpointValue: Endpoint, revision: 
     return await certifyNodeStatic(files, path => gaps.push({revision,path,kind:"parse_error",detail:"Source contains parser errors or missing tokens",scope:null}));
   } catch { return null; }
 }
+async function goStaticModel(repo:string, endpointValue:Endpoint, revision:"from"|"to", gaps:Gap[]):Promise<GoModel|null> {
+  try {
+    const entries=treeEntries(repo,endpointValue.tree);
+    if (!entries.some(e=>e.path === "go.mod") || entries.some(e=>e.mode !== "100644" && e.mode !== "100755")) return null;
+    const files=new Map(entries.map(e=>[e.path,git(repo,["cat-file","blob",e.oid])]));
+    return await certifyGoStatic(files, x=>gaps.push({revision,path:x.path,kind:x.kind,detail:x.detail,scope:null}));
+  } catch { return null; }
+}
+function goClosure(model:GoModel,revision:"from"|"to",changes:Change[]):Affected[] {
+  const changed=new Set(changes.map(c=>revision === "from" ? c.old_path : c.new_path).filter((p):p is string=>p!==null));
+  const incoming=new Map<string,string[]>();
+  for(const [source,targets] of model.imports) for(const target of targets) {const a=incoming.get(target)??[];a.push(source);incoming.set(target,a);}
+  const queue=[...changed].sort(), reached=new Set(queue), via=new Map<string,string>();
+  for(let i=0;i<queue.length;i++) for(const source of (incoming.get(queue[i])??[]).sort()) if(!reached.has(source)) {reached.add(source);queue.push(source);via.set(source,`${model.provenance.get(source)?.get(queue[i])?.join(", ") ?? "Go package dependency"} (${queue[i]})`);}
+  return [...reached].sort().map(path=>({revision,path,entity:null,reasons:[{kind:changed.has(path)?"changed":"dependency",detail:changed.has(path)?"Changed file in this snapshot":via.get(path)!}] }));
+}
+function addGoResourceGaps(model:GoModel,revision:"from"|"to",endpointValue:Endpoint,changes:Change[],gaps:Gap[]):void {
+  const changed=new Set(changes.map(c=>revision === "from" ? c.old_path : c.new_path).filter((p):p is string=>p!==null));
+  for(const [path,dir] of model.resources) if(changed.has(path)) {
+    const scope=`go-package:${model.moduleName}:${dir}`;
+    gaps.push({revision,path,kind:"opaque_embedded_resource",detail:"Embedded content semantics are opaque; include this package and all importing dependent packages",scope,boundary:{kind:"go_package",module:model.moduleName,package_path:dir,tree:endpointValue.tree,model:GO_STATIC_MODEL}});
+  }
+}
 /** Attach certified static file imports to the graph before reverse traversal. */
 function addStaticImports(graph: GraphV1, model: StaticModel): void {
   const files = new Set(graph.nodes.filter(n => n.kind === "file").map(n => n.id));
@@ -223,20 +247,20 @@ function addStaticImports(graph: GraphV1, model: StaticModel): void {
 }
 /** Stable predicates specify what the adapter must independently establish;
  * they contain no guessed profile, inventory, environment or receipt values. */
-function contextRequirements(builtins:string[]) {
+function contextRequirements(builtins:string[], goVersion?:string) {
   const singleton = [
     {id:"baseline",kind:"baseline",predicate:{op:"compatible_passing_receipt_for_from_and_profile"},evidence_kind:"receipt_validation"},
     {id:"environment",kind:"environment",predicate:{op:"complete_relevant_environment_for_execution"},evidence_kind:"environment_observation"},
     {id:"inputs",kind:"inputs",predicate:{op:"complete_inputs_for_target_and_profile"},evidence_kind:"input_discovery"},
     {id:"inventory",kind:"inventory",predicate:{op:"complete_inventory_for_target_and_profile"},evidence_kind:"runner_discovery"},
-    {id:"resolver",kind:"resolver",predicate:{op:"supported_node_typescript_resolver"},evidence_kind:"resolver_observation"},
+    {id:"resolver",kind:"resolver",predicate:goVersion ? {op:"supported_go_package_resolver",go_version:goVersion} : {op:"supported_node_typescript_resolver"},evidence_kind:"resolver_observation"},
     {id:"runner",kind:"runner",predicate:{op:"supported_runner_for_target_and_profile"},evidence_kind:"runner_observation"},
-    {id:"runtime",kind:"runtime",predicate:{op:"supported_node_runtime"},evidence_kind:"runtime_observation"},
+    {id:"runtime",kind:"runtime",predicate:goVersion ? {op:"supported_go_runtime",go_version:goVersion} : {op:"supported_node_runtime"},evidence_kind:"runtime_observation"},
   ];
-  const dependencies = [...new Set(builtins)].sort().map(name => ({id:`dependency:${name}`,kind:"dependency",predicate:{op:"node_builtin_matches_runtime",specifier:name},evidence_kind:"dependency_observation"}));
+  const dependencies = [...new Set(builtins)].sort().map(name => ({id:`dependency:${name}`,kind:"dependency",predicate:{op:goVersion ? "go_standard_package_matches_runtime" : name.startsWith("npm:") ? "node_external_dependency_matches_execution" : "node_builtin_matches_runtime",specifier:name},evidence_kind:"dependency_observation"}));
   return [...singleton,...dependencies].sort((a,b)=>a.id.localeCompare(b.id));
 }
-function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change[]): Affected[] {
+function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change[], model?:StaticModel): Affected[] {
   const paths = new Set(changes.map(c => revision === "from" ? c.old_path : c.new_path).filter((p): p is string => p !== null));
   const affected: Affected[] = [...paths].sort().map(path => ({ revision, path, entity:null, reasons:[{kind:"changed", detail:"Changed file in this snapshot"}] }));
   if (!graph) return affected;
@@ -249,7 +273,8 @@ function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change
   for (const edges of incoming.values()) edges.sort((a,b) => a.source.localeCompare(b.source) || a.relation.localeCompare(b.relation) || a.confidence.localeCompare(b.confidence));
   for (let i=0; i<queue.length; i++) for (const e of incoming.get(queue[i]) ?? []) if (!reached.has(e.source)) {
     reached.add(e.source); queue.push(e.source);
-    evidence.set(e.source, `${e.source} ${e.relation} ${e.target} (${e.confidence})`);
+    const raw=model?.provenance.get(e.source)?.get(e.target);
+    evidence.set(e.source, raw?.length ? `${e.source}: ${raw.join(", ")} resolved to ${e.target}` : `${e.source} ${e.relation} ${e.target} (${e.confidence})`);
   }
   for (const id of [...reached].sort()) {
     const n = nodes.get(id); if (!n) continue;
@@ -269,17 +294,27 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   let affected: Affected[] = [];
   let conditional = false;
   let builtins: string[] = [];
+  let goVersion:string|undefined;
+  let goModels:[GoModel,GoModel]|undefined;
+  let nodeModels:[StaticModel,StaticModel]|undefined;
+  const goProject=schemaVersion === 2 && (treeEntries(repo,from.tree).some(e=>e.path === "go.mod") || treeEntries(repo,to.tree).some(e=>e.path === "go.mod"));
   if (changes.length) {
     const oldGraph = await graphFor(repo, from, "from", gaps, version, grammar);
     const newGraph = await graphFor(repo, to, "to", gaps, version, grammar);
     // V1 retains its established conservative behavior. V2 may report a
     // conditional file-level graph only after certifying both pinned trees.
-    const configChanged = changes.some(c => [c.old_path,c.new_path].some(p => p === "package.json" || p === "tsconfig.json"));
-    const oldCandidate = schemaVersion === 2 ? await nodeStaticModel(repo,from,"from",gaps) : null;
-    const newCandidate = schemaVersion === 2 ? await nodeStaticModel(repo,to,"to",gaps) : null;
+    const configChanged = changes.some(c => [c.old_path,c.new_path].some(p => p === "package.json" || p === "tsconfig.json" || p === "go.mod"));
+    const oldGo = goProject ? await goStaticModel(repo,from,"from",gaps) : null;
+    const newGo = goProject ? await goStaticModel(repo,to,"to",gaps) : null;
+    const oldCandidate = schemaVersion === 2 && !goProject ? await nodeStaticModel(repo,from,"from",gaps) : null;
+    const newCandidate = schemaVersion === 2 && !goProject ? await nodeStaticModel(repo,to,"to",gaps) : null;
     const oldModel = configChanged ? null : oldCandidate;
     const newModel = configChanged ? null : newCandidate;
-    if (oldModel && newModel && oldGraph && newGraph) {
+    if (oldGo && newGo && oldGraph && newGraph && !configChanged && oldGo.goVersion === newGo.goVersion) {
+      for (let i=gaps.length-1;i>=0;i--) if (["unresolved_call","unresolved_reference"].includes(gaps[i].kind)) gaps.splice(i,1);
+      addGoResourceGaps(oldGo,"from",from,changes,gaps);addGoResourceGaps(newGo,"to",to,changes,gaps);
+      conditional=gaps.every(g=>g.scope !== null); builtins=[...new Set([...oldGo.builtins,...newGo.builtins])].sort();goVersion=oldGo.goVersion;goModels=[oldGo,newGo];
+    } else if (oldModel && newModel && oldGraph && newGraph) {
       try {
         addStaticImports(oldGraph,oldModel); addStaticImports(newGraph,newModel);
         // In this certified file-level model every relevant source dependency
@@ -289,11 +324,12 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
         for (let i=gaps.length-1;i>=0;i--) if (["unresolved_call","unresolved_reference"].includes(gaps[i].kind)) gaps.splice(i,1);
         conditional = gaps.length === 0;
         builtins=[...new Set([...oldModel.builtins,...newModel.builtins])].sort();
+        nodeModels=[oldModel,newModel];
       } catch { gaps.push({revision:"to",path:null,kind:"static_model_incomplete",detail:"A certified static import could not be represented in the graph",scope:null}); }
     } else {
       for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:schemaVersion === 1 ? "Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled" : "Outside the supported static Node/TypeScript ESM model; dynamic calls, resources, configuration or dependency kinds may be unmodeled", scope:null});
     }
-    affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
+    affected = goModels ? [...goClosure(goModels[0],"from",changes),...goClosure(goModels[1],"to",changes)] : [...closure(oldGraph, "from", changes,nodeModels?.[0]), ...closure(newGraph, "to", changes,nodeModels?.[1])];
   } else if (treeEntries(repo,from.tree).length > 0) {
     // A pinned tree compared with itself has no source changes. Analyze it
     // nonetheless: inaccessible or unsupported inputs must remain visible, and
@@ -303,6 +339,9 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   affected.sort((a,b) => a.revision.localeCompare(b.revision) || a.path.localeCompare(b.path) || (a.entity ?? "").localeCompare(b.entity ?? ""));
   gaps.sort((a,b) => a.revision.localeCompare(b.revision) || (a.path ?? "").localeCompare(b.path ?? "") || a.kind.localeCompare(b.kind) || a.detail.localeCompare(b.detail));
   const stamp = extractorStamp() ?? "unavailable";
-  const report = { schema_version:schemaVersion, analysis_identity:{ analyzer_version:version, grammar_identity:grammar, extractor_identity:stamp, resolver_identity:stamp, policy_identity:schemaVersion === 1 ? "conservative-v1" : "conditional-node-static-v1", mode:"conservative" }, comparison:{from,to}, changes, affected, analysis_gaps:gaps, required_fallback_scopes:gaps.length ? [{kind:"full_profile",scope:null,reason:"Dependency analysis has unbounded gaps"}] : [], analysis_status: gaps.length ? "incomplete" : conditional ? "conditional" : "complete" };
-  return schemaVersion === 1 ? report : {...report,supported_model:NODE_STATIC_MODEL,context_requirements:conditional ? contextRequirements(builtins) : []};
+  const unbounded=gaps.some(g=>g.scope === null);
+  const scopes=[...new Set(gaps.map(g=>g.scope).filter((s):s is string=>s !== null))].sort();
+  const fallback=unbounded ? [{kind:"full_profile",scope:null,reason:"Dependency analysis has unbounded gaps"}] : scopes.map(scope=>({kind:"scope",scope,reason:"Opaque input requires the package and its dependent targets"}));
+  const report = { schema_version:schemaVersion, analysis_identity:{ analyzer_version:version, grammar_identity:grammar, extractor_identity:stamp, resolver_identity:stamp, policy_identity:schemaVersion === 1 ? "conservative-v1" : goProject ? "conditional-go-static-v1" : "conditional-node-static-v2", mode:"conservative" }, comparison:{from,to}, changes, affected, analysis_gaps:gaps, required_fallback_scopes:fallback, analysis_status: unbounded ? "incomplete" : conditional ? "conditional" : gaps.length ? "bounded" : "complete" };
+  return schemaVersion === 1 ? report : {...report,supported_model:goProject ? GO_STATIC_MODEL : NODE_STATIC_MODEL,context_requirements:conditional ? contextRequirements(builtins,goVersion) : []};
 }

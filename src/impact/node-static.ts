@@ -5,12 +5,13 @@
  */
 import { posix } from "node:path";
 import { depthReady, parseDepth, warmDepthGrammars, type SyntaxNode } from "../graph/depth-parser.js";
+import {recordDependency, type FileDependencyFacts} from "./dependency-facts.js";
 
-export const NODE_STATIC_MODEL = { id:"node-typescript-static-esm", version:"1" } as const;
-export interface StaticModel { imports: Map<string,string[]>; builtins: string[] }
-type Bindings = {values:Set<string>; functions:Set<string>; modules:Set<string>; tests:Set<string>; asserts:Set<string>; imports:string[]; builtins:Set<string>};
+export const NODE_STATIC_MODEL = { id:"node-typescript-static-esm", version:"2" } as const;
+export interface StaticModel extends FileDependencyFacts { builtins: string[] }
+type Bindings = {values:Set<string>; functions:Set<string>; modules:Set<string>; tests:Set<string>; asserts:Set<string>; imports:{target:string;specifier:string}[]; builtins:Set<string>};
 const namePattern = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
-const safeName = (name:string) => namePattern.test(name) && !name.includes("__");
+const safeName = (name:string) => namePattern.test(name) && !name.includes("__") && name !== "constructor" && name !== "prototype";
 const literals = new Set(["number","true","false","null"]);
 const compound = new Set(["binary_expression","unary_expression","parenthesized_expression","ternary_expression","arguments"]);
 const assertions = new Set(["equal","strictEqual","deepEqual","deepStrictEqual","notEqual","notStrictEqual","ok"]);
@@ -27,13 +28,15 @@ function expr(n:SyntaxNode, b:Bindings, locals:Set<string>): boolean {
   if (n.type === "identifier") return safeName(n.text) && (locals.has(n.text) || b.values.has(n.text));
   if (n.type === "member_expression") {
     const obj=n.childForFieldName("object"), prop=n.childForFieldName("property");
-    return !!obj && obj.type === "identifier" && b.modules.has(obj.text) && !locals.has(obj.text) && !!prop && prop.type === "property_identifier" && safeName(prop.text);
+    return !!obj && obj.type === "identifier" && ((b.modules.has(obj.text) && !locals.has(obj.text)) || locals.has(obj.text)) && !!prop && prop.type === "property_identifier" && safeName(prop.text);
   }
+  if (n.type === "object") return n.namedChildren.every(c => c.type === "pair" && c.childForFieldName("key")?.type === "property_identifier" && safeName(c.childForFieldName("key")!.text) && !!c.childForFieldName("value") && expr(c.childForFieldName("value")!,b,locals));
+  if (n.type === "template_string") return n.namedChildren.every(c => c.type === "string_fragment" || (c.type === "template_substitution" && c.namedChildren.length === 1 && expr(c.namedChildren[0],b,locals)));
   if (n.type === "call_expression") {
     const fn=n.childForFieldName("function"), args=n.childForFieldName("arguments");
     if (!fn || !args || args.type !== "arguments") return false;
     const direct=fn.type === "identifier" && b.functions.has(fn.text) && !locals.has(fn.text);
-    const member=fn.type === "member_expression" && expr(fn,b,locals);
+    const member=fn.type === "member_expression" && b.modules.has(fn.childForFieldName("object")?.text ?? "") && expr(fn,b,locals);
     return (direct || member) && args.namedChildren.every(c => expr(c,b,locals));
   }
   return compound.has(n.type) && n.namedChildren.every(c => expr(c,b,locals));
@@ -46,7 +49,7 @@ function params(n:SyntaxNode): Set<string> | null {
     const pattern=p.childForFieldName("pattern"), type=p.childForFieldName("type");
     if (!pattern || pattern.type !== "identifier" || !safeName(pattern.text) || out.has(pattern.text)) return null;
     if (p.namedChildren.some(c => c.id !== pattern.id && (!type || c.id !== type.id))) return null;
-    if (type && (type.type !== "type_annotation" || type.namedChildren.length !== 1 || type.namedChildren[0].type !== "predefined_type" || !["number","string","boolean"].includes(type.namedChildren[0].text))) return null;
+    if (type && (type.type !== "type_annotation" || type.namedChildren.length !== 1 || !((type.namedChildren[0].type === "predefined_type" && ["number","string","boolean"].includes(type.namedChildren[0].text)) || (type.namedChildren[0].type === "type_identifier" && safeName(type.namedChildren[0].text))))) return null;
     out.add(pattern.text);
   }
   return out;
@@ -62,6 +65,14 @@ function pureFunction(fn:SyntaxNode,b:Bindings): boolean {
   const p=params(parameters); if (!p || body.type !== "statement_block") return false;
   for (const statement of body.namedChildren) {
     if (statement.type === "comment") continue;
+    if (statement.type === "lexical_declaration" && /^const\b/.test(statement.text)) {
+      for (const decl of statement.namedChildren) {
+        const local=decl.childForFieldName("name"), value=decl.childForFieldName("value");
+        if (decl.type !== "variable_declarator" || !local || local.type !== "identifier" || !safeName(local.text) || p.has(local.text) || !value || !expr(value,b,p)) return false;
+        p.add(local.text);
+      }
+      continue;
+    }
     if (statement.type !== "return_statement" || statement.namedChildren.length > 1 || !statement.namedChildren.every(n => expr(n,b,p))) return false;
   }
   return true;
@@ -71,11 +82,12 @@ function testRegistration(n:SyntaxNode,b:Bindings): boolean {
   const call=n.namedChildren[0], fn=call.childForFieldName("function"), args=call.childForFieldName("arguments");
   if (call.type !== "call_expression" || !fn || fn.type !== "identifier" || !b.tests.has(fn.text) || !args || args.namedChildren.length !== 2 || !stringLiteral(args.namedChildren[0])) return false;
   const arrow=args.namedChildren[1], parameters=arrow.childForFieldName("parameters"), body=arrow.childForFieldName("body");
-  if (arrow.type !== "arrow_function" || /^async\b/.test(arrow.text) || !parameters || parameters.namedChildren.length || !body || body.type !== "statement_block") return false;
-  for (const st of body.namedChildren) {
+  if (arrow.type !== "arrow_function" || /^async\b/.test(arrow.text) || !parameters || parameters.namedChildren.length || !body) return false;
+  const statements=body.type === "statement_block" ? body.namedChildren : [body];
+  for (const st of statements) {
     if (st.type === "comment") continue;
-    if (st.type !== "expression_statement" || st.namedChildren.length !== 1) return false;
-    const c=st.namedChildren[0], target=c.childForFieldName("function"), a=c.childForFieldName("arguments");
+    if (body.type === "statement_block" && (st.type !== "expression_statement" || st.namedChildren.length !== 1)) return false;
+    const c=body.type === "statement_block" ? st.namedChildren[0] : st, target=c.childForFieldName("function"), a=c.childForFieldName("arguments");
     if (c.type !== "call_expression" || !target || target.type !== "member_expression" || !a) return false;
     const obj=target.childForFieldName("object"), property=target.childForFieldName("property");
     if (!obj || obj.type !== "identifier" || !b.asserts.has(obj.text) || !property || !assertions.has(property.text)) return false;
@@ -114,7 +126,7 @@ function parseBindings(clause:SyntaxNode | undefined, category:"local"|"test"|"a
   }
   return true;
 }
-function sourceFile(root:SyntaxNode,path:string,paths:Set<string>): {imports:string[]; builtins:string[]} | null {
+function sourceFile(root:SyntaxNode,path:string,paths:Set<string>): {imports:{target:string;specifier:string}[]; builtins:string[]} | null {
   if (root.type !== "program") return null;
   const b:Bindings={values:new Set(),functions:new Set(),modules:new Set(),tests:new Set(),asserts:new Set(),imports:[],builtins:new Set()};
   const functions:SyntaxNode[]=[], tests:SyntaxNode[]=[];
@@ -125,7 +137,7 @@ function sourceFile(root:SyntaxNode,path:string,paths:Set<string>): {imports:str
       if (!value) return null;
       const local=resolveLocal(path,value,paths);
       let category:"local"|"test"|"assert";
-      if (local) { category="local"; b.imports.push(local); }
+      if (local) { category="local"; b.imports.push({target:local,specifier:value}); }
       else if (value === "node:test") { category="test"; b.builtins.add(value); }
       else if (value === "node:assert/strict") { category="assert"; b.builtins.add(value); }
       else return null;
@@ -143,6 +155,12 @@ function sourceFile(root:SyntaxNode,path:string,paths:Set<string>): {imports:str
     }
     const node=top.type === "export_statement" ? top.childForFieldName("declaration") : top;
     if (!node) return null;
+    if (node.type === "interface_declaration") {
+      // Only plain data interfaces; methods, accessors and inheritance can
+      // hide effects or alter the modeled module surface.
+      if (!/^interface\s+[A-Za-z_$][\w$]*\s*\{\s*(?:[A-Za-z_$][\w$]*\s*:\s*(?:number|string|boolean)\s*;?\s*)*\}$/.test(node.text)) return null;
+      continue;
+    }
     if (node.type === "function_declaration") {
       const name=node.childForFieldName("name");
       if (!name || !safeName(name.text) || b.values.has(name.text)) return null;
@@ -158,14 +176,16 @@ function sourceFile(root:SyntaxNode,path:string,paths:Set<string>): {imports:str
   }
   for (const fn of functions) if (!pureFunction(fn,b)) return null;
   for (const statement of tests) if (!testRegistration(statement,b)) return null;
-  return {imports:[...new Set(b.imports)].sort(),builtins:[...b.builtins].sort()};
+  return {imports:b.imports,builtins:[...b.builtins].sort()};
 }
 function configValid(files:ReadonlyMap<string,Buffer>):boolean {
   try {
     const decoder=new TextDecoder("utf-8",{fatal:true});
     const pkg=JSON.parse(decoder.decode(files.get("package.json")!));
-    if (!pkg || Array.isArray(pkg) || typeof pkg !== "object" || pkg.type !== "module" || Object.keys(pkg).some(k => !["name","version","private","type"].includes(k))) return false;
+    if (!pkg || Array.isArray(pkg) || typeof pkg !== "object" || pkg.type !== "module" || Object.keys(pkg).some(k => !["name","version","private","type","scripts","devDependencies"].includes(k))) return false;
     if ((pkg.name !== undefined && typeof pkg.name !== "string") || (pkg.version !== undefined && typeof pkg.version !== "string") || (pkg.private !== undefined && typeof pkg.private !== "boolean")) return false;
+    if (pkg.scripts !== undefined && (!pkg.scripts || Object.keys(pkg.scripts).length !== 1 || typeof pkg.scripts.test !== "string" || !/^tsx --test (?:test|tests)\/\*\.test\.ts$/.test(pkg.scripts.test))) return false;
+    if (pkg.devDependencies !== undefined && (!pkg.devDependencies || Array.isArray(pkg.devDependencies) || Object.keys(pkg.devDependencies).some(k => !["tsx","typescript"].includes(k) || typeof pkg.devDependencies[k] !== "string"))) return false;
     const cfg=JSON.parse(decoder.decode(files.get("tsconfig.json")!));
     if (!cfg || typeof cfg !== "object" || Array.isArray(cfg) || Object.keys(cfg).some(k => k !== "compilerOptions")) return false;
     const o=cfg.compilerOptions;
@@ -178,7 +198,7 @@ function configValid(files:ReadonlyMap<string,Buffer>):boolean {
 export async function certifyNodeStatic(files:ReadonlyMap<string,Buffer>, onParseError?: (path:string) => void): Promise<StaticModel | null> {
   const paths=new Set([...files.keys()].filter(filePath));
   await warmDepthGrammars(["typescript"]);if (!depthReady("typescript")) return null;
-  const decoder=new TextDecoder("utf-8",{fatal:true}), imports=new Map<string,string[]>(), builtins=new Set<string>();
+  const decoder=new TextDecoder("utf-8",{fatal:true}), facts:FileDependencyFacts={imports:new Map(),provenance:new Map()}, builtins=new Set<string>();
   let valid=true;
   try {
     for (const path of [...paths].sort()) {
@@ -190,9 +210,15 @@ export async function certifyNodeStatic(files:ReadonlyMap<string,Buffer>, onPars
         return sourceFile(root,path,paths);
       });
       if (!result) { valid=false; continue; }
-      imports.set(path,result.imports);for (const b of result.builtins) builtins.add(b);
+      facts.imports.set(path,[]);for (const item of result.imports) recordDependency(facts,path,item.target,`TypeScript import ${item.specifier}`);
+      facts.imports.get(path)!.sort();for (const b of result.builtins) builtins.add(b);
     }
   } catch { return null; }
-  if (!valid || !paths.size || !files.has("package.json") || !files.has("tsconfig.json") || !configValid(files) || [...files.keys()].some(p => !paths.has(p) && !["package.json","tsconfig.json"].includes(p))) return null;
-  return {imports,builtins:[...builtins].sort()};
+  // Under this model the only file reads are static source imports; README and
+  // license text therefore have no effect, subject to the independently
+  // validated loader, runner and complete-input requirements.
+  if (!valid || !paths.size || !files.has("package.json") || !files.has("tsconfig.json") || !configValid(files) || [...files.keys()].some(p => !paths.has(p) && !["package.json","tsconfig.json"].includes(p) && !/^(?:.*\/)?(?:README\.md|LICENSE)$/.test(p))) return null;
+  const pkg=JSON.parse(decoder.decode(files.get("package.json")!));
+  for (const name of Object.keys(pkg.devDependencies ?? {})) builtins.add(`npm:${name}`);
+  return {...facts,builtins:[...builtins].sort()};
 }

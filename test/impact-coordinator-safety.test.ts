@@ -8,94 +8,6 @@ async function coordinator(): Promise<any> {
   return import("../src/impact/coordinator.js");
 }
 
-type Files = Record<string, string>;
-type Event = { kind: "change" | "add" | "remove" | "rename" | "overflow" | "lost"; path?: string };
-type Mutation = "edit" | "addition" | "rename" | "edit-and-revert" | "overflow" | "lost";
-type Phase = "enumerate" | "read" | "seal";
-
-/** A deterministic backend; a phase callback acts as a barrier without sleeps. */
-function backend(options: { strategy?: "immutable" | "observed"; mutation?: Mutation; phase?: Phase; covered?: boolean } = {}) {
-  let live: Files = { "a.ts": "before-a", "b.ts": "before-b" };
-  let snapshot: Files | undefined;
-  let fired = false;
-  const events: Event[] = [];
-  const stages: string[] = [];
-  function at(phase: Phase) {
-    stages.push(phase);
-    if (phase !== options.phase || fired || !options.mutation) return;
-    fired = true;
-    switch (options.mutation) {
-      case "edit": live["a.ts"] = "after-a"; events.push({ kind: "change", path: "a.ts" }); break;
-      case "addition": live["new.ts"] = "added"; events.push({ kind: "add", path: "new.ts" }); break;
-      case "rename": live["moved.ts"] = live["b.ts"]; delete live["b.ts"]; events.push({ kind: "rename", path: "b.ts" }); break;
-      case "edit-and-revert": live["a.ts"] = "temporary"; events.push({ kind: "change", path: "a.ts" }); live["a.ts"] = "before-a"; events.push({ kind: "change", path: "a.ts" }); break;
-      case "overflow": events.push({ kind: "overflow" }); break;
-      case "lost": events.push({ kind: "lost" }); break;
-    }
-  }
-  return {
-    stages,
-    get live() { return { ...live }; },
-    strategy: options.strategy ?? "observed",
-    async acquire() {
-      stages.push("acquire");
-      if (options.strategy === "immutable") snapshot = { ...live };
-      return { strategy: options.strategy ?? "observed", identity: "snapshot-1" };
-    },
-    async observe() { stages.push("observe"); return { covered: options.covered !== false }; },
-    async enumerate() { at("enumerate"); return Object.keys(snapshot ?? live).sort(); },
-    async read(path: string) { at("read"); return (snapshot ?? live)[path]; },
-    async seal() { at("seal"); return { events: [...events], covered: options.covered !== false }; },
-    async cleanup() { stages.push("cleanup"); },
-  };
-}
-
-for (const phase of ["enumerate", "read", "seal"] as const) {
-  for (const mutation of ["edit", "addition", "rename", "edit-and-revert", "overflow", "lost"] as const) {
-    test(`observed capture invalidates ${mutation} at ${phase}`, async () => {
-      const fake = backend({ phase, mutation });
-      const { captureWorktree } = await coordinator();
-      const out = await captureWorktree({ backend: fake, maxAttempts: 1 });
-      assert.equal(out.status, "unavailable", `must not return a fingerprint for ${mutation} at ${phase}`);
-      assert.ok(!out.fingerprint);
-      assert.ok(fake.stages.indexOf("observe") < fake.stages.indexOf("enumerate"));
-      assert.ok(fake.stages.includes("cleanup"));
-    });
-  }
-}
-
-test("observed capture refuses incomplete observation coverage", async () => {
-  const fake = backend({ covered: false });
-  const { captureWorktree } = await coordinator();
-  const out = await captureWorktree({ backend: fake, maxAttempts: 1 });
-  assert.equal(out.status, "unavailable");
-  assert.ok(!out.fingerprint);
-  assert.ok(fake.stages.includes("cleanup"));
-});
-
-test("observed capture seals stable contents with observation established before enumeration", async () => {
-  const fake = backend();
-  const { captureWorktree } = await coordinator();
-  const out = await captureWorktree({ backend: fake, maxAttempts: 1 });
-  assert.equal(out.status, "captured");
-  assert.ok(typeof out.fingerprint === "string" && out.fingerprint.length > 0);
-  assert.deepEqual(out.files, { "a.ts": "before-a", "b.ts": "before-b" });
-  assert.ok(fake.stages.indexOf("observe") < fake.stages.indexOf("enumerate"));
-  assert.ok(fake.stages.includes("cleanup"));
-});
-
-test("immutable acquisition keeps a coherent inventory and bytes despite later live edits", async () => {
-  const fake = backend({ strategy: "immutable", phase: "enumerate", mutation: "rename" });
-  const { captureWorktree } = await coordinator();
-  const out = await captureWorktree({ backend: fake, maxAttempts: 1 });
-  assert.equal(out.status, "captured");
-  assert.deepEqual(out.files, { "a.ts": "before-a", "b.ts": "before-b" });
-  assert.deepEqual(fake.live, { "a.ts": "before-a", "moved.ts": "before-b" });
-  assert.equal(out.snapshotIdentity, "snapshot-1");
-  assert.ok(out.fingerprint);
-  assert.ok(fake.stages.includes("cleanup"));
-});
-
 const identity = { snapshot: "tree-B", mode: "conservative", policy: "v1", version: "v1" };
 function store(entry: any, opts: { refreshFails?: boolean; publishFails?: boolean } = {}) {
   const calls: string[] = [];
@@ -137,5 +49,62 @@ for (const fault of ["refreshFails", "publishFails"] as const) {
     const out = await loadConservativeGraph({ cache: fake, identity });
     assert.notEqual(out.status, "current");
     assert.notDeepEqual(out.value, { files: ["stale.ts"] });
+  });
+}
+
+/** Internal boundary accepts injected Git and materializer to expose exact-tree failures. */
+function treeBackend(fault?: "resolve" | "tree" | "blob" | "materialize") {
+  const calls: string[] = [];
+  let branch = "commit-A";
+  const git = {
+    async resolve(ref: string) {
+      calls.push(`resolve:${ref}`);
+      if (fault === "resolve") throw new Error("missing commit");
+      const result = { commit: branch, tree: "tree-A" };
+      branch = "commit-B"; // branch moves immediately after it is resolved
+      return result;
+    },
+    async readTree(tree: string) {
+      calls.push(`tree:${tree}`);
+      if (fault === "tree") throw new Error("missing tree object");
+      return [{ path: "source.ts", mode: "100644", oid: "blob-A" }];
+    },
+    async readBlob(oid: string) {
+      calls.push(`blob:${oid}`);
+      if (fault === "blob") throw new Error("corrupt blob");
+      return "export const a = 1;";
+    },
+  };
+  const materializer = {
+    async writeTree(entries: unknown) {
+      calls.push("materialize");
+      if (fault === "materialize") throw new Error("containment or materialization failure");
+      return entries;
+    },
+    async cleanup() { calls.push("cleanup"); },
+  };
+  return { calls, git, materializer };
+}
+
+test("committed analysis binds a moved ref to the originally resolved tree", async () => {
+  const { readCommittedSnapshot } = await coordinator();
+  const fake = treeBackend();
+  const result = await readCommittedSnapshot({ git: fake.git, materializer: fake.materializer, ref: "branch" });
+  assert.equal(result.status, "captured");
+  assert.equal(result.commit, "commit-A");
+  assert.equal(result.tree, "tree-A");
+  assert.equal(fake.calls.filter(x => x.startsWith("resolve:")).length, 1);
+  assert.ok(fake.calls.includes("tree:tree-A"));
+  assert.ok(fake.calls.includes("blob:blob-A"));
+  assert.ok(fake.calls.includes("cleanup"));
+});
+for (const fault of ["resolve", "tree", "blob", "materialize"] as const) {
+  test(`unavailable committed ${fault} cannot become a valid snapshot`, async () => {
+    const { readCommittedSnapshot } = await coordinator();
+    const fake = treeBackend(fault);
+    const result = await readCommittedSnapshot({ git: fake.git, materializer: fake.materializer, ref: "branch" });
+    assert.notEqual(result.status, "captured");
+    assert.ok(!result.fingerprint);
+    if (fake.calls.includes("materialize")) assert.ok(fake.calls.includes("cleanup"));
   });
 }

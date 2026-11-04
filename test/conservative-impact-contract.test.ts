@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 const cli = resolve("src/cli.ts");
 const tsx = import.meta.resolve("tsx");
@@ -83,8 +83,8 @@ function report(dir: string, from: string, to: string): Json {
     const ep = out.comparison[key];
     assert.equal(ep.requested, key === "from" ? from : to);
     assert.ok(typeof ep.fingerprint === "string" && ep.fingerprint.length > 0);
-    if (ep.kind === "commit") { assert.match(ep.commit, oid); assert.match(ep.tree, oid); }
-    else assert.equal(ep.kind, "worktree");
+    assert.equal(ep.kind, "commit");
+    assert.match(ep.commit, oid); assert.match(ep.tree, oid);
   }
   assert.equal(out.comparison.from.kind, "commit");
   for (const key of ["changes", "affected", "analysis_gaps", "required_fallback_scopes"]) assert.ok(Array.isArray(out[key]), key);
@@ -122,7 +122,7 @@ function report(dir: string, from: string, to: string): Json {
 
 test("impact requires explicit endpoints, rejects duplicate endpoints and unknown refs", () => fixture(dir => {
   const id = commit(dir, "base");
-  for (const args of [[], ["--from", id], ["--to", id], ["--from", id, "--to", "does-not-exist"], ["--from", id, "--from", id, "--to", id], ["--from", "worktree", "--to", id]]) {
+  for (const args of [[], ["--from", id], ["--to", id], ["--from", id, "--to", "does-not-exist"], ["--from", id, "--from", id, "--to", id], ["--from", "worktree", "--to", id], ["--from", id, "--to", "worktree"]]) {
     const r = invoke(dir, ...args, "--json");
     assert.equal(r.status, 2, `expected input error for ${args.join(" ")}; stderr=${r.stderr}`);
     assert.doesNotMatch(r.stderr, /unknown command/i);
@@ -193,16 +193,18 @@ test("cold and warm analyses have deterministic reports and do not modify source
   assert.equal(git(dir, "rev-parse", "HEAD"), b);
 }));
 
-test("worktree target includes staged, unstaged, untracked and deleted paths when capture is available", () => fixture(dir => {
-  file(dir, "staged.ts", "export const a = 1;\n"); file(dir, "unstaged.ts", "export const b = 1;\n"); file(dir, "deleted.ts", "export const c = 1;\n");
-  const a = commit(dir, "baseline");
-  file(dir, "staged.ts", "export const a = 2;\n"); git(dir, "add", "staged.ts");
-  file(dir, "unstaged.ts", "export const b = 2;\n"); file(dir, "new.ts", "export const d = 1;\n"); rmSync(join(dir, "deleted.ts"));
-  const r = invoke(dir, "--from", a, "--to", "worktree", "--json");
-  if (r.status !== 0) { assert.match(r.stderr, /capture|snapshot|observ/i, "unavailable coherent capture needs a specific diagnostic"); assert.throws(() => JSON.parse(r.stdout)); return; }
-  const out = JSON.parse(r.stdout);
-  assert.equal(out.comparison.to.kind, "worktree");
-  for (const p of ["staged.ts", "unstaged.ts", "new.ts", "deleted.ts"]) assert.ok(out.changes.some((c: Json) => c.old_path === p || c.new_path === p), `missing ${p}`);
+test("committed endpoints ignore staged, unstaged and untracked checkout contents", () => fixture(dir => {
+  file(dir, "src/x.ts", "export const x = 1;\n");
+  const a = commit(dir, "A");
+  file(dir, "src/x.ts", "export const x = 2;\n");
+  const b = commit(dir, "B");
+  const original = report(dir, a, b);
+  file(dir, "src/x.ts", "export const x = 3;\n"); git(dir, "add", "src/x.ts");
+  file(dir, "src/x.ts", "export const x = 4;\n"); file(dir, "src/untracked.ts", "export const untracked = true;\n");
+  const dirty = report(dir, a, b);
+  assert.deepEqual(dirty, original, "analysis must use committed trees rather than checkout contents");
+  assert.equal(readFileSync(join(dir, "src/x.ts"), "utf8"), "export const x = 4;\n");
+  assert.ok(!dirty.changes.some((c: Json) => c.new_path === "src/untracked.ts"));
 }));
 
 test("old and new sides of a changed file are both represented", () => fixture(dir => {
@@ -306,3 +308,66 @@ test("gap/fallback consistency rejects missing or contradictory bounded scopes",
   assert.throws(() => assertGapFallback({ analysis_status: "incomplete", analysis_gaps: [{ scope: null }], required_fallback_scopes: [] }), /unbounded gap/);
   assert.doesNotThrow(() => assertGapFallback({ analysis_status: "incomplete", analysis_gaps: [{ scope: null }], required_fallback_scopes: [{ kind: "full_profile", scope: null }] }));
 });
+
+/** Write symlink blobs directly, so tests do not need OS symlink privileges. */
+function committedLink(dir: string, path: string, target: string): void {
+  const hashed = spawnSync("git", ["hash-object", "-w", "--stdin"], { cwd: dir, input: target, encoding: "utf8" });
+  assert.equal(hashed.status, 0, hashed.stderr);
+  git(dir, "update-index", "--add", "--cacheinfo", "120000", hashed.stdout.trim(), path);
+}
+function assertUnsafeLinkFailsClosed(dir: string, a: string, b: string, secret: string): void {
+  const r = invoke(dir, "--from", a, "--to", b, "--json");
+  assert.ok(!r.stdout.includes(secret), "external file bytes leaked to report");
+  assert.ok(!r.stderr.includes(secret), "external file bytes leaked to diagnostics");
+  if (r.status !== 0) {
+    assert.equal(r.status, 2);
+    assert.match(r.stderr, /symlink|link|contain|materializ|snapshot/i);
+    assert.throws(() => JSON.parse(r.stdout));
+    return;
+  }
+  const out = report(dir, a, b);
+  assert.ok(out.analysis_gaps.some((g: Json) => g.revision === "to" && g.scope === null));
+  assert.equal(out.analysis_status, "incomplete");
+  assert.ok(out.required_fallback_scopes.some((x: Json) => x.kind === "full_profile" && x.scope === null));
+}
+
+for (const kind of ["absolute", "parent-escape", "chained-escape", "path-component-escape", "loop", "missing"] as const) {
+  test(`unsafe committed ${kind} symlinks cannot consume external content or suppress fallback`, () => fixture(dir => {
+    const sentinelDir = mkdtempSync(join(tmpdir(), "impact-sentinel-"));
+    try {
+      const secret = "UNIQUE_EXTERNAL_SENTINEL_NOT_TREE_CONTENT";
+      const sentinel = join(sentinelDir, "secret.ts");
+      writeFileSync(sentinel, secret);
+      const a = commit(dir, "empty base");
+      if (kind === "absolute") committedLink(dir, "link.ts", sentinel);
+      else if (kind === "parent-escape") committedLink(dir, "link.ts", relative(dir, sentinel).replaceAll("\\", "/"));
+      else if (kind === "chained-escape") { committedLink(dir, "link.ts", "indirect.ts"); committedLink(dir, "indirect.ts", sentinel); }
+      else if (kind === "path-component-escape") { committedLink(dir, "dir", sentinelDir); committedLink(dir, "link.ts", "dir/secret.ts"); }
+      else if (kind === "loop") { committedLink(dir, "link.ts", "indirect.ts"); committedLink(dir, "indirect.ts", "link.ts"); }
+      else committedLink(dir, "link.ts", "missing-target.ts");
+      git(dir, "commit", "-m", `add ${kind} link`);
+      const b = git(dir, "rev-parse", "HEAD");
+      assertUnsafeLinkFailsClosed(dir, a, b, secret);
+      assert.equal(readFileSync(sentinel, "utf8"), secret, "analysis or cleanup altered external sentinel");
+    } finally { rmSync(sentinelDir, { recursive: true, force: true }); }
+  }));
+}
+
+test("a contained symlink never contributes bytes from outside the pinned tree", () => fixture(dir => {
+  file(dir, "src/target.ts", "export const pinned = 1;\n");
+  const a = commit(dir, "base");
+  committedLink(dir, "src/link.ts", "target.ts");
+  git(dir, "commit", "-m", "add contained link");
+  const b = git(dir, "rev-parse", "HEAD");
+  file(dir, "src/target.ts", "export const uncommitted = 'NOT_PINNED';\n");
+  const r = invoke(dir, "--from", a, "--to", b, "--json");
+  if (r.status !== 0) {
+    assert.equal(r.status, 2);
+    assert.match(r.stderr, /symlink|link|contain|materializ|snapshot/i);
+    assert.throws(() => JSON.parse(r.stdout));
+    return;
+  }
+  const out = report(dir, a, b);
+  assert.ok(!JSON.stringify(out).includes("NOT_PINNED"));
+  assert.ok(out.changes.some((c: Json) => c.new_path === "src/link.ts"));
+}));

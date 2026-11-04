@@ -17,6 +17,7 @@ import type { GraphV1 } from "../graph/types.js";
 import { loadConservativeGraph, readCommittedSnapshot } from "./coordinator.js";
 import { preserveCandidates, type CandidateFact } from "./facts.js";
 import { trustedCacheDirectory, secureNewWindowsCacheDirectory } from "./cache-security.js";
+import { certifyNodeStatic, NODE_STATIC_MODEL, type StaticModel } from "./node-static.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 function git(dir: string, args: string[]): Buffer {
@@ -199,6 +200,42 @@ async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" 
     }
   } finally { rmSync(temp, { recursive: true, force: true }); }
 }
+async function nodeStaticModel(repo: string, endpointValue: Endpoint): Promise<StaticModel | null> {
+  try {
+    const files = new Map<string,Buffer>();
+    for (const entry of treeEntries(repo,endpointValue.tree)) {
+      if (entry.mode !== "100644" && entry.mode !== "100755") return null;
+      files.set(entry.path,git(repo,["cat-file","blob",entry.oid]));
+    }
+    return await certifyNodeStatic(files);
+  } catch { return null; }
+}
+/** Attach certified static file imports to the graph before reverse traversal. */
+function addStaticImports(graph: GraphV1, model: StaticModel): void {
+  const files = new Set(graph.nodes.filter(n => n.kind === "file").map(n => n.id));
+  const existing = new Set(graph.edges.map(e => `${e.source}\0${e.relation}\0${e.target}`));
+  for (const [source,targets] of model.imports) for (const target of targets) {
+    if (!files.has(source) || !files.has(target)) throw new Error("certified source missing from graph");
+    const key = `${source}\0imports\0${target}`;
+    if (!existing.has(key)) { graph.edges.push({source,target,relation:"imports",confidence:"extracted"}); existing.add(key); }
+  }
+  graph.meta.edgeCount=graph.edges.length;
+}
+/** Stable predicates specify what the adapter must independently establish;
+ * they contain no guessed profile, inventory, environment or receipt values. */
+function contextRequirements(builtins:string[]) {
+  const singleton = [
+    {id:"baseline",kind:"baseline",predicate:{op:"compatible_passing_receipt_for_from_and_profile"},evidence_kind:"receipt_validation"},
+    {id:"environment",kind:"environment",predicate:{op:"complete_relevant_environment_for_execution"},evidence_kind:"environment_observation"},
+    {id:"inputs",kind:"inputs",predicate:{op:"complete_inputs_for_target_and_profile"},evidence_kind:"input_discovery"},
+    {id:"inventory",kind:"inventory",predicate:{op:"complete_inventory_for_target_and_profile"},evidence_kind:"runner_discovery"},
+    {id:"resolver",kind:"resolver",predicate:{op:"supported_node_typescript_resolver"},evidence_kind:"resolver_observation"},
+    {id:"runner",kind:"runner",predicate:{op:"supported_runner_for_target_and_profile"},evidence_kind:"runner_observation"},
+    {id:"runtime",kind:"runtime",predicate:{op:"supported_node_runtime"},evidence_kind:"runtime_observation"},
+  ];
+  const dependencies = [...new Set(builtins)].sort().map(name => ({id:`dependency:${name}`,kind:"dependency",predicate:{op:"node_builtin_matches_runtime",specifier:name},evidence_kind:"dependency_observation"}));
+  return [...singleton,...dependencies].sort((a,b)=>a.id.localeCompare(b.id));
+}
 function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change[]): Affected[] {
   const paths = new Set(changes.map(c => revision === "from" ? c.old_path : c.new_path).filter((p): p is string => p !== null));
   const affected: Affected[] = [...paths].sort().map(path => ({ revision, path, entity:null, reasons:[{kind:"changed", detail:"Changed file in this snapshot"}] }));
@@ -222,7 +259,7 @@ function closure(graph: GraphV1 | null, revision: "from" | "to", changes: Change
   }
   return affected;
 }
-export async function analyzeImpact(repo: string, fromRef: string, toRef: string, version: string) {
+export async function analyzeImpact(repo: string, fromRef: string, toRef: string, version: string, schemaVersion: 1 | 2 = 1) {
   const from = endpoint(repo, fromRef);
   const to = endpoint(repo, toRef);
   for (const tree of [from.tree, to.tree]) treeEntries(repo,tree);
@@ -230,12 +267,30 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   const grammar = grammarIdentity();
   const gaps: Gap[] = [];
   let affected: Affected[] = [];
+  let conditional = false;
+  let builtins: string[] = [];
   if (changes.length) {
     const oldGraph = await graphFor(repo, from, "from", gaps, version, grammar);
     const newGraph = await graphFor(repo, to, "to", gaps, version, grammar);
-    // Existing navigation resolution cannot justify excluding unmodeled
-    // dynamic calls, resources or test-runner inputs.
-    for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:"Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled", scope:null});
+    // V1 retains its established conservative behavior. V2 may report a
+    // conditional file-level graph only after certifying both pinned trees.
+    const configChanged = changes.some(c => [c.old_path,c.new_path].some(p => p === "package.json" || p === "tsconfig.json"));
+    const oldModel = schemaVersion === 2 && !configChanged ? await nodeStaticModel(repo,from) : null;
+    const newModel = schemaVersion === 2 && !configChanged ? await nodeStaticModel(repo,to) : null;
+    if (oldModel && newModel && oldGraph && newGraph) {
+      try {
+        addStaticImports(oldGraph,oldModel); addStaticImports(newGraph,newModel);
+        // In this certified file-level model every relevant source dependency
+        // has an explicit import/re-export edge. Symbol-level resolution is
+        // deliberately broader than needed and its unresolved candidates do
+        // not imply missing file dependencies.
+        for (let i=gaps.length-1;i>=0;i--) if (["unresolved_call","unresolved_reference"].includes(gaps[i].kind)) gaps.splice(i,1);
+        conditional = gaps.length === 0;
+        builtins=[...new Set([...oldModel.builtins,...newModel.builtins])].sort();
+      } catch { gaps.push({revision:"to",path:null,kind:"static_model_incomplete",detail:"A certified static import could not be represented in the graph",scope:null}); }
+    } else {
+      for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:schemaVersion === 1 ? "Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled" : "Outside the supported static Node/TypeScript ESM model; dynamic calls, resources, configuration or dependency kinds may be unmodeled", scope:null});
+    }
     affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
   } else if (treeEntries(repo,from.tree).length > 0) {
     // A pinned tree compared with itself has no source changes. Analyze it
@@ -246,5 +301,6 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   affected.sort((a,b) => a.revision.localeCompare(b.revision) || a.path.localeCompare(b.path) || (a.entity ?? "").localeCompare(b.entity ?? ""));
   gaps.sort((a,b) => a.revision.localeCompare(b.revision) || (a.path ?? "").localeCompare(b.path ?? "") || a.kind.localeCompare(b.kind) || a.detail.localeCompare(b.detail));
   const stamp = extractorStamp() ?? "unavailable";
-  return { schema_version:1, analysis_identity:{ analyzer_version:version, grammar_identity:grammar, extractor_identity:stamp, resolver_identity:stamp, policy_identity:"conservative-v1", mode:"conservative" }, comparison:{from,to}, changes, affected, analysis_gaps:gaps, required_fallback_scopes:gaps.length ? [{kind:"full_profile",scope:null,reason:"Dependency analysis has unbounded gaps"}] : [], analysis_status:gaps.length ? "incomplete" : "complete" };
+  const report = { schema_version:schemaVersion, analysis_identity:{ analyzer_version:version, grammar_identity:grammar, extractor_identity:stamp, resolver_identity:stamp, policy_identity:schemaVersion === 1 ? "conservative-v1" : "conditional-node-static-v1", mode:"conservative" }, comparison:{from,to}, changes, affected, analysis_gaps:gaps, required_fallback_scopes:gaps.length ? [{kind:"full_profile",scope:null,reason:"Dependency analysis has unbounded gaps"}] : [], analysis_status: gaps.length ? "incomplete" : conditional ? "conditional" : "complete" };
+  return schemaVersion === 1 ? report : {...report,supported_model:NODE_STATIC_MODEL,context_requirements:conditional ? contextRequirements(builtins) : []};
 }

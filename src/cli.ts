@@ -1052,11 +1052,14 @@ grouped(program.command("impact"), GROUP.ci)
   .option("--from <commit>", "comparison source commit", (value: string, previous: string[] = []) => [...previous, value], [])
   .option("--to <commit>", "comparison target commit", (value: string, previous: string[] = []) => [...previous, value], [])
   .option("--json", "emit a versioned JSON impact report")
-  .action(async (opts: { from: string[]; to: string[]; json?: boolean }) => {
+  .option("--schema-version <version>", "report schema: 1 (default) or 2", (value: string, previous: string[] = []) => [...previous, value], [])
+  .action(async (opts: { from: string[]; to: string[]; json?: boolean; schemaVersion: string[] }) => {
     try {
       if (opts.from.length !== 1 || opts.to.length !== 1) throw new Error("impact requires exactly one --from and one --to endpoint");
+      if (opts.schemaVersion.length > 1 || (opts.schemaVersion.length === 1 && !["1","2"].includes(opts.schemaVersion[0]))) throw new Error("impact supports only schema version 1 or 2");
+      const schemaVersion = opts.schemaVersion[0] === "2" ? 2 : 1;
       const { analyzeImpact } = await import("./impact/analyze.js");
-      const result = await analyzeImpact(process.cwd(), opts.from[0], opts.to[0], currentVersion);
+      const result = await analyzeImpact(process.cwd(), opts.from[0], opts.to[0], currentVersion, schemaVersion);
       console.log(JSON.stringify(result));
     } catch (error) {
       console.error(`impact: ${error instanceof Error ? error.message : String(error)}`);

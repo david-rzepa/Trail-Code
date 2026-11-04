@@ -296,73 +296,67 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 4,
-      "correction_runs": 2,
-      "findings": [
-        {
-          "id": "test_design:4:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "open",
-          "target": "design",
-          "target_attempt": 4,
-          "target_fp": "v1:sha256:0d261feee0840a72e8b9aff620492233f2e04fbb6371f0991e990bf3a65fd84f",
-          "text": "The approved design requires deterministic tests for capture-time edits, additions/renames, edit-and-revert, watcher overflow/loss and failed or incompatible conservative cache refresh, but exposes no way to synchronize observation/capture phases or inject observer and cache faults. An uncontrolled subprocess race cannot prove the event happened during capture or exercise loss deterministically, and a snapshot-based implementation can legitimately succeed despite concurrent mutation. Define a testable capture/cache seam or observable instrumentation that supports both allowed capture strategies and failure injection without extending the public CLI; also specify how tests can assert coherent capture success or explicit unavailability.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-03T22:33:48Z",
+      "attempt": 5,
+      "correction_runs": 3,
+      "findings": [],
+      "finished_at": "2026-11-04T00:12:25Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:659387a7758750e6e09ac6e3cc010b36dfd17690"
+          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff"
         },
         "policy": {}
       },
       "frozen": [
-        "test/conservative-impact-contract.test.ts"
+        "test/conservative-impact-contract.test.ts",
+        "test/impact-coordinator-safety.test.ts"
       ],
-      "holder": "codex:root/g1-test-design-4",
-      "input_fp": "v1:sha256:7e0f7ef9c5c7d3e86a28310185796b1724847df21b8c81f8b021e9dca48d8406",
+      "holder": "codex:root/g1-test-design-5",
+      "input_fp": "v1:sha256:10ba7d179c19f4f02691af68f52f5d3975d8b241640557853a2f1ad8f8b80304",
       "ok": true,
       "output": {
         "commands": [
-          "node --import tsx --test test/conservative-impact-contract.test.ts"
+          "node --import tsx --test test/conservative-impact-contract.test.ts",
+          "node --import tsx --test test/impact-coordinator-safety.test.ts"
         ],
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 12487,
-              "id_or_scope": "test/conservative-impact-contract.test.ts (14 tests, node test runner total)",
-              "observation": "failing: all 14 tests exercised the CLI and failed because impact is not implemented; navigation fixture completed a real upstream graph build"
+              "duration_ms": 13583,
+              "id_or_scope": "test/conservative-impact-contract.test.ts",
+              "observation": "failing: all 14 subprocess contract tests reach real CLI, where impact is not implemented"
+            },
+            {
+              "duration_ms": 174,
+              "id_or_scope": "test/impact-coordinator-safety.test.ts",
+              "observation": "incomplete pre-implementation: each test enters its test body, but the internal coordinator module does not yet exist so behavioral assertions cannot run"
             }
           ],
-          "checkpoint": "3f2607f999c1049a99eec37de659f56515689ba5",
+          "checkpoint": "13a8da12227317f3417fe2bd7721e9388935282b",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 12553,
+              "duration_ms": 13637,
+              "exit": 1
+            },
+            {
+              "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
+              "duration_ms": 236,
               "exit": 1
             }
           ],
-          "summary": "Red baseline, with wall-clock command timing and runner-reported suite duration.",
-          "total_ms": 12553
-        },
-        "responses": {
-          "review_tests:1:1": "disputed: The observable CLI contract has no way to synchronize tests to enumeration, reads, sealing, observer overflow or failure; racing filesystem writes is not deterministic and valid snapshot implementations need not observe changes. The stable-worktree test correctly allows explicit failure when coherent capture is unavailable as the approved design requires. I raised a design finding to define deterministic test controls for both genuine snapshots and watched capture.",
-          "review_tests:1:2": "disputed: Added tests for stale snapshot identities, unavailable target after a warm cache, and a real navigation graph build in a different mode. Deterministically forcing conservative refresh or write failure requires a defined cache/fault injection seam, which the current approved design lacks; I raised a design finding.",
-          "review_tests:1:3": "fixed: Unbounded global lookup now requires a to-revision unbounded gap, incomplete status, and a full-profile fallback."
+          "summary": "Measured separate red runs at the committed checkpoint. Capture/cache tests do not yet exercise coordinator logic because the feature module does not exist.",
+          "total_ms": 13873
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "477cda18bf2792295f4b1926eeb680bc159b15f9",
-          "commit": "3f2607f999c1049a99eec37de659f56515689ba5",
-          "tree": "75e0e07ebc6861dc3052a823b2f4863e37224e47"
+          "change": "f384289ee18fa993efa744317d93d3da32bc1ef6",
+          "commit": "13a8da12227317f3417fe2bd7721e9388935282b",
+          "tree": "a50da8f417922d5b4ae05ed51651595d5cb84a04"
         }
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     }
   },

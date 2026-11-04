@@ -364,3 +364,27 @@ test("v2 practical TypeScript project handles ordinary functions and built-in te
   assert.ok(affected(out, "test/a.test.ts"));
   assert.ok(!affected(out, "test/b.test.ts"));
 }));
+
+test("v2 inverse Go change selects B and leaves A and A's consumer alone", () => fixture(dir => {
+  goProject(dir);
+  const a = commit(dir, "baseline independent Go packages");
+  file(dir, "b/b.go", "package b\n\nfunc Name() string { return \"b\" + \"\" }\n");
+  const b = commit(dir, "change only B");
+  const out = run(dir, a, b, 2);
+  assert.equal(out.analysis_status, "conditional", "a supported B-only change should be selective");
+  assert.ok(!full(out));
+  assert.ok(affected(out, "b/b_test.go"), "B package tests must be included");
+  assert.ok(!affected(out, "a/a_test.go"), "unrelated A tests must not be included");
+  assert.ok(!affected(out, "consumer/consumer_test.go"), "A's dependent tests do not depend on B");
+}));
+
+test("v2 Go deletion reaches surviving tests through old cross-package imports or falls back fully", () => fixture(dir => {
+  goProject(dir);
+  const a = commit(dir, "before deletion of imported A");
+  rmSync(join(dir, "a/a.go"));
+  const b = commit(dir, "remove A source but retain tests and importing consumer");
+  const out = run(dir, a, b, 2);
+  assert.ok(out.changes.some((c: Json) => c.kind === "removed" && c.old_path === "a/a.go" && c.new_path === null));
+  assert.ok(affected(out, "consumer/consumer_test.go", "from") || full(out), "old A-to-consumer graph must cover the surviving consumer tests or require full fallback");
+  assert.ok(affected(out, "a/a_test.go", "from") || full(out), "surviving package tests must be selected or covered by full fallback");
+}));

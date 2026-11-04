@@ -148,26 +148,31 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:36:08Z",
+      "finished_at": "2026-11-04T00:56:25Z",
       "fp_parts": {
-        "candidates": [],
+        "candidates": [
+          [
+            "adversary_design:5:1",
+            true
+          ]
+        ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:2c71fe088850553c629b3433e4199063e53571d58a85631b717985f40901eaf9",
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "review": "v1:sha256:aa9de18c190ac32879a327771f9958eb27d3a4751de9ba0222c8601272a6b0cd",
-          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+          "adversary": "v1:sha256:66cc957713754b7c6b3290e3ca49a744fd47cb5f6f8361de563c491ef84dbb5a",
+          "doc": "v1:blob:e6a1b1620717362d7fc8639267e7ca655272da68",
+          "review": "v1:sha256:b85cce586ec2d21b79a6d4d2f6b0445260a001a1e0d74308b8f7620431ee2af9",
+          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-filter-4",
-      "input_fp": "v1:sha256:94189691bb9510b79a4ff03374e91899e696687bd0893b5b9d8ec3e1f40587ad",
+      "holder": "codex:root/g1-portable-filter",
+      "input_fp": "v1:sha256:88ef846e80b305fd011ba4473b6aa3039994ec579a75e1b86314daf2e5b32bf5",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve the internal capture and cache testing boundary. There are no open findings or notes to filter.",
+        "summary": "The general design review approved; the adversarial review found one material issue around containment and symlink handling for committed snapshots. The finding reopens design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

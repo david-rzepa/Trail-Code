@@ -81,30 +81,30 @@
       "status": "done"
     },
     "design": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-03T22:42:26Z",
+      "finished_at": "2026-11-04T17:39:28Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:55dc1f4dbb02ab5f5ee534be9ad812ebbab5aa35a8caab73f84887a067e97b18",
-          "spec": "v1:sha256:0525e6926dc268bd55a143c38bcf9e6c359188f89d1a60c255df069c70104a1b"
+          "dep_designs": "v1:sha256:2e4c2f9eeeef05719a0ef34ece9fc750e3097f0e8685f3ecfb983f28869b2e51",
+          "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
         },
         "policy": {}
       },
-      "holder": "codex:root/g4-design-1",
-      "input_fp": "v1:sha256:fcf6754e6619bae1d58846d7924c836ff93924147cbc32f867d8b0e5a26e4234",
+      "holder": "codex:root/g4-normal-design",
+      "input_fp": "v1:sha256:6fcc3d0e169e91150d2b59a74386106e1e127b5d6e8898a311224c7214708190",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "3cfc20ce4288e5afa191fb28f6fbb1613f2430bb",
-          "commit": "8f2e3cd74dd768866ace0152bcd5831eed765ebb",
+          "blob": "9ab7f65348cd9d32bef2afaa04a78294a88476fc",
+          "commit": "14f1dabef2b41fdbeead7e9a45a1fa11c30ee67b",
           "path": ".zzzops/reviews/4/design.md"
         },
-        "summary": "Specify an integrated release-gate matrix with isolated Git histories, induced failures and protected snapshot/receipt checks across supported ecosystems. Measure end-to-end selective and full runs with reproducible provenance, explicit fallback frequency and honest unavailable results."
+        "summary": "Align end-to-end release gates with committed-only endpoints and ordinary stable-input execution, explicitly deferring worktree and mutation-proof claims. Require both a real v2 conditional sparse case with independently validated context and negative coverage that forces full fallback for missing or altered requirements, alongside reproducible full-run comparisons and timing."
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "filter_design": {

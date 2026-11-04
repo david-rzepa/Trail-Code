@@ -328,48 +328,78 @@
       "status": "done"
     },
     "review_impl": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [
         {
-          "id": "review_impl:3:1",
-          "impact": "A malformed or partially recovered source tree can be asserted to have complete conditional dependency coverage, allowing the consumer to exclude tests despite analysis of an incomplete or incorrect syntax tree.",
+          "id": "review_impl:5:1",
+          "impact": "A failing Go test can be skipped while the report claims no uncertainty.",
           "lens": "correctness",
           "material": true,
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "resolved",
+          "status": "open",
           "target": "implement",
-          "target_attempt": 9,
-          "target_fp": "v1:sha256:d02b04a6cce2fc39d7ce751496052742c16d2337756c40065eda1dd91a2ea9f9",
-          "text": "src/impact/node-static.ts certifies tree-sitter trees without rejecting parse errors or missing tokens. A changed commit with `export function a() { return 2;` and no closing brace produces schema v2 conditional with no gap or fallback, although tsc reports TS1005. Reject malformed/recovered trees for both endpoints.",
+          "target_attempt": 11,
+          "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
+          "text": "src/impact/go-static.ts:61-66 treats any README.md or LICENSE as irrelevant unless explicitly embedded, but Go automatically loads tracked fuzz corpus files under testdata/fuzz/<FuzzName>/ regardless of filename. In a two-package module with FuzzValue in a/fuzz_test.go, changing only a/testdata/fuzz/FuzzValue/README.md from 'go test fuzz v1\\nint(1)\\n' to 'go test fuzz v1\\nint(2)\\n' changes go test ./a from passing to failing. The impact CLI returns conditional with no gaps or fallback and omits a/fuzz_test.go. Model corpus-to-package test dependencies or conservatively fall back, including filenames normally classified as documentation.",
           "upheld": false
         },
         {
-          "id": "review_impl:3:2",
-          "impact": "The test suite passes while the analyzer incorrectly reports conditional completeness for syntactically invalid committed inputs.",
+          "id": "review_impl:5:2",
+          "impact": "The delivered architecture fails the approved multilingual shared-graph contract and cannot preserve import uncertainty and provenance for scope decisions.",
+          "lens": "compliance",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 11,
+          "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
+          "text": "The approved multilingual design requires a shared Trail-code conservative fact pipeline preserving raw imports/re-exports, candidate provenance and combined reverse dependencies. src/impact/facts.ts:48-49 filters out import intents, and src/impact/analyze.ts:300-332 builds upstream graphs but uses a separate goClosure over the Go-specific parser when selecting Go changes. The upstream graph and its relations are therefore discarded for the supported Go path; this does not implement the requested common multilingual foundation or preserve raw import uncertainty. Connect the supported Go selection to shared conservative import facts and reverse relationships, preserving source/revision provenance and scoped or global uncertainty as required by the design.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:5:3",
+          "impact": "Ordinary Go projects receive global fallback, undermining the required practical sparse behavior; the misleading gap impedes diagnosis.",
+          "lens": "missing",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "implement",
+          "target_attempt": 11,
+          "target_fp": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d",
+          "text": "The Go model recognizes only testing and embed standard-library imports; an otherwise conventional two-package module containing 'import \\\"fmt\\\"' returns full fallback for an isolated change, with an unresolved fmt import and a misleading message about the Node/TypeScript ESM model. Support and identify standard-library dependencies under the declared Go toolchain context so routine conventional Go modules achieve the approved useful sparse selection, and make fallback reasons identify the actual Go boundary.",
+          "upheld": false
+        },
+        {
+          "id": "review_impl:5:4",
+          "impact": "The demonstrated missed test and shared-graph regressions can pass acceptance undetected.",
           "lens": "tests",
           "material": true,
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "resolved",
+          "status": "open",
           "target": "test_design",
-          "target_attempt": 13,
-          "target_fp": "v1:sha256:63d4700e67f9ce92b4445b236940dc657320bfffb1501691f82d6d63601ff4c7",
-          "text": "test/impact-conditional-contract.test.ts does not cover missing anonymous syntax tokens or other tree-sitter recovery shapes. Add a real-CLI regression with a missing closing brace (and both endpoints as appropriate) requiring an unbounded gap and full fallback.",
+          "target_attempt": 16,
+          "target_fp": "v1:sha256:3cfb6b347ea59a126a52f9d00264266bce33700b76b1085794583ca781ab72ff",
+          "text": "The frozen conditional contract has no regression for implicit Go fuzz corpus resources. Add an end-to-end two-commit case whose real go test passes before a corpus edit and fails after it, including a README.md-named corpus file; assert the impacted owning tests or an explicit safe fallback. Add representative conventional Go standard-library import and shared cross-language/raw import provenance coverage required by the approved design, including Python and mixed-language fixtures.",
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T18:54:28Z",
+      "finished_at": "2026-11-04T20:21:50Z",
       "fp_parts": {
         "def": "v1:sha256:ba0e80cd449a16330f3e62cea7fab93aad71b666081fd28f1c0386cf4f3d2d24",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "code": "v1:sha256:4dc21de67e21082766705f421d9db025d339ed068caa9ceba578cd3c26ee5fc8",
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "tests": "v1:sha256:6662515d19eab900ffee30aec96e5a61dc457dd1e9f7bf16db5147e424b25605"
+          "code": "v1:sha256:3fc9fd59454a5c87e9b3c36b797d6b2fbbe2e379b2f2e6cd1b51c561e67860c6",
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
+          "tests": "v1:sha256:22cee2312f025b59011cecdd28fc575b6f03a975137b3cfd5e33103f9a248634"
         },
         "lenses": [
           "compliance",
@@ -379,27 +409,27 @@
           "craft"
         ],
         "policy": {},
-        "subject": "v1:sha256:bf8e780ca55f6cb0a7665e68d367c222de52d3cc3d93066921eaac684ad59abb"
+        "subject": "v1:sha256:2d5368449fe34f579f5d093d5b03a18a248e31c8914a41f476c6a008573fd55d"
       },
-      "holder": "codex:root/g1-v2-review-impl2",
-      "input_fp": "v1:sha256:996c0b64188ecd167e5932aa69cd70e113ee783fac9d4292ac20760ec33ecc24",
+      "holder": "codex:root/g1-multilingual-review-impl",
+      "input_fp": "v1:sha256:926c7fe5f5501e7a6c713bd9b2ae905e83f0e79339e975d48c6a8d4445bc8af0",
       "ok": true,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "41a0edccee9717e5275860472d7eb72a47560195",
-          "commit": "3d6e29aabe1af09f650c304474885acee04c1c99",
+          "blob": "862c6c7c034344e45f17fdb706ba7d8f311416b6",
+          "commit": "615cbb02a930173bdde061ae007be1b2c3c81562",
           "path": ".zzzops/reviews/1/review_impl.md"
         },
-        "summary": "Both malformed-tree implementation and regression-test findings are resolved."
+        "summary": "A real Go fuzz corpus change can omit a failing test with no fallback, and the implementation does not preserve or use the approved shared multilingual import graph for Go selection."
       },
       "reason": "stale",
       "reviewed": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "8647d31529c72bd7aeecc44a5999adc981a78764",
-          "commit": "f1b20d3f193625e19027e8bb52e7b36de4c89241",
-          "tree": "d024936a78fd4385a3e933f9f0178087d95ef9db"
+          "change": "ceef65cb3a569e809f6ccb6148163e30f8c4025f",
+          "commit": "aacc7388d18a83ca62efc473f4d834cd3c20ddf4",
+          "tree": "8ea22b3ec5032925dc2b60b39d89c8b48014192f"
         }
       },
       "status": "done"

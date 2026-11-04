@@ -221,22 +221,22 @@
       "status": "done"
     },
     "integrate": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T18:56:56Z",
+      "finished_at": "2026-11-04T21:09:12Z",
       "fp_parts": {
         "def": "v1:sha256:e2bc5ba4bab5ee48b60bbac872aa8787c8183b9bea68e99a6cafbe25d67d00a5",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "code": "v1:sha256:2c6157c7cfad0c67f1ad55205419c7f3a9d24f7d7490b5232093c2fdc70ad7ea"
+          "code": "v1:sha256:368b14e9a9163d5df2ba7d6559cc2ef9bdd1aa2a0eeeaf0c4273227d9d96dec5"
         },
         "policy": {
           "verification.required_ci": []
         }
       },
-      "holder": "codex:root/g1-integrate",
-      "input_fp": "v1:sha256:e86f945c6b02ec196aa1c7f00142c6ddb51fe0b6d70da26e3cb6b689a79c99a7",
+      "holder": "codex:root/g1-multilingual-integrate",
+      "input_fp": "v1:sha256:2d44cae63c5531a655c746da8a6914c53db312a55056362d0f97180c3d18890f",
       "ok": true,
       "output": {
         "ci": {
@@ -247,13 +247,13 @@
         },
         "pr": {
           "base": "test-impact",
-          "head": "83b5556aa9dbfa1d9cb2d19faddeebe2eb921699",
+          "head": "db0d148e7dbc47c3199d2e3b23b207d4e277531e",
           "number": 1,
-          "tree": "d024936a78fd4385a3e933f9f0178087d95ef9db",
+          "tree": "f63a5a92f843af1671e5850264710703d722be03",
           "url": "https://github.com/david-rzepa/Trail-Code/pull/1"
         }
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "review_design": {

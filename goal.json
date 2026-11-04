@@ -151,31 +151,31 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 7,
-      "correction_runs": 6,
+      "attempt": 8,
+      "correction_runs": 7,
       "findings": [],
-      "finished_at": "2026-11-04T17:10:28Z",
+      "finished_at": "2026-11-04T17:14:04Z",
       "fp_parts": {
         "candidates": [
           [
-            "adversary_design:7:1",
+            "review_design:8:1",
             true
           ]
         ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:8f4cafc3901a15d0fc97ca4ba445a34ee74a9bfa8ccec688fd0cf5967705d785",
-          "doc": "v1:blob:b683c036a3e28d46c81e0a54afde8f49e3d2855e",
-          "review": "v1:sha256:07c116513556c59a319a1ceab213575f53e9680a79eab1264194994e324c0ea5",
+          "adversary": "v1:sha256:f923e3a204df87ebb72255b6a686e52c823de1b17864ee778d881559c4258e67",
+          "doc": "v1:blob:189cac32eaba18fa6ae71003df76a52e9f20abd2",
+          "review": "v1:sha256:c7c0593ca2074033708018c1f3f2e74bd292014086edc86aa4aca47c829b144c",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-filter",
-      "input_fp": "v1:sha256:1487bdcf1d9d9060e575ca1df4e69c8623cec8f7c28ec35a3947b0ae481e656a",
+      "holder": "codex:root/g1-context-filter2",
+      "input_fp": "v1:sha256:807691df1797698bc59a4414e089b2028e514564e424fadc59d3ce817bc4f623",
       "ok": true,
       "output": {
-        "summary": "The design review approved; the adversarial review found one material issue requiring an independent model contract to verify conditional requirements and evidence bindings. It reopens design. No non-material notes require verdicts.",
+        "summary": "Adversarial review resolved the registry completeness finding. The design review identified one material issue: execution-only values must be bound by the consumer or supplied through a supported context input. That issue reopens design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

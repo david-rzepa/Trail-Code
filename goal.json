@@ -161,26 +161,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-04T17:32:38Z",
+      "finished_at": "2026-11-04T19:19:36Z",
       "fp_parts": {
         "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:0e9946c5893f76ea4a00eee0c4989c70e766d7430f704d91062cdf3386924a8b",
-          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "review": "v1:sha256:b2b1aacd7d993642b85c778de99a5debc5b4e66363ccb1e401041132fb1a71d7",
-          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
+          "adversary": "v1:sha256:3128d0861b10203c3bad873aa2660228fc833a39368b8299ed244a9767e64c05",
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
+          "review": "v1:sha256:4a8edaed38daddf21a10481a79bac8f89bdcf600fedc099cf65f3db6c066c289",
+          "spec": "v1:sha256:e192d2c48b0a9a62b09f4e89fbf7d7c9447d07b111dc183b478fef01f03417df"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-normal-filter",
-      "input_fp": "v1:sha256:b162ee17dd11533a90c938ddd5320747af4ea0a7196d47149c1c53347e5598f9",
+      "holder": "codex:root/g2-multilingual-filter",
+      "input_fp": "v1:sha256:1d29810c7da9fb4b7b452fb88bfac330168ca5e96edd34079a3865fd51b94880",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve the owner-directed stable-input execution model. No open findings or notes require verdicts.",
+        "summary": "Both reviews approve multilingual planning and Go/Node execution integration. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

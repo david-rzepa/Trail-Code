@@ -588,10 +588,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 13,
-      "correction_runs": 11,
+      "attempt": 14,
+      "correction_runs": 12,
       "findings": [],
-      "finished_at": "2026-11-04T17:48:21Z",
+      "finished_at": "2026-11-04T18:32:27Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -606,7 +606,7 @@
         "test/impact-coordinator-safety.test.ts",
         "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-context-tests2",
+      "holder": "codex:root/g1-v2-parse-tests",
       "input_fp": "v1:sha256:d73f549202049e4ff885476a244b012b67130dcf3255e484fe81ae1ec5833028",
       "ok": true,
       "output": {
@@ -619,45 +619,45 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 3011,
-              "id_or_scope": "test/impact-conditional-contract.test.ts",
-              "observation": "synthetic malformed-report checker passes; five real CLI cases fail because --schema-version is not implemented"
+              "duration_ms": 2443,
+              "id_or_scope": "four v2 parser recovery cases (missing brace/parenthesis, each old and new revision)",
+              "observation": "failing: all four run the real CLI and find no revision/path-specific unbounded parse gap"
             }
           ],
-          "checkpoint": "b26dee40e82ce71315c3b036f0f9f49bed00bc1d",
+          "checkpoint": "0c71a1e7818a186d4c053f660fd2f1074a0b43d8",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 27649,
+              "duration_ms": 28081,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 123,
+              "duration_ms": 105,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
-              "duration_ms": 8266,
+              "duration_ms": 8210,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-conditional-contract.test.ts",
-              "duration_ms": 3039,
+              "duration_ms": 8488,
               "exit": 1
             }
           ],
-          "summary": "Four targeted commands measured at checkpoint: three existing suites pass; conditional suite has one passing schema-validator test and five expected red implementation tests.",
-          "total_ms": 39077
+          "summary": "At the submitted checkpoint three existing suites pass; the v2 suite has six passing and four new failing parser-recovery cases.",
+          "total_ms": 44884
         },
         "responses": {
-          "review_tests:9:1": "fixed: Added version-aware assertions to every real v2 CLI report, checking analysis identity, exact commit/tree/fingerprint binding, mandatory arrays and typed change, affected, gap, fallback and requirement records, and status consistency. Repeated conditional analysis checks deterministic ordering; added malformed synthetic cases to exercise the checker."
+          "review_impl:3:2": "fixed: Added real-CLI v2 cases for missing closing braces and missing closing parentheses, independently exercising malformed input in both comparison revisions. Each requires an unbounded gap attributed to the malformed file and revision, incomplete status and full-profile fallback."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "80aec9930fb226a14ca1185bdf0c050c30cc451c",
-          "commit": "b26dee40e82ce71315c3b036f0f9f49bed00bc1d",
-          "tree": "ff378d3bebc4f75d242f52b7d3f4f3748565ba94"
+          "change": "cdfb001a2b4180d818cb7e61d3d0b9f4df503f2b",
+          "commit": "0c71a1e7818a186d4c053f660fd2f1074a0b43d8",
+          "tree": "bdd68fc18136ef7b235cd5323a9871b488da711a"
         }
       },
       "reason": "reopened",

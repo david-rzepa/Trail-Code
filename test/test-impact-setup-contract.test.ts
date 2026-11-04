@@ -212,3 +212,28 @@ test('Trail-code setup preserves and executes the original npm test fallback', {
     assert.equal(result.execution_status,'passed');assert.equal(result.verification_status,'validated');
   } finally {rmSync(dir,{recursive:true,force:true});}
 });
+
+test('changed original test command requires reinspection and remains intact',()=>{
+  const dir=fixture('node');try {
+    const {adapter}=configure(dir,'node');const manifest=JSON.parse(readFileSync(join(dir,'package.json'),'utf8'));
+    manifest.scripts.test='node --test test/new-runner.js';put(dir,'package.json',JSON.stringify(manifest));
+    put(dir,'test/new-runner.js',"import { test } from 'node:test'; test('new required gate',()=>{});\n");
+    const again=run(dir,process.execPath,['--import',tsx,setup,'--target',dir,'--profile','node','--json']);
+    assert.equal(JSON.parse(readFileSync(join(dir,'package.json'),'utf8')).scripts.test,manifest.scripts.test);
+    if(again.status===0) {
+      const target=commit(dir,'change canonical runner');
+      const plan=run(dir,process.execPath,[adapter,'--from',target,'--to',target,'--plan','--json']);
+      if(plan.status===0) {const report=JSON.parse(plan.stdout);assert.notEqual(report.selection_strategy,'selective');assert.notEqual(report.verification_status,'validated');}
+    }
+  } finally {rmSync(dir,{recursive:true,force:true});}
+});
+
+test('malformed generated configuration cannot silently fall through to passing execution',()=>{
+  const dir=fixture('go');try {
+    const {adapter,result}=configure(dir,'go');assert.equal(typeof result.config,'string');
+    const config=resolve(dir,result.config);assert.ok(config.startsWith(dir+'/'));writeFileSync(config,'{ invalid json');
+    const target=commit(dir,'corrupt configuration');
+    const outcome=run(dir,process.execPath,[adapter,'--from',target,'--to',target,'--all','--json'],{XDG_STATE_HOME:join(dir,'state')});
+    assert.notEqual(outcome.status,0);assert.notEqual(JSON.parse(outcome.stdout).verification_status,'validated');
+  } finally {rmSync(dir,{recursive:true,force:true});}
+});

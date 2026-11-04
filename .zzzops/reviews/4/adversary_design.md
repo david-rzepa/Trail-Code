@@ -1,3 +1,3 @@
 # Adversary re-review
 
-No new material adversarial findings. The revised release gate tests version separation, spoofed or omitted conditional requirements, mismatched evidence and forged receipt chains while explicitly recording the owner's stable-input assumption rather than claiming continuous checkout protection. It retains containment checks for analysis and uses disposable histories for injected failures.
+No material adversarial findings in the clarification. Missing sparse-only conditional context forbids sparse selection; a full run may establish a full-profile receipt only when its independently required workflow and receipt identity are complete. The design also requires separate negative coverage for incomplete full-run identity. This preserves fallback without treating missing evidence as permission to skip tests.

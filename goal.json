@@ -81,9 +81,16 @@
       "status": "done"
     },
     "design": {
+      "answer": {
+        "decided_at": "2026-11-04T17:28:34Z",
+        "decided_by": "Dave",
+        "quote": "Are you trying to solve the problem of proving that a checkout didn't change still? No test runner every bothers to prove that...",
+        "text": "Use normal test-runner execution with the assumption that relevant checkout inputs stay stable during a run. Do not require proof, filesystem snapshots, mutation monitoring, edit-and-revert detection, or an isolated checkout as a prerequisite for verification. Keep explicit committed comparison endpoints and execute the intended target using ordinary Git checks and user workflow."
+      },
       "attempt": 9,
       "blocked": {
         "category": "decision",
+        "instructions": "The human answered: Use normal test-runner execution with the assumption that relevant checkout inputs stay stable during a run. Do not require proof, filesystem snapshots, mutation monitoring, edit-and-revert detection, or an isolated checkout as a prerequisite for verification. Keep explicit committed comparison endpoints and execute the intended target using ordinary Git checks and user workflow.",
         "options": [
           "Q1: Require strict detection or immutable isolation; support only environments where a reliable platform-specific mechanism is available, and refuse verification elsewhere.",
           "Q1: Use a private isolated checkout of the target commit with before-and-after integrity checks; explicitly trust test processes and other same-user processes not to edit and revert source during a run, and invalidate detectable changes.",
@@ -93,7 +100,7 @@
         "reason": "owner question: Q1 (review_design:5:1): Which execution guarantee should the initial cross-platform, commit-only release provide? Standard Git and ordinary unprivileged portable filesystem APIs do not",
         "recommendation": "Q1: Use a private isolated checkout and disclose the same-user trust assumption if broad portability is the priority. Tests run against the pinned commit, output is separated or declared, and detectable changes invalidate the result; this does not claim to detect edit-and-revert. Keep strict isolation as a future optional mode.",
         "repeats": 2,
-        "waiting_for": "human"
+        "waiting_for": "agent"
       },
       "correction_runs": 8,
       "findings": [],

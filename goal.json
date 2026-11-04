@@ -96,28 +96,28 @@
       "status": "done"
     },
     "design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-03T22:39:30Z",
+      "finished_at": "2026-11-04T17:34:37Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
-          "dep_designs": "v1:sha256:940194773f5a5e4a8068aa3d1f91a5d4ccc36e942b0dd17d0d176b07d9e00a43",
-          "spec": "v1:sha256:4c3c41b772bd8ac2f79d869104e93cb2d578b256cac00032b64455310d3795e7"
+          "dep_designs": "v1:sha256:fcfb2122412f833d4da297fc7bb33576d2a5c387e9efecaffe1bd6588f2b3a87",
+          "spec": "v1:sha256:4c09c0e14d1d9afa3eb6eb3ec78cf97526cb6a678043498b26e32577528407e3"
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-design-3",
-      "input_fp": "v1:sha256:396931dce1cf3971d94a051e1f8fe094463c512fb1cb61178b121fdd1e31dad9",
+      "holder": "codex:root/g3-normal-design",
+      "input_fp": "v1:sha256:e70d4741203e25833516ece7ae78eac254445e2d710f8bf42fe7fa4d5250004c",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "a239731b95eff6a51c41ae0253dafae3a2604cfa",
-          "commit": "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5",
+          "blob": "d85b2764b6579d5b71e082132aa4603451027f68",
+          "commit": "f4ea95d0e8dfbbdcc38150009a108bb8a53feb67",
           "path": ".zzzops/reviews/3/design.md"
         },
-        "summary": "Refresh the setup-skill design against G2’s internal-only capture/cache test seam: generated adapters use only supported production interfaces, with real packaged wiring tested and identity protection retained. Preserve the untrusted repository-content boundaries and injection tests."
+        "summary": "Refresh setup skill and generated adapter design to committed-only endpoints and normal stable-input execution, with explicit worktree rejection and ordinary checkout preflight. Require G2 to validate the full independently derived v2 context requirement set before sparse execution, preserving safe fallback and repository-data trust safeguards."
       },
       "reason": "stale",
       "status": "done"

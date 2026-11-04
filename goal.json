@@ -408,38 +408,51 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 11,
-      "correction_runs": 10,
-      "findings": [],
-      "finished_at": "2026-11-04T18:35:21Z",
+      "attempt": 12,
+      "correction_runs": 11,
+      "findings": [
+        {
+          "id": "review_tests:12:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 15,
+          "target_fp": "v1:sha256:9089ce13146108c4d0fa5134432e2351cc18a948c141e154b5395fc1210e6149",
+          "text": "The only selective Go change is always in package A; the import-deletion case changes the consumer itself and accepts its own package tests, so it does not demonstrate that a deleted old cross-package dependency reaches surviving dependents. A hardcoded A-only model or a model omitting old cross-package closure can pass. Add the design-required inverse B case (include B targets and exclude unrelated A/consumer) and a deletion/import-change case that exercises old-revision cross-package dependents or explicitly required fallback.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T19:23:16Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "tests": "v1:sha256:6662515d19eab900ffee30aec96e5a61dc457dd1e9f7bf16db5147e424b25605"
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
+          "tests": "v1:sha256:2376e1c6b455e84556138fd35882f6da64b0d2caaa4d3caa331a4f8cf99cc349"
         },
         "policy": {},
-        "subject": "v1:sha256:ed27823a2d034f5c5b0c4e0ee1c5b197a27c3416ae4c43be5ee8df4ffc32651e"
+        "subject": "v1:sha256:9089ce13146108c4d0fa5134432e2351cc18a948c141e154b5395fc1210e6149"
       },
-      "holder": "codex:root/g1-v2-parse-review",
-      "input_fp": "v1:sha256:a704a8ce714a0b12cc160c9ffc14d1dc6cda1157c394322bb67d25614d7d2971",
-      "ok": true,
+      "holder": "codex:root/g1-multilingual-review-tests",
+      "input_fp": "v1:sha256:e37b888c09a2aa80965e88ec4b72774ee5fcc3e85cd7c4a5787add9ad7459314",
+      "ok": false,
       "output": {
-        "decision": "approved",
+        "decision": "changes_requested",
         "report": {
-          "blob": "b165ae5a325399e264749c5b20cd648dc58d9073",
-          "commit": "6fde22c28078b7de5e6461c37e80d9c2cc0c66dd",
+          "blob": "3bfee6e9e35520111356e8c9ac016a7157e65335",
+          "commit": "5a5ec3d082f19b95d7c0afc1a189e873d4b7e898",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Parser recovery tests cover malformed old and new revisions with mandatory full fallback."
+        "summary": "Practical Go tests omit inverse selection and an old-graph cross-package deletion case."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "cdfb001a2b4180d818cb7e61d3d0b9f4df503f2b",
-          "commit": "0c71a1e7818a186d4c053f660fd2f1074a0b43d8",
-          "tree": "bdd68fc18136ef7b235cd5323a9871b488da711a"
+          "change": "4a559c897c4cebdae4b42ab22af2b94f49b6ff51",
+          "commit": "3354e6092c5fb8ebfe0ed4865def49b5e64b2dc9",
+          "tree": "2ffbc3197b8ea79259c09405f88942cd799a0446"
         }
       },
       "status": "done"

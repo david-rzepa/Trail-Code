@@ -37,10 +37,89 @@ function invoke(dir: string, ...args: string[]) {
     env: { ...process.env, HOME: dir, USERPROFILE: dir, NO_COLOR: "1" },
   });
 }
+function validateV2(out: Json, dir: string, a: string, b: string): void {
+  assert.equal(out.schema_version, 2);
+  assert.ok(out.analysis_identity && typeof out.analysis_identity === "object");
+  assert.equal(out.analysis_identity.mode, "conservative");
+  for (const key of ["analyzer_version", "grammar_identity", "extractor_identity", "resolver_identity", "policy_identity"]) {
+    assert.ok(typeof out.analysis_identity[key] === "string" && out.analysis_identity[key].length > 0, `missing ${key}`);
+  }
+  for (const [key, expected] of [["from", a], ["to", b]] as const) {
+    const ep = out.comparison?.[key];
+    assert.ok(ep && typeof ep === "object", `missing ${key} endpoint`);
+    assert.equal(ep.kind, "commit");
+    assert.equal(ep.requested, expected);
+    assert.equal(ep.commit, expected);
+    assert.match(ep.commit, /^[0-9a-f]{40,64}$/);
+    assert.match(ep.tree, /^[0-9a-f]{40,64}$/);
+    assert.equal(ep.tree, git(dir, "rev-parse", `${expected}^{tree}`));
+    assert.ok(typeof ep.fingerprint === "string" && ep.fingerprint.length > 0);
+  }
+  for (const key of ["changes", "affected", "analysis_gaps", "required_fallback_scopes", "context_requirements"]) {
+    assert.ok(Array.isArray(out[key]), `${key} must be an array`);
+  }
+  assert.ok(typeof out.supported_model?.id === "string" && out.supported_model.id.length > 0);
+  assert.ok(typeof out.supported_model?.version === "string" && out.supported_model.version.length > 0);
+  for (const change of out.changes) {
+    assert.ok(["added", "modified", "removed", "renamed"].includes(change.kind));
+    assert.ok(change.old_path === null || typeof change.old_path === "string");
+    assert.ok(change.new_path === null || typeof change.new_path === "string");
+    assert.ok(Array.isArray(change.old_entities) && change.old_entities.every((x: unknown) => typeof x === "string"));
+    assert.ok(Array.isArray(change.new_entities) && change.new_entities.every((x: unknown) => typeof x === "string"));
+    if (change.kind === "added") assert.ok(change.old_path === null && typeof change.new_path === "string");
+    if (change.kind === "removed") assert.ok(typeof change.old_path === "string" && change.new_path === null);
+    if (change.kind === "modified") assert.ok(typeof change.old_path === "string" && change.old_path === change.new_path);
+    if (change.kind === "renamed") assert.ok(typeof change.old_path === "string" && typeof change.new_path === "string" && change.old_path !== change.new_path);
+  }
+  for (const item of out.affected) {
+    assert.ok(["from", "to"].includes(item.revision));
+    assert.ok(typeof item.path === "string" && item.path.length > 0 && !item.path.includes("\\"));
+    assert.ok(item.entity === null || typeof item.entity === "string");
+    assert.ok(Array.isArray(item.reasons) && item.reasons.length > 0);
+    for (const reason of item.reasons) {
+      assert.ok(["changed", "dependency", "fallback"].includes(reason.kind));
+      assert.ok(typeof reason.detail === "string" && reason.detail.length > 0);
+    }
+  }
+  for (const gap of out.analysis_gaps) {
+    assert.ok(["from", "to"].includes(gap.revision));
+    assert.ok(gap.path === null || typeof gap.path === "string");
+    assert.ok(typeof gap.kind === "string" && gap.kind.length > 0);
+    assert.ok(typeof gap.detail === "string" && gap.detail.length > 0);
+    assert.ok(gap.scope === null || (typeof gap.scope === "string" && gap.scope.length > 0));
+  }
+  for (const fallback of out.required_fallback_scopes) {
+    assert.ok(["scope", "full_profile"].includes(fallback.kind));
+    assert.ok(typeof fallback.reason === "string" && fallback.reason.length > 0);
+    assert.ok(fallback.kind === "full_profile" ? fallback.scope === null : typeof fallback.scope === "string" && fallback.scope.length > 0);
+  }
+  const ids = new Set<string>();
+  for (const req of out.context_requirements) {
+    assert.ok(typeof req.id === "string" && req.id.length > 0 && !ids.has(req.id));
+    ids.add(req.id);
+    assert.ok(typeof req.kind === "string" && req.kind.length > 0);
+    assert.ok(typeof req.evidence_kind === "string" && req.evidence_kind.length > 0);
+    assert.ok(req.predicate && typeof req.predicate === "object" && !Array.isArray(req.predicate));
+    assert.ok(typeof req.predicate.op === "string" && req.predicate.op.length > 0);
+  }
+  assert.ok(["complete", "bounded", "incomplete", "conditional"].includes(out.analysis_status));
+  const unbounded = out.analysis_gaps.some((g: Json) => g.scope === null);
+  const hasFull = out.required_fallback_scopes.some((f: Json) => f.kind === "full_profile" && f.scope === null);
+  for (const gap of out.analysis_gaps) {
+    if (gap.scope === null) assert.ok(hasFull, "unbounded gap needs full fallback");
+    else assert.ok(hasFull || out.required_fallback_scopes.some((f: Json) => f.kind === "scope" && f.scope === gap.scope), "bounded gap needs its scope or full fallback");
+  }
+  if (out.analysis_status === "complete") assert.equal(out.analysis_gaps.length, 0);
+  if (out.analysis_status === "bounded") assert.ok(out.analysis_gaps.length > 0 && !unbounded);
+  if (out.analysis_status === "incomplete") assert.ok(unbounded && hasFull);
+  if (out.analysis_status === "conditional") assert.ok(!unbounded && out.context_requirements.length > 0);
+}
 function run(dir: string, a: string, b: string, version?: number): Json {
   const r = invoke(dir, "--from", a, "--to", b, "--json", ...(version === undefined ? [] : ["--schema-version", String(version)]));
   assert.equal(r.status, 0, `impact failed: ${r.stderr}\n${r.stdout}`);
-  return JSON.parse(r.stdout);
+  const out = JSON.parse(r.stdout);
+  if (version === 2) validateV2(out, dir, a, b);
+  return out;
 }
 function repo(dir: string): { a: string; b: string } {
   file(dir, "package.json", JSON.stringify({ name: "independent-targets", private: true, type: "module" }));
@@ -156,4 +235,24 @@ test("v2 unresolved imports cannot be declared conditionally complete", () => fi
   assert.equal(out.analysis_status, "incomplete");
   assert.ok(out.analysis_gaps.some((g: Json) => g.scope === null));
   assert.ok(full(out));
+}));
+
+test("v2 contract checks detect malformed identity, provenance and fallback", () => fixture(dir => {
+  const a = commit(dir, "tree"), tree = git(dir, "rev-parse", `${a}^{tree}`);
+  const endpoint = { requested: a, kind: "commit", commit: a, tree, fingerprint: `git-tree:${tree}` };
+  const valid: Json = {
+    schema_version: 2,
+    analysis_identity: { mode: "conservative", analyzer_version: "1", grammar_identity: "1", extractor_identity: "1", resolver_identity: "1", policy_identity: "1" },
+    supported_model: { id: "node-static", version: "1" },
+    comparison: { from: endpoint, to: endpoint },
+    changes: [], affected: [], analysis_gaps: [], required_fallback_scopes: [],
+    context_requirements: [{ id: "runtime", kind: "runtime", predicate: { op: "supported_runtime" }, evidence_kind: "runtime_observation" }],
+    analysis_status: "conditional",
+  };
+  assert.doesNotThrow(() => validateV2(valid, dir, a, a));
+  assert.throws(() => validateV2({ ...valid, analysis_identity: {} }, dir, a, a));
+  assert.throws(() => validateV2({ ...valid, comparison: { from: { ...endpoint, tree: "0".repeat(40) }, to: endpoint } }, dir, a, a));
+  assert.throws(() => validateV2({ ...valid, affected: [{ revision: "to", path: "test.ts", entity: null, reasons: [] }] }, dir, a, a));
+  assert.throws(() => validateV2({ ...valid, analysis_gaps: [{ revision: "to", path: null, kind: "unknown", detail: "unknown", scope: null }] }, dir, a, a));
+  assert.throws(() => validateV2({ ...valid, context_requirements: [] }, dir, a, a));
 }));

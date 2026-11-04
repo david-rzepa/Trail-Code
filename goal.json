@@ -81,30 +81,10 @@
       "status": "done"
     },
     "design": {
-      "answer": {
-        "decided_at": "2026-11-04T17:28:34Z",
-        "decided_by": "Dave",
-        "quote": "Are you trying to solve the problem of proving that a checkout didn't change still? No test runner every bothers to prove that...",
-        "text": "Use normal test-runner execution with the assumption that relevant checkout inputs stay stable during a run. Do not require proof, filesystem snapshots, mutation monitoring, edit-and-revert detection, or an isolated checkout as a prerequisite for verification. Keep explicit committed comparison endpoints and execute the intended target using ordinary Git checks and user workflow."
-      },
-      "attempt": 9,
-      "blocked": {
-        "category": "decision",
-        "instructions": "The human answered: Use normal test-runner execution with the assumption that relevant checkout inputs stay stable during a run. Do not require proof, filesystem snapshots, mutation monitoring, edit-and-revert detection, or an isolated checkout as a prerequisite for verification. Keep explicit committed comparison endpoints and execute the intended target using ordinary Git checks and user workflow.",
-        "options": [
-          "Q1: Require strict detection or immutable isolation; support only environments where a reliable platform-specific mechanism is available, and refuse verification elsewhere.",
-          "Q1: Use a private isolated checkout of the target commit with before-and-after integrity checks; explicitly trust test processes and other same-user processes not to edit and revert source during a run, and invalidate detectable changes.",
-          "Q1: Another approach; specify the allowed assumptions or platform requirements."
-        ],
-        "question": "owner question: Q1 (review_design:5:1): Which execution guarantee should the initial cross-platform, commit-only release provide? Standard Git and ordinary unprivileged portable filesystem APIs do not by themselves guarantee detection of an edit-and-revert by a same-user process during test execution.",
-        "reason": "owner question: Q1 (review_design:5:1): Which execution guarantee should the initial cross-platform, commit-only release provide? Standard Git and ordinary unprivileged portable filesystem APIs do not",
-        "recommendation": "Q1: Use a private isolated checkout and disclose the same-user trust assumption if broad portability is the priority. Tests run against the pinned commit, output is separated or declared, and detectable changes invalidate the result; this does not claim to detect edit-and-revert. Keep strict isolation as a future optional mode.",
-        "repeats": 2,
-        "waiting_for": "agent"
-      },
-      "correction_runs": 8,
+      "attempt": 10,
+      "correction_runs": 9,
       "findings": [],
-      "finished_at": "2026-11-04T17:22:03Z",
+      "finished_at": "2026-11-04T17:30:30Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -113,12 +93,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-context-design",
+      "holder": "codex:root/g2-normal-execution",
       "input_fp": "v1:sha256:086cb84736da53c8452419c7e6d565b9b94595fc07a129eae6f01b672f6f9307",
-      "ok": false,
-      "output": null,
-      "reason": "stale",
-      "status": "blocked"
+      "ok": true,
+      "output": {
+        "doc": {
+          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
+          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56",
+          "path": ".zzzops/reviews/2/design.md"
+        },
+        "summary": "Align committed-only execution with the owner’s normal test-runner stable-input assumption and G1’s v2 conditional model. Independently derive required context and collector evidence, require full fallback for missing or mismatched evidence, and preserve trusted JSON receipt handling."
+      },
+      "reason": "retry",
+      "status": "done"
     },
     "filter_design": {
       "attempt": 5,

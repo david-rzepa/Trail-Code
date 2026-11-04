@@ -612,72 +612,76 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 11,
-      "correction_runs": 9,
+      "attempt": 12,
+      "correction_runs": 10,
       "findings": [],
-      "finished_at": "2026-11-04T02:26:54Z",
+      "finished_at": "2026-11-04T17:43:55Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea"
+          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d"
         },
         "policy": {}
       },
       "frozen": [
         "test/conservative-impact-contract.test.ts",
+        "test/impact-conditional-contract.test.ts",
         "test/impact-coordinator-safety.test.ts",
         "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-regression-tests3",
-      "input_fp": "v1:sha256:e97ad0ab41d76b6916b3678a00a26bdd7746e12a01ac35f59dd8a1e76ba5b902",
+      "holder": "codex:root/g1-context-tests",
+      "input_fp": "v1:sha256:d73f549202049e4ff885476a244b012b67130dcf3255e484fe81ae1ec5833028",
       "ok": true,
       "output": {
         "commands": [
           "node --import tsx --test test/conservative-impact-contract.test.ts",
           "node --import tsx --test test/impact-coordinator-safety.test.ts",
-          "node --import tsx --test test/impact-installed-package.test.ts"
+          "node --import tsx --test test/impact-installed-package.test.ts",
+          "node --import tsx --test test/impact-conditional-contract.test.ts"
         ],
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 14299,
-              "id_or_scope": "isolated copy fixture and offline packed artifact integration",
-              "observation": "copy fixture passed for modified/new inputs and excluded outputs; packed integration reached expected unavailable grammar identity and failed before cache read"
+              "duration_ms": 3763,
+              "id_or_scope": "test/impact-conditional-contract.test.ts",
+              "observation": "failing: five real-CLI tests enter their assertions but explicit --schema-version is not implemented yet"
             }
           ],
-          "checkpoint": "32d60af32ec89b96d0fed6e6b300399ff39051f6",
+          "checkpoint": "c8f3bd1f2b7838c6c6ed10048224f01491ae595c",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 23601,
-              "exit": 1
+              "duration_ms": 31679,
+              "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 102,
+              "duration_ms": 126,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
-              "duration_ms": 7306,
+              "duration_ms": 10356,
+              "exit": 0
+            },
+            {
+              "cmd": "node --import tsx --test test/impact-conditional-contract.test.ts",
+              "duration_ms": 3798,
               "exit": 1
             }
           ],
-          "summary": "Measured target commands at committed checkpoint. Uses an isolated copy of current checkout, with offline lockfile-installed dependencies.",
-          "total_ms": 31009
-        },
-        "responses": {
-          "review_tests:7:1": "fixed: Replace git archive HEAD with a recursive isolated copy of actual working files, retaining modified and untracked inputs while excluding Git metadata, node_modules, dist, local caches and ZzzOps worktrees. Added a focused fixture proving modified and added files are copied and build outputs/dependencies are excluded."
+          "summary": "Four measured targeted commands at committed checkpoint; the three preexisting suites pass and the new conditional v2 suite is red pending implementation. G2 independently validates context, evidence and receipts.",
+          "total_ms": 45959
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "d875de11225194d918a380143d7a86b24f005300",
-          "commit": "32d60af32ec89b96d0fed6e6b300399ff39051f6",
-          "tree": "e41e7b913a5cadc497f4e1ea39011aa5d19ba454"
+          "change": "366a6450257219a479a319abe42816ac4d511274",
+          "commit": "c8f3bd1f2b7838c6c6ed10048224f01491ae595c",
+          "tree": "663c58dd3ad7eba59a15b1f99b8f1861538ba351"
         }
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     }
   },

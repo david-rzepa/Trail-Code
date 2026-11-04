@@ -236,87 +236,51 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [
-        {
-          "id": "review_tests:1:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 1,
-          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
-          "text": "Prove actual selected and excluded test execution, including Go dependents, and exercise Trail-code setup with its original full npm test fallback; reported execution units alone can be fabricated.",
-          "upheld": false
-        },
         {
           "id": "review_tests:1:2",
           "note": null,
           "response": "fixed: Fresh npm package test builds, packs, unpacks and invokes setup asset; maintenance tests check unchanged rerun, user edits, added project and changed original command; tests require incompatible helper and malformed configuration to fail without passing evidence. Deliberate generated-content edit is preserved or setup stops.",
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 2,
           "target_fp": "v1:sha256:5067d45d7c0c171a532a5d7dd933edbd0df1b7af8e318a2f9f08e89430712ac9",
           "text": "Cover fresh packaged setup invocation and meaningful maintenance including changed workflows/projects, user edits/conflicts, helper incompatibility and no passing evidence on failed setup.",
           "upheld": false
-        },
-        {
-          "id": "review_tests:1:3",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 1,
-          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
-          "text": "Add executable setup-level fallback/gap tests for discovery, unsupported or mixed/cross-project inputs and incomplete requirements, plus generated-adapter mismatch and failure propagation.",
-          "upheld": false
-        },
-        {
-          "id": "review_tests:1:4",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "test_design",
-          "target_attempt": 1,
-          "target_fp": "v1:sha256:743f1048f4a85171ceefb7181389f1b045fd4df405e3248ed6fe8c7c2b9089df",
-          "text": "Separate malicious-content behavior from unsafe destination rejection so a normal setup actually processes untrusted data without executing it or weakening coverage; include legitimate project instructions.",
-          "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T23:46:03Z",
+      "finished_at": "2026-11-04T23:48:59Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
-          "tests": "v1:sha256:87f7f1fca276b78eb32f197d89b1a006c7acfc570816d087d6d59bb6b6fa7977"
+          "tests": "v1:sha256:be14f4864d3052bdc6320ef6edd950f62377b1e2871523ab42c345d8b77b4b56"
         },
         "policy": {},
-        "subject": "v1:sha256:a473b9e8fc7af0409dfdadb51d6ddbb46e05b59d10996b70bf598f49b1004e26"
+        "subject": "v1:sha256:7ebfc6f464b1badea0eb8964915ec515a0147d72776c74fd6dc4d87b3a94852e"
       },
-      "holder": "codex:root/g3-review-tests2",
-      "input_fp": "v1:sha256:debb110871cfe336846003f492cc851da5c2024283d975a06659a4459373a173",
-      "ok": false,
+      "holder": "codex:root/g3-review-tests3",
+      "input_fp": "v1:sha256:b44db07b60f024e35c75949ab307e89b6fde00e77922c3636672886ee629f798",
+      "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "43cae3ec7b5d3b5e852c31c86c97116a5e0b6da4",
-          "commit": "e08f5328556ebfabb56c1e1e938b42023ce58909",
+          "blob": "87465bfa9458aaf159e20e2620c4b032be88495b",
+          "commit": "6f2ee75c487d6d84096f9800916dbd5823186bd7",
           "path": ".zzzops/reviews/3/review_tests.md"
         },
-        "summary": "Expanded tests address three prior findings; package verification still only invokes help and must exercise real setup and generated adapter from an installed distribution without the development checkout."
+        "summary": "All prior findings are resolved in test design. Fresh package test runs setup and generated adapter from a separate offline installation; feature paths need execution after implementation."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
-          "change": "525e55122c774002ed46179f167f84dc1796360c",
-          "commit": "3526e2dd48a17c2b42e0fb48be84d079753d31a7",
-          "tree": "a1b56331321f8fd55faf57039d44ed10bad8aa0b"
+          "change": "4868cd1f9533e45b94b586a084fcd6c9afedfaec",
+          "commit": "61a73e80599d7533bc29aec1a61b9a26cbc239be",
+          "tree": "7df19db5d024141c549e971f05a534464caafa7b"
         }
       },
       "status": "done"

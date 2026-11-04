@@ -470,15 +470,15 @@
       "status": "done"
     },
     "run_tests": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T01:50:13Z",
+      "finished_at": "2026-11-04T02:33:56Z",
       "fp_parts": {
         "def": "v1:sha256:def927cb81b82bf3b076ecd841fe451396715db71445477cd2a999786666b4ca",
         "inputs": {
-          "code": "v1:sha256:00dd857bc36f31910c4c74dd47ba8d95a818be2c00996838a263076320419371",
-          "commands": "v1:sha256:f1118dd4506ba7af51de350c8e5dfb4ed0a9e26b8615c4ea9c405742ac3d95c5"
+          "code": "v1:sha256:787bc807547f8d3dcf6c04a467d161b7b35e03d18578c564a6a58f387eecf817",
+          "commands": "v1:sha256:cc180929ccbef2cd95c8e32a6e3b31261bd766065592078475ffd411038ade11"
         },
         "policy": {
           "verification": {
@@ -496,8 +496,8 @@
           ]
         }
       },
-      "holder": "codex:root/g1-run-tests-2",
-      "input_fp": "v1:sha256:61d59eb384084da69d8be1d1016f8c7012ec62c5482ec3e9ad634193c29b204e",
+      "holder": "codex:root/g1-run-tests-3",
+      "input_fp": "v1:sha256:64b2e855cf5561399e067826740cd95488aaf0ea10338f81a28098f19dff5855",
       "ok": true,
       "output": {
         "result": {
@@ -505,34 +505,42 @@
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
               "exit": 0,
-              "milliseconds": 25556,
-              "seconds": 25,
+              "milliseconds": 30821,
+              "seconds": 30,
               "source": "goal",
-              "tail": "a contained symlink never contributes bytes from outside the pinned tree (1144.614037ms)\n✔ production analysis never reads an external target through a committed absolute link (1130.816025ms)\n✔ production analysis never reads an external target through a committed chain link (1133.802977ms)\n✔ production analysis never reads an external target through a committed component link (1136.693993ms)\nℹ tests 25\nℹ suites 0\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 25531.879215\n"
+              "tail": "et through a committed component link (1181.194882ms)\n✔ unchanged populated committed trees are complete without fabricated fallback (599.481504ms)\n✔ Git commit replacement refs cannot rewrite pinned commit analysis (1212.719909ms)\n✔ Git tree replacement refs cannot rewrite pinned commit analysis (1210.120123ms)\n✔ Git blob replacement refs cannot rewrite pinned commit analysis (1205.627047ms)\nℹ tests 29\nℹ suites 0\nℹ pass 29\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 30799.001965\n"
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
               "exit": 0,
-              "milliseconds": 110,
+              "milliseconds": 103,
               "seconds": 0,
               "source": "goal",
-              "tail": "✔ cache rejects wrong snapshot and returns only rebuilt current identity (1.889796ms)\n✔ cache rejects navigation mode and returns only rebuilt current identity (0.26902ms)\n✔ cache rejects wrong policy and returns only rebuilt current identity (0.204987ms)\n✔ cache rejects incompatible version and returns only rebuilt current identity (0.253665ms)\n✔ cache refreshFails cannot promote stale data to current (0.369332ms)\n✔ cache publishFails cannot promote stale data to current (0.263207ms)\n✔ committed analysis binds a moved ref to the originally resolved tree (0.522781ms)\n✔ unavailable committed resolve cannot become a valid snapshot (0.353041ms)\n✔ unavailable committed tree cannot become a valid snapshot (0.353807ms)\n✔ unavailable committed blob cannot become a valid snapshot (0.339074ms)\n✔ unavailable committed materialize cannot become a valid snapshot (0.22984ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 83.784433\n"
+              "tail": "✔ cache rejects wrong snapshot and returns only rebuilt current identity (1.767444ms)\n✔ cache rejects navigation mode and returns only rebuilt current identity (0.250323ms)\n✔ cache rejects wrong policy and returns only rebuilt current identity (0.199178ms)\n✔ cache rejects incompatible version and returns only rebuilt current identity (0.250067ms)\n✔ cache refreshFails cannot promote stale data to current (0.316219ms)\n✔ cache publishFails cannot promote stale data to current (0.267731ms)\n✔ committed analysis binds a moved ref to the originally resolved tree (0.50964ms)\n✔ unavailable committed resolve cannot become a valid snapshot (0.324723ms)\n✔ unavailable committed tree cannot become a valid snapshot (0.295626ms)\n✔ unavailable committed blob cannot become a valid snapshot (0.315178ms)\n✔ unavailable committed materialize cannot become a valid snapshot (0.215399ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.51212\n"
+            },
+            {
+              "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
+              "exit": 0,
+              "milliseconds": 10077,
+              "seconds": 10,
+              "source": "goal",
+              "tail": "✔ npm CLI discovery uses Node-compatible paths for Windows (1.191473ms)\n✔ isolated source copy includes edited and added inputs while excluding outputs (1.218409ms)\n✔ packed distribution has meaningful grammar identity and reuses extraction cache offline (9964.400309ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10054.936493\n"
             },
             {
               "cmd": "npm run build",
               "exit": 0,
-              "milliseconds": 7150,
-              "seconds": 7,
+              "milliseconds": 6676,
+              "seconds": 6,
               "source": "verification",
-              "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g1/dist/vendor/grammars (9 wasm)\nnpm notice\nnpm notice New major version of npm available! 11.20.0 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n"
+              "tail": "\n> @nanonets/graft@0.28.0 build\n> tsc -p tsconfig.json && tsc -p viewer/tsconfig.json && node scripts/build-viewer.mjs && node scripts/vendor-grammars.mjs\n\nviewer bundle → dist/viewer/\ngrammar queries → dist/graph/queries/ (17 .scm)\nvendored grammars → /home/dave/Work/dev/trail-code-test-impact/.zzzops/worktrees/g1/dist/vendor/grammars (9 wasm)\n"
             },
             {
               "cmd": "npm test",
               "exit": 0,
-              "milliseconds": 734000,
-              "seconds": 734,
+              "milliseconds": 708742,
+              "seconds": 708,
               "source": "verification",
-              "tail": "s to that child; --in <unknown> errors listing repos (10.051478ms)\n✔ federated ask: explicit --in <weak child> bypasses the cross-child gate (footer hint is reachable) (10.244284ms)\n✔ strength gate: body-only junk (`position`) gated out at ~30-node scale (11.414161ms)\n✔ strength gate: body-only junk (`position`) gated out at ~200-node scale (57.712576ms)\n✔ strength gate: 3-child payment/gateway/refund — strong + mid federate, incidental-var junk gated out (21.316241ms)\n✔ strength gate: a legit COMMON-term (low-idf) name match is NOT overcorrected out (13.447858ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (14.710716ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (13.873528ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.309555ms)\nℹ tests 4195\nℹ suites 0\nℹ pass 4187\nℹ fail 0\nℹ cancelled 0\nℹ skipped 8\nℹ todo 0\nℹ duration_ms 733703.839745\n"
+              "tail": "t COMMON-term (low-idf) name match is NOT overcorrected out (11.791468ms)\n✔ strength gate: junk matching only a file basename gateway.ts (no symbol named for the term) is gated out (12.98879ms)\n✔ strength gate: junk matching only a dir segment gateway/ (no symbol named for the term) is gated out (12.668602ms)\n✔ readWorkspace: rejects foreign/invalid json as not-a-workspace (0.272894ms)\nℹ tests 4202\nℹ suites 0\nℹ pass 4194\nℹ fail 0\nℹ cancelled 0\nℹ skipped 8\nℹ todo 0\nℹ duration_ms 708462.059836\n"
             }
           ],
           "passed": true,
@@ -551,21 +559,21 @@
               "platform": "linux",
               "python": "3.14"
             },
-            "goal_ms": 25666,
+            "goal_ms": 41001,
             "parallel_commands": false,
-            "plan_sha256": "a7e59ccb0f19d66156fb8e473057c9a7727e09c421a2fa5d3bc450ee8865ea1d",
-            "total_ms": 766817,
-            "verification_ms": 741150,
+            "plan_sha256": "dc39e8a1f66e58e8e47d231f58a8f19df873bab2ccded9d81276f641740fd5c7",
+            "total_ms": 756419,
+            "verification_ms": 715418,
             "verification_plan_sha256": "707adb38c7263e1efa6f40732b18f24b57a9a961d40161de22b2befd644ae63d",
             "workers": {
               "goal": 2,
               "verification": 2
             }
           },
-          "tree": "d8766808e7bf581a41a6c748226fc1491091d870"
+          "tree": "9598388b5df746158cb642c6c5744e095401eaca"
         }
       },
-      "reason": "not_ok",
+      "reason": "stale",
       "status": "done"
     },
     "test_design": {

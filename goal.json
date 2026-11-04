@@ -108,26 +108,31 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:38:22Z",
+      "finished_at": "2026-11-04T01:04:13Z",
       "fp_parts": {
-        "candidates": [],
+        "candidates": [
+          [
+            "review_design:5:1",
+            true
+          ]
+        ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:19eb99ffe1b1e121c4fed31d598962a9a878d08f5812d276b72221235fd90155",
-          "doc": "v1:blob:73315b825dffade0616fb58ff448e6ebffc293e7",
-          "review": "v1:sha256:5d30258caa6bfc47ee999118e4983b3751047c5e43516c124ffa6c173c9852bf",
-          "spec": "v1:sha256:3818b0fc4ea2e7bb9c60ec0cb017b41d043c5bd023a9aff0dd47796c784ad64e"
+          "adversary": "v1:sha256:4165cb79bd938ec1bc92abe81f4740f320596b8d9bf947b5c1922308f9db6d52",
+          "doc": "v1:blob:9406acaa0a2efcacd6bd0583042ca4228edc9a46",
+          "review": "v1:sha256:b6ac3b4d70f73a702e6bb0d43e778c18904c8d0cba3efe5050334b7fab1820d6",
+          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "policy": {}
       },
-      "holder": "codex:root/g2-filter-4",
-      "input_fp": "v1:sha256:ee6da8cea38e55bd2dfecd762a02bc13775683ca86a6d29299209107c13b2971",
+      "holder": "codex:root/g2-commit-filter",
+      "input_fp": "v1:sha256:2974eac1e40fc73cddd9fb179d4989c8385b1b85fb8ebb1e8869b5c3ab379ff3",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve alignment with the dependency test seam and preservation of production identity and receipt trust boundaries. No open findings or notes require verdicts.",
+        "summary": "The adversarial review approved; the design review found one material gap in the viability of a portable execution-identity mechanism. This finding reopens design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

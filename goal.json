@@ -108,7 +108,20 @@
     "design": {
       "attempt": 12,
       "correction_runs": 9,
-      "findings": [],
+      "findings": [
+        {
+          "id": "design:reopen:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 12,
+          "target_fp": "v1:sha256:7ba656b8df88d7d15cd9cddc60f9c3ef561e62d9684abe0dddcb925a42d2f4ad",
+          "text": "Use Trail-code multilingual graph/extraction as the general basis for useful conservative selection. The current whole-repository Node/TypeScript syntax whitelist and global fallback for ordinary files make PR #1 fail the user goal. Define practical file/build-target relationships, explicit per-language coverage and justified bounded scope fallback while retaining full fallback when dependencies cannot be bounded. Preserve the owner-approved context contract and commit-only scope.",
+          "upheld": false
+        }
+      ],
       "finished_at": "2026-11-04T17:15:12Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",

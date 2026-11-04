@@ -151,26 +151,35 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 9,
-      "correction_runs": 8,
+      "attempt": 10,
+      "correction_runs": 9,
       "findings": [],
-      "finished_at": "2026-11-04T17:20:24Z",
+      "finished_at": "2026-11-04T19:07:04Z",
       "fp_parts": {
-        "candidates": [],
+        "candidates": [
+          [
+            "adversary_design:10:1",
+            true
+          ],
+          [
+            "review_design:10:1",
+            true
+          ]
+        ],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:7425c9431f66dd17d94ed2301ccf44444f42e4fdca4528b7b15528ab1a58acb1",
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "review": "v1:sha256:2d3c0eada3a48cbf88f8476251cf570d81ea596155c4612728fcbb335bf2fbe7",
+          "adversary": "v1:sha256:56398c86b700d0ddd0068b338bef4d972fbb081c798963d3ada398492be13fca",
+          "doc": "v1:blob:7f147521938cbeea607e7eec549cbbd37be958c5",
+          "review": "v1:sha256:72670a771c301062bb0e4d0bf17daa757ed5b6829753c101cc94b964ae346180",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-filter3",
-      "input_fp": "v1:sha256:706269699266ca4fe52f6fb496b34eaa0b1ff36c899dcd172f03208b7c2fef74",
+      "holder": "codex:root/g1-multilingual-filter",
+      "input_fp": "v1:sha256:2b4582487cecb26b1c18bdda2efc6f5c4b893be470f3b27934c143a29e6228e4",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve separating analyzer predicates from independently observed execution evidence; the prior issue is resolved. No open findings or notes require verdicts.",
+        "summary": "Both reviews identify material inconsistencies between the multilingual design and the owner-approved ordinary stable-input execution model. These findings reopen design. No non-material notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

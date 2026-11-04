@@ -215,9 +215,16 @@
       "status": "done"
     },
     "implement": {
+      "answer": {
+        "decided_at": "2026-11-04T17:02:52Z",
+        "decided_by": "Dave",
+        "quote": "Approved",
+        "text": "Add schema v2 with an explicit conditional status, versioned supported-model identity, and mandatory machine-readable context requirements. The adapter must validate all requirements before using sparse impact; unknown or unmet requirements trigger full fallback. Retain conservative v1 behavior."
+      },
       "attempt": 7,
       "blocked": {
         "category": "decision",
+        "instructions": "The human answered: Add schema v2 with an explicit conditional status, versioned supported-model identity, and mandatory machine-readable context requirements. The adapter must validate all requirements before using sparse impact; unknown or unmet requirements trigger full fallback. Retain conservative v1 behavior.",
         "options": [
           "Add schema v2 with an explicit conditional status, a versioned supported-model identity and machine-readable required context; G2 must validate every requirement before using the sparse impact and otherwise run the full profile. Existing v1 consumers reject v2, and v1 retains conservative fallback.",
           "Keep schema v1 and require full-profile fallback until analyzer and adapter can establish all runtime dependencies without a conditional contract.",
@@ -227,7 +234,7 @@
         "reason": "owner question: May the impact report add a versioned v2 contract for sparse results that are conditional on a validated execution context? A tracked-source graph alone cannot rule out a test runner, ",
         "recommendation": "Use schema v2 with mandatory context requirements and explicit conditional status. Implement a first practical Node/TypeScript static-import slice, retain import-time effects in file-level reverse closure, and treat unknown syntax, dynamic loading, unsupported test hooks, unverified runners or unknown requirements as full fallback. The adapter must verify pinned runner, configuration and external inputs, not merely trust an undocumented assumption. The ESM/runtime and Windows ACL fixes are checkpointed at 39f6612; the Windows path requires real Windows verification.",
         "repeats": 1,
-        "waiting_for": "human"
+        "waiting_for": "agent"
       },
       "correction_runs": 6,
       "findings": [],

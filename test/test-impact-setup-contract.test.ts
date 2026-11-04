@@ -165,7 +165,8 @@ test('fresh installed package configures and runs an adapter without the develop
     assert.equal(packed.status,0,packed.stderr);const tarball=join(dir,JSON.parse(packed.stdout)[0].filename);
     const install=join(dir,'install');mkdirSync(install);
     put(install,'package.json',JSON.stringify({name:'isolated-install',private:true,type:'module'}));
-    const isolated={HOME:join(dir,'home'),USERPROFILE:join(dir,'home'),XDG_CONFIG_HOME:join(dir,'config'),NODE_PATH:'',NODE_OPTIONS:''};
+    const cache=run(setupRoot,'npm',['config','get','cache']);assert.equal(cache.status,0,cache.stderr);
+    const isolated={HOME:join(dir,'home'),USERPROFILE:join(dir,'home'),XDG_CONFIG_HOME:join(dir,'config'),NODE_PATH:'',NODE_OPTIONS:'',npm_config_cache:cache.stdout.trim()};
     mkdirSync(isolated.HOME,{recursive:true});mkdirSync(isolated.XDG_CONFIG_HOME,{recursive:true});
     const installed=run(install,'npm',['install','--ignore-scripts','--no-audit','--no-fund','--offline',tarball],isolated,180_000);
     assert.equal(installed.status,0,`offline install failed: ${installed.stderr}`);

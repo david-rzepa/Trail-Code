@@ -560,15 +560,15 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 14,
-      "correction_runs": 12,
+      "attempt": 15,
+      "correction_runs": 13,
       "findings": [],
-      "finished_at": "2026-11-04T18:32:27Z",
+      "finished_at": "2026-11-04T19:21:11Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d"
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41"
         },
         "policy": {}
       },
@@ -578,8 +578,8 @@
         "test/impact-coordinator-safety.test.ts",
         "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-v2-parse-tests",
-      "input_fp": "v1:sha256:d73f549202049e4ff885476a244b012b67130dcf3255e484fe81ae1ec5833028",
+      "holder": "codex:root/g1-multilingual-tests",
+      "input_fp": "v1:sha256:28dcf22fc10b33399ee7e99fd2089d70b027fe08e16a1e7aa4edbb8dd58f9a50",
       "ok": true,
       "output": {
         "commands": [
@@ -591,48 +591,45 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 2443,
-              "id_or_scope": "four v2 parser recovery cases (missing brace/parenthesis, each old and new revision)",
-              "observation": "failing: all four run the real CLI and find no revision/path-specific unbounded parse gap"
+              "duration_ms": 3363,
+              "id_or_scope": "five multilingual conditional analyzer cases (Go module, cross-package closure, missing import, embedded resource, practical TypeScript)",
+              "observation": "one deletion/old-graph case passes; four fail because Go or practical Node reports incomplete/full fallback or drops raw import provenance"
             }
           ],
-          "checkpoint": "0c71a1e7818a186d4c053f660fd2f1074a0b43d8",
+          "checkpoint": "3354e6092c5fb8ebfe0ed4865def49b5e64b2dc9",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 28081,
+              "duration_ms": 28264,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 105,
+              "duration_ms": 110,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
-              "duration_ms": 8210,
+              "duration_ms": 8375,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-conditional-contract.test.ts",
-              "duration_ms": 8488,
+              "duration_ms": 11943,
               "exit": 1
             }
           ],
-          "summary": "At the submitted checkpoint three existing suites pass; the v2 suite has six passing and four new failing parser-recovery cases.",
-          "total_ms": 44884
-        },
-        "responses": {
-          "review_impl:3:2": "fixed: Added real-CLI v2 cases for missing closing braces and missing closing parentheses, independently exercising malformed input in both comparison revisions. Each requires an unbounded gap attributed to the malformed file and revision, incomplete status and full-profile fallback."
+          "summary": "Measured four targeted commands at submitted checkpoint. Three existing suites pass; v2 suite has 11 passing and 4 failing. Go fixtures are analyzed by the CLI; running go test and baseline/context evidence belong to G2.",
+          "total_ms": 48692
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "cdfb001a2b4180d818cb7e61d3d0b9f4df503f2b",
-          "commit": "0c71a1e7818a186d4c053f660fd2f1074a0b43d8",
-          "tree": "bdd68fc18136ef7b235cd5323a9871b488da711a"
+          "change": "4a559c897c4cebdae4b42ab22af2b94f49b6ff51",
+          "commit": "3354e6092c5fb8ebfe0ed4865def49b5e64b2dc9",
+          "tree": "2ffbc3197b8ea79259c09405f88942cd799a0446"
         }
       },
-      "reason": "reopened",
+      "reason": "stale",
       "status": "done"
     }
   },

@@ -265,15 +265,15 @@
       "status": "done"
     },
     "review_tests": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [
         {
           "id": "review_tests:4:1",
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "test_design",
           "target_attempt": 7,
           "target_fp": "v1:sha256:8cddf8945b561f95ce99eb76101536c4a9b61251d7bbddc0bb834dbc9605545a",
@@ -281,35 +281,35 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T01:09:59Z",
+      "finished_at": "2026-11-04T01:13:41Z",
       "fp_parts": {
         "def": "v1:sha256:fe95ae09ee0f9f1ad2643ac35155602b64707df47cf83a8c3a08e9c722b0384c",
         "inputs": {
           "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:6d20089bbe38b941be5f4739ef0a43e2034775d8db9951bc9ae49cafabc510e8"
+          "tests": "v1:sha256:8362cf3cf678387c4f45ad3b919284b4d4b56ed257b7f24af813709d7c6ebaf1"
         },
         "policy": {},
-        "subject": "v1:sha256:8cddf8945b561f95ce99eb76101536c4a9b61251d7bbddc0bb834dbc9605545a"
+        "subject": "v1:sha256:9408ebeb29c2d6cf7f5219a431fa1a0fa02be5d94f7607f57a108cd02c242480"
       },
-      "holder": "codex:root/g1-commit-review-tests",
-      "input_fp": "v1:sha256:01b105ca460562843f129805733a93631f7032372bb21fb6e8280fdf1c34e758",
-      "ok": false,
+      "holder": "codex:root/g1-commit-review-tests2",
+      "input_fp": "v1:sha256:ec71489d50b573297c60dbb8d7addd2c5a3e02878903ccbff7e959bcf1e4362d",
+      "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "64848827502e3255eb0e7b23543b344adf056cc6",
-          "commit": "62c8686d1162d6a487107c2e6b988218d6850f66",
+          "blob": "3826fdc74ddc465476fb3cef1e505e17f11f2426",
+          "commit": "2ff2e976552055bac24a32f678c93c47bc38cf71",
           "path": ".zzzops/reviews/1/review_tests.md"
         },
-        "summary": "Commit-only coverage is sound except it does not detect external reads through unsafe committed symlinks."
+        "summary": "Self-tested production read traps and changed external sentinels address the symlink finding."
       },
       "reason": "stale",
       "reviewed": {
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "eb781f12b77ad47412f4515d2ac4c0ea866205cf",
-          "commit": "640fa111a9a450d2e09c3a5a8c4870d8f0c9e052",
-          "tree": "205d3c860663f922c3527ea93a14101a4aa06575"
+          "change": "259f4a327eaecba5d0443085b909f668548187b2",
+          "commit": "6f7bfa43024f1e261cb4488f301835340245dc6a",
+          "tree": "6d135ff26abbd74efb639c037ca3287512b70939"
         }
       },
       "status": "done"

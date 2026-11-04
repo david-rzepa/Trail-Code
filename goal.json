@@ -47,35 +47,35 @@
       "status": "done"
     },
     "approve_design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T17:39:12Z",
+      "finished_at": "2026-11-04T19:22:10Z",
       "fp_parts": {
         "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
         "inputs": {
-          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "filter": "v1:sha256:00975485490c887869d708b0c0de39901c1d2c21d38a6da76921d6c193bfcf5b",
-          "summary": "v1:sha256:a72b1370dc64ced1bb6200b1ebc93b2e777b50885a299ab927623f4303e82c00"
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
+          "filter": "v1:sha256:44ed357bcd9aae2540afef3587dafe7aaed3b7d38e7cdc49dbbc86d68837259a",
+          "summary": "v1:sha256:c7cc7a2a0098047596a8a957843525a3c5eba4d3005abe92cc8f2b557cc380b3"
         },
         "policy": {},
-        "subject": "v1:sha256:cde01a15675dd1f01aec230a51f83e791043725b35bf7d85f09cdedcbb1db6b7"
+        "subject": "v1:sha256:e36637f5a0efb08b8884d2d82bf6c26446eac8f32ed868e55dc1cd8f87a10969"
       },
       "holder": "human",
-      "input_fp": "v1:sha256:f036a5e63699391c042d81bb182c37dd76a4a14c5ddab628669188b815ae5165",
+      "input_fp": "v1:sha256:8c36f9187693c6766db64892ce6b451dd60d0bb9f786efd9912995f0790f209f",
       "ok": true,
       "output": {
-        "decided_at": "2026-11-04T17:39:12Z",
+        "decided_at": "2026-11-04T19:22:10Z",
         "decided_by": "Dave",
         "decision": "approved",
-        "quote": "Approve both designs",
-        "summary": "Approved G2 ordinary stable-checkout execution and independently validated context design."
+        "quote": "Approve both",
+        "summary": "Approved the reviewed multilingual runner design and increase of G2 correction limit to 55."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56"
+          "blob": "83e827dc59df9658a1eae976e99b6af2821df423",
+          "commit": "bb092c2a6e633f4e822166af16cdd729e68c3c89"
         }
       },
       "status": "done"

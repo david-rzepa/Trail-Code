@@ -175,6 +175,48 @@
       "reason": "stale",
       "status": "done"
     },
+    "implement": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [
+        {
+          "id": "implement:1:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "test_design",
+          "target_attempt": 3,
+          "target_fp": "v1:sha256:1f8fbbaa45a9711bd179b142bb582effbff86c8d86a29da4594c494f816fdc7a",
+          "text": "The frozen Go and Node sparse fixtures require filesystem marker instrumentation that is outside the approved G1 static models: Go imports os and calls Getenv/OpenFile (go-static.ts accepts only testing, embed, strings, strconv, and fmt), while Node imports node:fs and writes through appendFileSync, which node-static.ts cannot certify. Focused execution reaches both sparse assertions and returns full fallback, with inventory/resolver/inputs marked invalid; neither is evidence that normal supported tests must fall back. The Node fixture also uses a package script that configValid rejects (node --import tsx --test versus the modeled tsx --test form). Revise fixtures to establish actual execution externally while keeping repository source and runner within the validated G1 model, or provide and review a sound expanded G1 model and environment/resource dependencies; do not whitelist arbitrary filesystem/environment APIs. Separately ensure regressions cover how committed generated adapter/configuration files and .gitignore are classified: current G1 model treats these as unmodeled inputs, so a correct generated setup cannot yet produce sparse results without a sound verified classification or model extension. The setup contract must preserve real execution evidence and the canonical full workflow.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T23:58:16Z",
+      "fp_parts": {
+        "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
+        "inputs": {
+          "base": "v1:sha256:3c0d853ca670d0dbedfab1d4049304651e129c388941ebd6fade820164a5366f",
+          "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245",
+          "tests": "v1:sha256:be14f4864d3052bdc6320ef6edd950f62377b1e2871523ab42c345d8b77b4b56"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g3-implement",
+      "input_fp": "v1:sha256:cb9910eed044d970081993b5c271b82a8f67c2bb405ad9651870ed1d4d8c2aa5",
+      "ok": true,
+      "output": {
+        "code": {
+          "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
+          "change": "ea0caea28e38ed9105c86b6ed57ba56aefb16e78",
+          "commit": "9f859782671cedcb33bd29b6600cf4e4404aa76f",
+          "tree": "669509acd90620be2460c07e8aae2c363bd81d91"
+        },
+        "summary": "Drafted an explicit packaged setup asset and thin verification adapter, preserving the original npm test command for the recognized Node workflow. The build passed and seven focused cases passed, but the two real sparse fixtures fall back under the current G1 model; the implementation is incomplete and must be revised after test-design correction. The full contract command was started but interrupted after the two focused failures were established; its repository-wide fallback case did not complete."
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "review_design": {
       "attempt": 4,
       "correction_runs": 3,

@@ -215,30 +215,23 @@
       "status": "done"
     },
     "implement": {
-      "answer": {
-        "decided_at": "2026-11-04T17:02:52Z",
-        "decided_by": "Dave",
-        "quote": "Approved",
-        "text": "Add schema v2 with an explicit conditional status, versioned supported-model identity, and mandatory machine-readable context requirements. The adapter must validate all requirements before using sparse impact; unknown or unmet requirements trigger full fallback. Retain conservative v1 behavior."
-      },
-      "attempt": 7,
-      "blocked": {
-        "category": "decision",
-        "instructions": "The human answered: Add schema v2 with an explicit conditional status, versioned supported-model identity, and mandatory machine-readable context requirements. The adapter must validate all requirements before using sparse impact; unknown or unmet requirements trigger full fallback. Retain conservative v1 behavior.",
-        "options": [
-          "Add schema v2 with an explicit conditional status, a versioned supported-model identity and machine-readable required context; G2 must validate every requirement before using the sparse impact and otherwise run the full profile. Existing v1 consumers reject v2, and v1 retains conservative fallback.",
-          "Keep schema v1 and require full-profile fallback until analyzer and adapter can establish all runtime dependencies without a conditional contract.",
-          "Use another explicit contract; specify the boundary and fallback behavior."
-        ],
-        "question": "owner question: May the impact report add a versioned v2 contract for sparse results that are conditional on a validated execution context? A tracked-source graph alone cannot rule out a test runner, loader, plugin, or external dependency importing project code dynamically. Schema v1 has no way to express a condition that downstream must validate, and marking it complete could cause an unsafe exclusion.",
-        "reason": "owner question: May the impact report add a versioned v2 contract for sparse results that are conditional on a validated execution context? A tracked-source graph alone cannot rule out a test runner, ",
-        "recommendation": "Use schema v2 with mandatory context requirements and explicit conditional status. Implement a first practical Node/TypeScript static-import slice, retain import-time effects in file-level reverse closure, and treat unknown syntax, dynamic loading, unsupported test hooks, unverified runners or unknown requirements as full fallback. The adapter must verify pinned runner, configuration and external inputs, not merely trust an undocumented assumption. The ESM/runtime and Windows ACL fixes are checkpointed at 39f6612; the Windows path requires real Windows verification.",
-        "repeats": 1,
-        "waiting_for": "agent"
-      },
-      "correction_runs": 6,
-      "findings": [],
-      "finished_at": "2026-11-04T17:01:14Z",
+      "attempt": 8,
+      "correction_runs": 7,
+      "findings": [
+        {
+          "id": "implement:8:1",
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 9,
+          "target_fp": "v1:sha256:254a48386c7f98312167d6ec872b18c4618cd31a0d956dff6478977cee087f47",
+          "text": "The owner approved schema v2 with explicit conditional status, versioned supported-model identity and mandatory machine-readable execution-context requirements, while retaining conservative v1 fallback. Update this design and dependent G2 design before implementation: specify exact v2 CLI/schema selection and status, tracked-source Node/TypeScript dependency model and its boundaries, mandatory runtime/runner/loader/environment requirements and their evidence, fail-closed rules for unknown or unmet conditions, validation and backward compatibility; require a concrete sparse two-target fixture plus adversarial dynamic loader, plugin, resource, fixture and import-side-effect cases. Quote the owner decision recorded on implement attempt 7. An unverified conditional report must never be consumed as unconditional completeness.",
+          "upheld": false
+        }
+      ],
+      "finished_at": "2026-11-04T17:05:06Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
@@ -248,12 +241,20 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-sparse-implement",
+      "holder": "codex:root/g1-context-implement",
       "input_fp": "v1:sha256:919a5606c71dd0aa8e9d7ec484f0ab74a710200a7cd55bc0111951d3d6849206",
-      "ok": false,
-      "output": null,
-      "reason": "reopened",
-      "status": "blocked"
+      "ok": true,
+      "output": {
+        "code": {
+          "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
+          "change": "4047d211e0ee398e7c99d72101c2b94b0f7ffc5e",
+          "commit": "39f66120b9711535d77b3b1d9bc06e6782c94373",
+          "tree": "3e2be27a9be55f0ab8c3b12da8e9e615a9655509"
+        },
+        "summary": "Preserved the ESM runtime identity and Windows ACL cache changes at 39f6612. All three existing contract suites passed on Linux; Windows ACL behavior still requires real Windows verification. The owner-approved conditional schema requires a design and test revision before sparse execution can be implemented safely."
+      },
+      "reason": "retry",
+      "status": "done"
     },
     "review_design": {
       "attempt": 6,

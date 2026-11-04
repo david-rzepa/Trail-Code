@@ -196,30 +196,33 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 9,
-      "correction_runs": 8,
+      "attempt": 10,
+      "correction_runs": 9,
       "findings": [],
-      "finished_at": "2026-11-04T18:07:42Z",
+      "finished_at": "2026-11-04T18:38:32Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
           "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "tests": "v1:sha256:9321a85293c7eb0a5e4600bffe5ad4bdb5fabace20bcb2ee9668a7c7d341158b"
+          "tests": "v1:sha256:6662515d19eab900ffee30aec96e5a61dc457dd1e9f7bf16db5147e424b25605"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-v2-implement",
-      "input_fp": "v1:sha256:3b2c2a8410ff4144746c6a9e0160621160cdf898c17f1668bc30e267beb8a686",
+      "holder": "codex:root/g1-v2-parse-fix",
+      "input_fp": "v1:sha256:2629c4e4b7bf4346ccd6c0d7b8ef29f7b81dc4caa969f2fd4b8cb19236a194f6",
       "ok": true,
       "output": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "4d36fb8599ded121f0a5e46f8593549659912900",
-          "commit": "507003d235ecd9a5d22a91abbfcea51534345071",
-          "tree": "eac3717cf0596aea9153febcceb024044f0a5cfd"
+          "change": "8647d31529c72bd7aeecc44a5999adc981a78764",
+          "commit": "f1b20d3f193625e19027e8bb52e7b36de4c89241",
+          "tree": "d024936a78fd4385a3e933f9f0178087d95ef9db"
         },
-        "summary": "Implemented opt-in schema v2 conditional analysis for a deliberately narrow static Node/TypeScript ESM model, with explicit machine-readable context requirements and conservative fallback; schema v1 remains conservative. The four required frozen contract suites passed (29, 11, 3, and 6 tests), as did five model tests and npm run build. A real Node test-runner regression fixture demonstrated selection of a dependent failing test while excluding an independent passing test. Identity/security tests passed three with the Windows-only ACL test skipped; Windows behavior needs host validation. Runtime context remains to be independently validated by the downstream consumer."
+        "responses": {
+          "review_impl:3:1": "fixed: Both pinned revisions reject parser ERROR and missing-token recovery through tree-sitter hasError, and report a path-specific unbounded parse gap. Four frozen old/new missing-brace and missing-parenthesis regressions pass; real sparse behavior and v1 contract tests also pass."
+        },
+        "summary": "Reject recovered TypeScript parse trees and emit unbounded revision and path-specific parse gaps before certifying the conditional static model. Required suites passed 29, 11, 3 and 10 tests; five sparse-model tests and build passed."
       },
       "reason": "stale",
       "status": "done"

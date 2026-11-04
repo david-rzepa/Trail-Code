@@ -1,3 +1,3 @@
-# Re-review: portable committed endpoints
+# Re-review: committed symlinks and materialization
 
-The revised design follows the owner's committed-endpoint scope: both refs are resolved once, committed objects are analyzed by immutable IDs, `worktree` is rejected explicitly, and missing objects or unsupported inputs cannot be treated as unchanged. It removes reliance on filesystem snapshots or privileged operations for analysis while retaining execution-time identity protection as a separate requirement. The updated tests cover live checkout and ref changes without weakening exact-tree comparison. No material finding in this change.
+The updated design binds symlink interpretation to entries of the pinned tree, broadens or stops for unproven targets, and requires no-follow, root-contained materialization and cleanup. Tests cover contained and escaping links, chains, loops and external sentinels. No new material issue in the change.

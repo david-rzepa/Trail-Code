@@ -176,6 +176,48 @@
       "reason": "stale",
       "status": "done"
     },
+    "filter_impl": {
+      "attempt": 1,
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T02:09:33Z",
+      "fp_parts": {
+        "candidates": [
+          [
+            "review_impl:1:1",
+            true
+          ],
+          [
+            "review_impl:1:2",
+            true
+          ],
+          [
+            "review_impl:1:3",
+            true
+          ],
+          [
+            "review_impl:1:4",
+            true
+          ]
+        ],
+        "def": "v1:sha256:5fab78ee7a74554d9897b964ee764247bd55068d6c3b2a64932fad9704979c4b",
+        "inputs": {
+          "code": "v1:sha256:2f5d4d3c54e0f2567b941a2696fa3a29c9d3306de47ebe34d51b81a79fcd57a1",
+          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "review": "v1:sha256:2166240cfe16918e054cc170e409b32dbec24cb7d62fd347f218bc773e814c6f"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g1-filter-impl",
+      "input_fp": "v1:sha256:7dcbc6dc24a132d42edfda3b11abc53bbb6c4ea0b9eff82aa536b2f76685f0a3",
+      "ok": true,
+      "output": {
+        "summary": "Implementation review requests changes on four material findings: replacement-ref identity, unconditional full fallback, packaged grammar/cache identity, and missing regression tests. These reopen implementation and test design. No non-material notes require verdicts.",
+        "verdicts": {}
+      },
+      "reason": "new",
+      "status": "done"
+    },
     "implement": {
       "attempt": 5,
       "correction_runs": 4,

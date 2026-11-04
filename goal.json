@@ -81,50 +81,45 @@
       "status": "done"
     },
     "base": {
-      "attempt": 1,
-      "correction_runs": 0,
+      "attempt": 2,
+      "correction_runs": 1,
       "findings": [],
-      "finished_at": "2026-11-04T23:35:28Z",
+      "finished_at": "2026-11-04T23:39:22Z",
       "fp_parts": {
         "def": "v1:sha256:9b5973f3342b82689a1174525e34920af8ec08a54db6f4e643b2844a436917fe",
         "inputs": {
           "heads": "v1:sha256:37416e83694451045f7d4c0b0464e934e6f9348c4df76e3ac20b99203dd249a2",
-          "merges": "v1:sha256:1d8897c9c30418c748272dd8bc42113d6ecc76d48025e0f2ff09cf40d6d23fcd"
+          "merges": "v1:sha256:8394780ba6e5d5519397b98bd27a962ccc0e9b28e42cee5aaab6e0814efc315b"
         },
         "policy": {}
       },
-      "holder": "codex:root/g3-base",
-      "input_fp": "v1:sha256:cb2bf3bdb338a80384eb6bb7629410c7312505d05a847c24ae8db3b8eeabad86",
+      "holder": "codex:root/g3-base2",
+      "input_fp": "v1:sha256:9c412e5790d4165837f75280d6bebda8d22beca7b11d7a7d3dfbda210990c80e",
       "ok": true,
       "output": {
-        "base_commit": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
+        "base_commit": "4713ed326e8b77b5eef711758ab29f31399fb522",
         "branch": "zzzops/work/g3",
         "replay_map": {
-          "0be58ce5321e3da9b699452a141cbc149fee4ff1": "b35540cf8c22e51c84459c680d36987582c3e820",
-          "2bb11477eb441c0545e6cebee361ca873249933b": "fb99fca64a67ffa743acd601c5a1f4a53f1b9c44",
-          "2bd5cacfb47b24537e3f58223f8d7d5e984dd8d5": "6883cbf6be5026429b3e07c5e24406f67a293c76",
-          "362ef5a2421f9fa3110c79c8d064ed61774e313d": "cca31879b105e3eef79d0abc52f20b42556f2f54",
-          "38dbd2c818c6be92e6362e3bf0a320f8380b689a": "a3a91590a647e9a3c6048745bd379cd254d1ba85",
-          "5460cbb0f513985f27c332605ddc61b9893fe007": "ed6fc60f663a5abc8eebbb8e9cfe781db2ba2723",
-          "661ea574c57649d235d4a14ea3e2eaab16dc7151": "018c6d9deb7515de951d9fe14b0f76c5e4112297",
-          "7b499d5b2edf3784848296ca8268d00e2ecb017f": "6781e0665503cd3d8f6b64fc3c180f6e6abefaf0",
-          "8bb097aa2fd849a2106b3368f54ae30b9c56caf0": "214a53518f480f41becfec7af2abab40a19a5502",
-          "9e41769dd2311ecbee414c577f3a87ddd3370d24": "b38ef5b9116c4267a38c0ece1dd277e32579587f",
-          "c606f34cfa549f0c24c98d076734538efb6b6e29": "225531ff60e5b229b29b29cb716bc3db45f0ad15",
-          "e9b38aef80428ff9bdff2cddd6cc212e0de342ed": "0ae590ceb4b235c466f90aea8104de4695b6f2d6",
-          "f4ea95d0e8dfbbdcc38150009a108bb8a53feb67": "42183936f896747991849e32415664132fcdb1cb"
+          "018c6d9deb7515de951d9fe14b0f76c5e4112297": "01ce80a91aead86dadbff9a7736e60181c59ea65",
+          "0ae590ceb4b235c466f90aea8104de4695b6f2d6": "6fd0ea0729d5f6268d58e3b23493d10dca32a7de",
+          "214a53518f480f41becfec7af2abab40a19a5502": "5cb7f7943bef4e2e2ff377b8788cab2eeccd0709",
+          "225531ff60e5b229b29b29cb716bc3db45f0ad15": "19c07be92c0050fd2fbf73f6010bd7d5153ee17b",
+          "42183936f896747991849e32415664132fcdb1cb": "e8d5da87eae31d4c911852ae3964f937f1c12a27",
+          "6781e0665503cd3d8f6b64fc3c180f6e6abefaf0": "0361989532c65b999b1a0bbbb876cdd907456ac4",
+          "6883cbf6be5026429b3e07c5e24406f67a293c76": "9fd3adb36cb225f4c680cb309d6d46902188518a",
+          "a3a91590a647e9a3c6048745bd379cd254d1ba85": "da0c3d9725db40df309663c117c924f5eb65e29b",
+          "b35540cf8c22e51c84459c680d36987582c3e820": "b43fbdcf704d5e6e44ecc601fccceb36c7df7b69",
+          "b38ef5b9116c4267a38c0ece1dd277e32579587f": "d2a402e6767f7fc70d0674de2b35bb0e98796985",
+          "cca31879b105e3eef79d0abc52f20b42556f2f54": "753a85a14bab05f1f59cb79bef19b57574f73357",
+          "ec6d0564e78af1ce01994adf20a09593fdb3ba06": "aaa32cf6b24174885061334407ff6b7a018cf324",
+          "ed6fc60f663a5abc8eebbb8e9cfe781db2ba2723": "33686a69eb4c5f1bbb9f113a5d1ae9e8891f2fbb",
+          "fb99fca64a67ffa743acd601c5a1f4a53f1b9c44": "8bccda6cbd4f89c4d3c6a7cd2a1a281edf9aecf7"
         },
         "replay_pos": {},
-        "stack": [
-          {
-            "goal": 2,
-            "head": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
-            "pr": 2
-          }
-        ],
+        "stack": [],
         "synced": null
       },
-      "reason": "new",
+      "reason": "stale",
       "status": "done"
     },
     "design": {
@@ -242,13 +237,14 @@
     },
     "test_design": {
       "attempt": 1,
+      "carried_by": "base",
       "correction_runs": 0,
       "findings": [],
       "finished_at": "2026-11-04T23:38:57Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
-          "base": "v1:sha256:30d1027bcc9d506a218bc1ebeb16f3a631bad9a6c140df1bbba34bb69a03ed12",
+          "base": "v1:sha256:3c0d853ca670d0dbedfab1d4049304651e129c388941ebd6fade820164a5366f",
           "doc": "v1:blob:ba403c7dbf93a8fa0384b9aa8f6f348649515245"
         },
         "policy": {}
@@ -257,7 +253,7 @@
         "test/test-impact-setup-contract.test.ts"
       ],
       "holder": "codex:root/g3-test-design",
-      "input_fp": "v1:sha256:bdc76f471c3ea9e2dc88a38f536e71079df64a41790b19a2fe867e3411d61b6d",
+      "input_fp": "v1:sha256:0b21ca4bcd070a280b246164dec9287fdc609bdc75a4ec186f2f317fbbd3f3ac",
       "ok": true,
       "output": {
         "commands": [
@@ -283,9 +279,9 @@
           "total_ms": 323
         },
         "tests": {
-          "base": "0e9d70f2a1729397dec07c7af32b7ae09901cbb2",
+          "base": "4713ed326e8b77b5eef711758ab29f31399fb522",
           "change": "d3fe0b91a5757744cc6b1847aad817d5714077be",
-          "commit": "ec6d0564e78af1ce01994adf20a09593fdb3ba06",
+          "commit": "aaa32cf6b24174885061334407ff6b7a018cf324",
           "tree": "e8b03ac6b2ab207ea588d756985c80d442a69cce"
         }
       },

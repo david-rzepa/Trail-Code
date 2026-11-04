@@ -108,26 +108,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 3,
-      "correction_runs": 2,
+      "attempt": 4,
+      "correction_runs": 3,
       "findings": [],
-      "finished_at": "2026-11-04T17:45:13Z",
+      "finished_at": "2026-11-04T19:32:36Z",
       "fp_parts": {
         "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:731c4426db9a974afb3bd053b81ddcfd1f7e0b84c40c0498037b7ea54135e724",
-          "doc": "v1:blob:0442cc456e673992864369a02b67d48806decd5e",
-          "review": "v1:sha256:f46e61ee53443776eab29ec72542f80cc27b273b75eaa048bf33af5df0aa73c4",
-          "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
+          "adversary": "v1:sha256:7beb44365fa70e7bc0d5abd09fd3e654cb4007ac901e570b9f9a968f22e34ad9",
+          "doc": "v1:blob:3088d3b4018d2b8897cc256b490d4d0902e0b9fe",
+          "review": "v1:sha256:d130f9fc6946720943c4ab37d480194f49264b5ed7f1de7b2808688a4aa040b0",
+          "spec": "v1:sha256:97beaf135607fc6f7f9c557a0d92b8722af6e800cf2c3420f8515a334055d95b"
         },
         "policy": {}
       },
-      "holder": "codex:root/g4-normal-filter2",
-      "input_fp": "v1:sha256:403f6bc9adbfc40975cae959a5c1fdf3055dbae6399cd79a48cf22214206011b",
+      "holder": "codex:root/g4-multilingual-filter",
+      "input_fp": "v1:sha256:9adfa6760ca16e191115087b9f188c8edffb7494807c1f1fad0328479c3eb213",
       "ok": true,
       "output": {
-        "summary": "Both reviews approve the distinction between sparse-only context gaps and missing full-run receipt identity; the prior finding is resolved. No open findings or notes require verdicts.",
+        "summary": "Both reviews approve multilingual release gates requiring real sparse execution and safe fallback evidence. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

@@ -187,15 +187,15 @@
       "status": "blocked"
     },
     "review_design": {
-      "attempt": 4,
-      "correction_runs": 3,
+      "attempt": 5,
+      "correction_runs": 4,
       "findings": [],
-      "finished_at": "2026-11-03T22:35:32Z",
+      "finished_at": "2026-11-04T00:55:19Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "spec": "v1:sha256:538fbdcae4722322a42be595f3bfc31e8675c213f5c2376ddd476c1bbfc7a960"
+          "doc": "v1:blob:e6a1b1620717362d7fc8639267e7ca655272da68",
+          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "lenses": [
           "intent",
@@ -223,25 +223,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:2089f1328e1d7d39ae492ed9756ac007b79fdceb8287b963a737912097997409"
+        "subject": "v1:sha256:83d8a8f1e060ab27f505815b4b130195f5099defa9896168e9d7267a0be396c6"
       },
-      "holder": "codex:root/g1-review-4",
-      "input_fp": "v1:sha256:f1f42559c0c02cf828fbc4616012f9ee34262db61875bb0a263d70874e760c38",
+      "holder": "codex:root/g1-portable-review",
+      "input_fp": "v1:sha256:c7217ff76df4c47706b32ea1ea75917e2110a4f35a7c247478dd1d8df735c982",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "76ed021be5cc6004747e169dd26cbcb29a9297d1",
-          "commit": "c6e1942ec238a9edffe747fbeacbbd83f673c1d5",
+          "blob": "35154d8e8448f77cfbd8052268709fd461ff3254",
+          "commit": "0fad9fd62aadc084e6e411e0cd944d86b9b01747",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Internal test seams make capture and cache failures reproducible without changing the public interface."
+        "summary": "Committed endpoint design retains exact identity and portable analysis."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
-          "commit": "f6423531c156c582e98c82681f9691999e6149a6"
+          "blob": "e6a1b1620717362d7fc8639267e7ca655272da68",
+          "commit": "2f883c1ae68c06490174c89b36940c30821b9e67"
         }
       },
       "status": "done"

@@ -161,6 +161,34 @@
       "reason": "stale",
       "status": "done"
     },
+    "implement": {
+      "attempt": 1,
+      "blocked": {
+        "category": "decision",
+        "instructions": "Partial implementation is committed at 380bc17 on the goal work branch. Both frozen suites pass (15 CLI tests, 27 coordinator tests) and npm run build passes. Continue implementation before declaring success: (1) worktree capture supports only a repository rooted at a Btrfs subvolume where safe deletion is allowed; this host lacks user_subvol_rm_allowed, so successful real production capture could not be verified, and ordinary worktrees on other filesystems remain unavailable; implement and verify another genuinely coherent capture backend or arrange a suitable environment. Never use before/after hashing or best-effort watchers as proof. (2) Current analysis retains upstream navigation graph edges and safely reports an unbounded full-profile fallback for all nonempty snapshots, but does not yet preserve unresolved or multiple plausible candidates with detailed provenance as required by the approved design. Extend conservative extraction/resolution and directly validate complete graph and gap contracts. (3) Verify snapshot identity, isolation, stale cache invalidation and actual native worktree operation on a supported platform. Do not treat the frozen tests passing or unconditional fallback as completion.",
+        "reason": "Partial implementation is committed at 380bc17 on the goal work branch. Both frozen suites pass (15 CLI tests, 27 coordinator tests) and npm run build passes. Continue implementation before declaring ",
+        "repeats": 1,
+        "waiting_for": "agent"
+      },
+      "correction_runs": 0,
+      "findings": [],
+      "finished_at": "2026-11-04T00:32:10Z",
+      "fp_parts": {
+        "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
+        "inputs": {
+          "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
+          "doc": "v1:blob:bfbd164eae508267b5bd9ee7c17ffff539a7b0ff",
+          "tests": "v1:sha256:85b0ea5b5d40a6054ec6a82d36f134f2baae5b8e4a7d3e4c808754efcebbf89b"
+        },
+        "policy": {}
+      },
+      "holder": "codex:root/g1-implement-1",
+      "input_fp": "v1:sha256:6aa7d9fdbc702f5a45f08257835a94eaac8d23d8e3b9501af0ceb5bce76d87b9",
+      "ok": false,
+      "output": null,
+      "reason": "new",
+      "status": "blocked"
+    },
     "review_design": {
       "attempt": 4,
       "correction_runs": 3,

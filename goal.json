@@ -45,35 +45,35 @@
       "status": "done"
     },
     "approve_design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T17:38:54Z",
+      "finished_at": "2026-11-04T19:17:28Z",
       "fp_parts": {
         "def": "v1:sha256:d04fc5094a85157b7e25b3020caaee316324161c59b30d25d4aabb2e5c24f0ed",
         "inputs": {
-          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "filter": "v1:sha256:b28038ceb4a71706ab1f1787c03e2df7b220479d083f88abcc829252268783ea",
-          "summary": "v1:sha256:f6263833c62d4b0bc7d6922100e465ca2afebdac0e6c3e351a5026cf9e5440f9"
+          "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
+          "filter": "v1:sha256:6e7f79c1fd74d285c7f7eeb4bceed637a92d1d0ae6e8414402906a902f0d8122",
+          "summary": "v1:sha256:481e4478b3c704f5f6e15a96314f2e77dddbb11c6fcdb2ea723d8aa70843b26c"
         },
         "policy": {},
-        "subject": "v1:sha256:21ecc7cafd1edb4dec18c9a7320d1a8000f69fe8a98f3677d3ec4a844ffeafb1"
+        "subject": "v1:sha256:0cd4c8e7bb21e4a75ee2b221460a6fba94dede73cfd929fdf9f921c423a04b71"
       },
       "holder": "human",
-      "input_fp": "v1:sha256:b0b7f42ad718530f02285dbeb012e5cc5d342366b45277f342c852752e09fa7b",
+      "input_fp": "v1:sha256:38282612908b89dbe63100a51946b23d5d48436d1e424e9463ea93f9d68c0f07",
       "ok": true,
       "output": {
-        "decided_at": "2026-11-04T17:38:54Z",
+        "decided_at": "2026-11-04T19:17:28Z",
         "decided_by": "Dave",
         "decision": "approved",
-        "quote": "Approve both designs",
-        "summary": "Approved G1 conditional sparse-impact report design."
+        "quote": "Approve multilingual design",
+        "summary": "Approved multilingual Trail-code-based analysis with practical Node/TypeScript and Go sparse cases and justified bounded fallback."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "e4122ae859c7d550d3a4407d5341c88ad6921e3d",
-          "commit": "9f2c1070538df1cdbe3952e62f9bfdc39517fbb4"
+          "blob": "324fdb329d40cf43af80eaa16978b161349ccd41",
+          "commit": "85a28e79d7201b9896585c13dac8e63f88882d99"
         }
       },
       "status": "done"

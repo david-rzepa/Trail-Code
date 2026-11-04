@@ -121,10 +121,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 14,
-      "correction_runs": 11,
+      "attempt": 15,
+      "correction_runs": 12,
       "findings": [],
-      "finished_at": "2026-11-04T19:09:57Z",
+      "finished_at": "2026-11-04T19:12:44Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -133,22 +133,21 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-multilingual-design2",
+      "holder": "codex:root/g1-multilingual-design3",
       "input_fp": "v1:sha256:d37e0bbe6a0f6b946e969799445214aa9ca49602c6b7333733ba727ac4975aeb",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
-          "commit": "c22993632ce908c0400ea9cf23b5ed27cd9cc5a4",
+          "blob": "324fdb329d40cf43af80eaa16978b161349ccd41",
+          "commit": "85a28e79d7201b9896585c13dac8e63f88882d99",
           "path": ".zzzops/reviews/1/design.md"
         },
         "responses": {
-          "adversary_design:10:1": "fixed: Replaced uninterrupted target identity and mutation protection requirements with ordinary runner preflight and explicit stable-input reporting throughout the design.",
-          "review_design:10:1": "fixed: Removed mid-run mutation proof and isolation requirements, preserved pinned Git-tree analysis and independent context validation, and added preflight/reporting acceptance."
+          "review_design:11:1": "fixed: Set Node/TypeScript and Go as minimum useful slices and require a real Go conditional sparse result and adapter execution, with explicit package initialization and import coverage and conservative fallback boundaries."
         },
-        "summary": "Align execution references with the owner’s ordinary-runner, practical preflight and stable-input direction while retaining immutable committed-tree analysis and multilingual conditional coverage. Reports distinguish analyzed source from execution assumptions without claiming proof of unchanged inputs."
+        "summary": "Require working sparse selection for a conventional Go module as well as Node/TypeScript, with explicit package/import coverage and safe fallback for unsupported constructs. The release gate includes real independent Go package targets and full-suite comparison."
       },
-      "reason": "stale",
+      "reason": "reopened",
       "status": "done"
     },
     "filter_design": {

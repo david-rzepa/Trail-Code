@@ -257,14 +257,14 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 6,
-      "correction_runs": 5,
+      "attempt": 7,
+      "correction_runs": 6,
       "findings": [],
-      "finished_at": "2026-11-04T00:57:54Z",
+      "finished_at": "2026-11-04T17:08:44Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
+          "doc": "v1:blob:b683c036a3e28d46c81e0a54afde8f49e3d2855e",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "lenses": [
@@ -293,25 +293,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:ad72273520fed21274d5d24e18df777c58f91d2c59509b05c7bd899425f06bc7"
+        "subject": "v1:sha256:628f75fcbd8499e46f901cab78a68f617660fc7559e6d61c1601e775d7d5c3b2"
       },
-      "holder": "codex:root/g1-commit-review2",
-      "input_fp": "v1:sha256:609e2c067a5ba5efd4fc2aa1cdc9d2aa198eb6cb17d592a3f2bc4a97978e0f54",
+      "holder": "codex:root/g1-context-review",
+      "input_fp": "v1:sha256:5dc539c73192d57cf4cfb60177b34a62ebe0bef352821480d0c04b14f20699ac",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "c2075ca13784a272f0caf5b7653fee7d9fd8f305",
-          "commit": "4d44f550a26680fbd5080a53c99f046ec2f53307",
+          "blob": "250984b452ac9a07cc8ba9dc35ddadd7ea3a6cfb",
+          "commit": "bd9f2d7cc1046aec0f0c857d995213fe2e6a3005",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Symlink and materialization boundaries preserve pinned-tree identity and containment."
+        "summary": "Conditional v2 preserves fail-closed compatibility and defines a practical whole-file supported subset."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "commit": "5e960b81d90983a1f139550fc6e7d208b959158c"
+          "blob": "b683c036a3e28d46c81e0a54afde8f49e3d2855e",
+          "commit": "9cc2a43cba388e30e9c8d069719a346e1136be1c"
         }
       },
       "status": "done"

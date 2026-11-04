@@ -576,3 +576,51 @@ test('production CLI propagates runner failure and cancellation without passing 
     assert.equal(subsequent.status,0,subsequent.stderr);cannotNarrow(JSON.parse(subsequent.stdout),'cancelled production run');
   }finally{cleanup(f);}
 });
+
+test('untracked failing Go test in an unchanged package cannot yield passing sparse verification',{skip:!hasGo()},async()=>{
+  const f=fixture('go');try {
+    await establishBaseline(f);
+    put(f.dir,'b/untracked_test.go','package b\nimport "testing"\nfunc TestUntrackedFailure(t *testing.T) { t.Fatal("UNTRACKED_FAILURE") }\n');
+    assert.match(git(f.dir,'status','--porcelain','--untracked-files=all'),/\?\? b\/untracked_test\.go/);
+    const fullRun=realFullRun(f);assert.notEqual(fullRun.status,0,'the actual complete Go suite must fail');assert.match(fullRun.stdout+fullRun.stderr,/UNTRACKED_FAILURE/);
+    const report=await verify(f,['--from',f.a,'--to',f.b,'--json']);
+    assert.notEqual(report.verification_status,'validated','a failing runnable test cannot be omitted from validated evidence');
+    assert.ok(!report.receipt_id,'untracked failing tests cannot produce a passing receipt');
+  }finally{cleanup(f);}
+});
+
+test('ignored failing Go test in an unchanged package cannot yield passing sparse verification',{skip:!hasGo()},async()=>{
+  const f=fixture('go');try {
+    await establishBaseline(f);
+    put(f.dir,'.git/info/exclude','b/ignored_test.go\n');
+    put(f.dir,'b/ignored_test.go','package b\nimport "testing"\nfunc TestIgnoredFailure(t *testing.T) { t.Fatal("IGNORED_FAILURE") }\n');
+    assert.equal(git(f.dir,'check-ignore','b/ignored_test.go'),'b/ignored_test.go');
+    const fullRun=realFullRun(f);assert.notEqual(fullRun.status,0,'ignored tests are still executed by the real Go runner');assert.match(fullRun.stdout+fullRun.stderr,/IGNORED_FAILURE/);
+    const report=await verify(f,['--from',f.a,'--to',f.b,'--json']);
+    assert.notEqual(report.verification_status,'validated','ignored runnable input cannot be omitted from validated evidence');
+    assert.ok(!report.receipt_id,'ignored failing tests cannot produce a passing receipt');
+  }finally{cleanup(f);}
+});
+
+test('additional affected test from a valid analyzer report is included or forces full fallback',async()=>{
+  const f=fixture('node');try {
+    await establishBaseline(f);
+    const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{mutate:r=>{
+      const original=r.affected.find((entry:Result)=>entry.path===f.impacted[0]);assert.ok(original,'actual analyzer must report the affected test');
+      assert.ok(!r.affected.some((entry:Result)=>entry.path===f.independent));
+      r.affected.push({...structuredClone(original),path:f.independent});
+    }});
+    if(report.selection_strategy==='selective')assert.ok(units(report).includes(f.independent),'analyzer-reported affected tests cannot be dropped');
+    else assert.notEqual(report.selection_strategy,'selective');
+  }finally{cleanup(f);}
+});
+
+test('malformed analyzer affected entries cannot justify a sparse plan',async()=>{
+  const f=fixture('node');try {
+    await establishBaseline(f);
+    for(const malformed of [null,{}, {path:42}, {path:'../outside.test.ts'}]) {
+      const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{mutate:r=>{r.affected.push(malformed);}});
+      cannotNarrow(report,`malformed affected entry ${JSON.stringify(malformed)}`);
+    }
+  }finally{cleanup(f);}
+});

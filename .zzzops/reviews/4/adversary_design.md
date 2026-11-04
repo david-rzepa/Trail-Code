@@ -1,3 +1,3 @@
-# Adversary review
+# Adversary re-review
 
-No material adversarial findings. The design exercises forged and unsafe receipt paths, observer loss and stale caches, ensures a failed or mismatched target cannot acquire a passing receipt, and requires the validation harness itself to detect deliberately omitted failures. Histories and mutation tests use disposable checkouts and avoid resetting the user's checkout. Benchmark evidence excludes secrets and does not count plans or failed runs as verification.
+No new material adversarial findings. The revised release gate tests version separation, spoofed or omitted conditional requirements, mismatched evidence and forged receipt chains while explicitly recording the owner's stable-input assumption rather than claiming continuous checkout protection. It retains containment checks for analysis and uses disposable histories for injected failures.

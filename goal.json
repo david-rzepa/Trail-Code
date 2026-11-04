@@ -136,31 +136,26 @@
       "status": "done"
     },
     "filter_design": {
-      "attempt": 8,
-      "correction_runs": 7,
+      "attempt": 9,
+      "correction_runs": 8,
       "findings": [],
-      "finished_at": "2026-11-04T17:14:04Z",
+      "finished_at": "2026-11-04T17:20:24Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "review_design:8:1",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:c83a5e0ec02bc9504ff118f774138ad5517f6b3a5885d1c28444982e78d23a9f",
         "inputs": {
-          "adversary": "v1:sha256:f923e3a204df87ebb72255b6a686e52c823de1b17864ee778d881559c4258e67",
-          "doc": "v1:blob:189cac32eaba18fa6ae71003df76a52e9f20abd2",
-          "review": "v1:sha256:c7c0593ca2074033708018c1f3f2e74bd292014086edc86aa4aca47c829b144c",
+          "adversary": "v1:sha256:7425c9431f66dd17d94ed2301ccf44444f42e4fdca4528b7b15528ab1a58acb1",
+          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "review": "v1:sha256:2d3c0eada3a48cbf88f8476251cf570d81ea596155c4612728fcbb335bf2fbe7",
           "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-filter2",
-      "input_fp": "v1:sha256:807691df1797698bc59a4414e089b2028e514564e424fadc59d3ce817bc4f623",
+      "holder": "codex:root/g1-context-filter3",
+      "input_fp": "v1:sha256:706269699266ca4fe52f6fb496b34eaa0b1ff36c899dcd172f03208b7c2fef74",
       "ok": true,
       "output": {
-        "summary": "Adversarial review resolved the registry completeness finding. The design review identified one material issue: execution-only values must be bound by the consumer or supplied through a supported context input. That issue reopens design. No non-material notes require verdicts.",
+        "summary": "Both reviews approve separating analyzer predicates from independently observed execution evidence; the prior issue is resolved. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

@@ -187,31 +187,15 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 6,
-      "correction_runs": 5,
-      "findings": [
-        {
-          "id": "review_design:5:1",
-          "impact": "Implementation can satisfy fail-closed rules by returning incomplete for every run, leaving the requested portable test runner unusable without this being discovered until late.",
-          "lens": "truth",
-          "material": true,
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "resolved",
-          "target": "design",
-          "target_attempt": 7,
-          "target_fp": "v1:sha256:432dc9b8adab34dc5a395a74e48cfa3a84d839a1220f85d67bc858a8207395a1",
-          "text": "The design promises an ordinary-Git, unprivileged committed-target execution path but does not identify a concrete viable mechanism on any supported platform that maintains immutable inputs or reliably observes every modification and loss of coverage for the whole run. A private temporary checkout or read-only file permissions alone are expressly insufficient because the test process or another same-user process can modify and revert input bytes. Define an initial supported-platform mechanism and early real-platform feasibility test demonstrating both a passing full run and invalidation on edit-and-revert/observation loss, or bring the owner a concrete tradeoff if none is feasible.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T17:31:39Z",
+      "attempt": 7,
+      "correction_runs": 6,
+      "findings": [],
+      "finished_at": "2026-11-04T19:17:32Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
+          "doc": "v1:blob:83e827dc59df9658a1eae976e99b6af2821df423",
+          "spec": "v1:sha256:e192d2c48b0a9a62b09f4e89fbf7d7c9447d07b111dc183b478fef01f03417df"
         },
         "lenses": [
           "intent",
@@ -239,25 +223,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:cde01a15675dd1f01aec230a51f83e791043725b35bf7d85f09cdedcbb1db6b7"
+        "subject": "v1:sha256:e36637f5a0efb08b8884d2d82bf6c26446eac8f32ed868e55dc1cd8f87a10969"
       },
-      "holder": "codex:root/g2-normal-review",
-      "input_fp": "v1:sha256:d77365bb0453d0bea0430a2d039ab0db70bc60cf4ef2cf0695f48ef92e167b1c",
+      "holder": "codex:root/g2-multilingual-review",
+      "input_fp": "v1:sha256:2f93b98f107b33469d6bbdf99b4d7827aa8982939c4962c58877be8e8d5c1f14",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "060b92a7ed1b1d478255f21f85c4231e95bebc26",
-          "commit": "4fa2214426a26e7dee1d189f5351fee766fb311e",
+          "blob": "e538730311c61f0ce346cf6b952a675bd20e7977",
+          "commit": "da649da8ad1f79e4fc17373e7bfbbf6c63a0c0e5",
           "path": ".zzzops/reviews/2/review_design.md"
         },
-        "summary": "Owner-selected stable-input execution is recorded and reported honestly."
+        "summary": "Multilingual planning and real Go/Node execution align with the approved normal-runner scope."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
-          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56"
+          "blob": "83e827dc59df9658a1eae976e99b6af2821df423",
+          "commit": "bb092c2a6e633f4e822166af16cdd729e68c3c89"
         }
       },
       "status": "done"

@@ -12,36 +12,36 @@
   "priority": "P2",
   "records": {
     "adversary_design": {
-      "attempt": 2,
-      "correction_runs": 1,
+      "attempt": 3,
+      "correction_runs": 2,
       "findings": [],
-      "finished_at": "2026-11-04T17:40:57Z",
+      "finished_at": "2026-11-04T17:44:08Z",
       "fp_parts": {
         "def": "v1:sha256:dc145bce044fd2a77d598b0ad3c7716d0f6be4e7acaf468319ff291c84903a4d",
         "inputs": {
-          "doc": "v1:blob:9ab7f65348cd9d32bef2afaa04a78294a88476fc",
+          "doc": "v1:blob:0442cc456e673992864369a02b67d48806decd5e",
           "spec": "v1:sha256:1a7ebe850546d58c80034654c5151c0b38539b64b925a5ccab2df746c437e38e"
         },
         "policy": {},
-        "subject": "v1:sha256:d068d0c8e2f6da7eb34bc50f4f7f521f6d2191d8897dd60d326a2fbfbee5bcf3"
+        "subject": "v1:sha256:de41c740fa4ae43db5fad37b3b1e3519ba67d2c251d8562d9f0f60238d465033"
       },
-      "holder": "codex:root/g4-normal-adversary",
-      "input_fp": "v1:sha256:108573ed00dcd75f96773122976876b089e3bada37a06375810d1b14a4c85613",
+      "holder": "codex:root/g4-normal-adversary2",
+      "input_fp": "v1:sha256:c3a1a2b430d609209a62d181997beefe7694eff36f515d66c1d0a812bd494467",
       "ok": true,
       "output": {
         "decision": "approved",
         "report": {
-          "blob": "3d75d07e5da10b49baa239ea0bab6917b5f644ce",
-          "commit": "8e24c8c08d227666d48908c6c7add9b29d748212",
+          "blob": "9cf72be671aad4ae2632004ddc4d579143f42f2f",
+          "commit": "fa4dcfc44c7eb52589bcb925760707cd201a9a7d",
           "path": ".zzzops/reviews/4/adversary_design.md"
         },
-        "summary": "No material adversarial findings in the revised conditional and stable-input release gates."
+        "summary": "No material adversarial findings in the sparse-only versus full-run context distinction."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "9ab7f65348cd9d32bef2afaa04a78294a88476fc",
-          "commit": "14f1dabef2b41fdbeead7e9a45a1fa11c30ee67b"
+          "blob": "0442cc456e673992864369a02b67d48806decd5e",
+          "commit": "adc5d4c2d046eb360e65f781375d66eeed623fb3"
         }
       },
       "status": "done"

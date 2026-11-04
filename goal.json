@@ -280,8 +280,8 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 10,
-      "correction_runs": 9,
+      "attempt": 11,
+      "correction_runs": 10,
       "findings": [
         {
           "id": "review_design:10:1",
@@ -291,20 +291,35 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "design",
           "target_attempt": 13,
           "target_fp": "v1:sha256:3d8247d33a71cbcf0ef5ff863ac4c6dfa18fe1799876aef9e95ac587285a8968",
           "text": "The multilingual design says the execution layer must validate and protect target execution identity, and its v2 requirements and acceptance still require mutation protection. The later owner decision explicitly chose ordinary runner semantics and a stable-input assumption rather than proving uninterrupted identity or detecting mid-run edits. Replace those execution-layer references with ordinary target preflight and honest stable-input reporting while preserving G1 pinned-tree analysis and its clean-checkout independence.",
           "upheld": false
+        },
+        {
+          "id": "review_design:11:1",
+          "impact": "The project could pass its release gates while reproducing the Node-only admission the owner rejected.",
+          "lens": "intent",
+          "material": true,
+          "note": null,
+          "response": null,
+          "rounds": 1,
+          "status": "open",
+          "target": "design",
+          "target_attempt": 14,
+          "target_fp": "v1:sha256:88730bfd2ad34fcf75272550f2a2ee45ad0bbd85e703339edbd46c8ec2073772",
+          "text": "The acceptance requirement for two-target sparse plans applies only to each demonstrably supported slice, but does not require any non-Node slice to be supported. Python and Go fixtures could always fall back to the full profile while only Node demonstrates selection, leaving the owner-requested multilingual impact capability unproven. Name a minimum supported set and require a real sparse case in at least one non-Node ecosystem, retaining conservative bounded/full fallback tests for unsupported constructs.",
+          "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T19:06:06Z",
+      "finished_at": "2026-11-04T19:11:07Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:7f147521938cbeea607e7eec549cbbd37be958c5",
-          "spec": "v1:sha256:6af2d20b99d9cf33b8afdc2e64a7bf37c2bf5ce2ae6459d4c3ed04ef24da8122"
+          "doc": "v1:blob:5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
+          "spec": "v1:sha256:a325a50fefccbdcf4afbe6f9596c2568dbe228071d37a46ed7ee580e3d25e79c"
         },
         "lenses": [
           "intent",
@@ -332,25 +347,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:f920cf0fa68b3ba519c2f66c0d84bbb1fe6c2e5add9ce65307b3dafebceda9d6"
+        "subject": "v1:sha256:84c41ac7a157ac6fadfb2a8cc98513f554fd70621ebe4af16adcf57f07e20827"
       },
-      "holder": "codex:root/g1-multilingual-review",
-      "input_fp": "v1:sha256:526cc7edaf35f5d60502ac26fc5dda706b35492aea820e21a6667f154f6084e9",
+      "holder": "codex:root/g1-multilingual-review2",
+      "input_fp": "v1:sha256:63433d83f35c562543fcdd16307545dbc80d4ecef120d0c240d28a38e5a12ee3",
       "ok": true,
       "output": {
         "decision": "changes_requested",
         "report": {
-          "blob": "cc5e41be7a6713bb1d217c667b927e09fa947ea3",
-          "commit": "825fae914fe9f879845a3a546592fd26e685fc82",
+          "blob": "d2ff9003c251552c675cd12d2f6287db1172d805",
+          "commit": "40156a4b33c4e073f3a80bfa6bd58db27c5197f0",
           "path": ".zzzops/reviews/1/review_design.md"
         },
-        "summary": "Align execution references in multilingual design with the owner-approved stable-input assumption."
+        "summary": "Record a concrete multilingual sparse-selection acceptance floor."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "7f147521938cbeea607e7eec549cbbd37be958c5",
-          "commit": "bc06a3a9ae31498ebeb2ac75118446c3ab08f550"
+          "blob": "5f7d7b7ad2b37dd9aa4b1d393500d6ffc3cbfee0",
+          "commit": "c22993632ce908c0400ea9cf23b5ed27cd9cc5a4"
         }
       },
       "status": "done"

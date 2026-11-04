@@ -11,8 +11,8 @@
  * implementation without these test-only overrides.
  */
 import assert from 'node:assert/strict';
-import {spawnSync} from 'node:child_process';
-import {copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync} from 'node:fs';
+import {spawn, spawnSync} from 'node:child_process';
+import {copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -24,7 +24,8 @@ const engineFile = pathToFileURL(resolve('src/test-impact/verification.ts')).hre
 type Result = Record<string, any>;
 type Model = 'node' | 'go';
 function command(cwd: string, executable: string, args: string[]) {
-  const result = spawnSync(executable, args, {cwd, encoding:'utf8', timeout:120_000});
+  const env={...process.env};delete env.NODE_TEST_CONTEXT;
+  const result = spawnSync(executable, args, {cwd, encoding:'utf8', timeout:120_000,env});
   assert.equal(result.error, undefined, `${executable}: ${result.error}`);
   return result;
 }
@@ -104,6 +105,7 @@ interface VerifyOptions {
   onChildOutput?:(stream:string,text:string)=>void;
   signal?:AbortSignal;
   beforeReceiptPublish?:()=>Promise<void>;
+  beforeReceiptRead?:()=>void;
   failReceiptPublish?:()=>void;
 }
 async function verify(f:Fixture,args:string[], options:VerifyOptions={}):Promise<Result> {
@@ -125,6 +127,7 @@ async function verify(f:Fixture,args:string[], options:VerifyOptions={}):Promise
     observeCommand:(argv:string[])=>{options.seen?.push([...argv]);options.onCommand?.(argv);},
     signal:options.signal,
     beforeReceiptPublish:options.beforeReceiptPublish,
+    beforeReceiptRead:options.beforeReceiptRead,
     onChildOutput:options.onChildOutput,
     failReceiptPublish:options.failReceiptPublish,
   });
@@ -386,7 +389,7 @@ test('concurrent full-run receipt publication cannot expose incomplete records',
       verify(f,['--from',f.a,'--to',f.a,'--all','--json'],{beforeReceiptPublish}),
       verify(f,['--from',f.a,'--to',f.a,'--all','--json'],{beforeReceiptPublish}),
     ]);
-    assert.equal(reached,2,'both runs must overlap before receipt publication');
+    assert.equal(reached,2,'both runs must reach publication');
     assert.ok(pair.some(r=>r.verification_status==='validated' && r.receipt_id),'at least one full receipt must publish');
     for(const result of pair) if(result.verification_status==='validated') assert.ok(result.receipt_id);
     checkout(f,f.b);const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json']);
@@ -486,5 +489,90 @@ test('full fallback preserves preparation, runner and gate order with child logs
     assert.ok(emitted.some(x=>x.stream==='stderr' && x.text.includes('G2_PREPARATION')));
     assert.ok(emitted.some(x=>x.stream==='stderr' && x.text.includes('G2_GLOBAL_GATE')));
     assert.match(JSON.stringify(result),/stable.{0,80}input|input.{0,80}stable/i);
+  }finally{cleanup(f);}
+});
+
+test('receipt reuse rejects a different profile and corrupted predecessor, even with a valid selective child',async()=>{
+  const f=fixture('node');try {
+    checkoutBaseline(f);const before=new Set(regularFiles(f.state));
+    const a=await verify(f,['--from',f.a,'--to',f.a,'--all','--json']);assert.ok(a.receipt_id);
+    const afterA=new Set(regularFiles(f.state));const aFiles=[...afterA].filter(p=>!before.has(p));assert.ok(aFiles.length);
+    checkout(f,f.b);
+    const otherProfile=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{profile:{name:'different-profile'}});
+    cannotNarrow(otherProfile,'receipt from another profile');
+    const b=await verify(f,['--from',f.a,'--to',f.b,'--json']);assert.equal(b.selection_strategy,'selective');assert.ok(b.receipt_id);
+    const bFiles=regularFiles(f.state).filter(p=>!afterA.has(p));assert.ok(bFiles.length);
+    for(const path of aFiles) writeFileSync(path,'{corrupt predecessor');
+    assert.ok(bFiles.some(existsSync),'the child receipt remains present');
+    put(f.dir,'src/a.ts','export function value() { return 1 + 0 + 0; }\n');const c=commit(f.dir,'next revision');
+    const report=await verify(f,['--from',f.b,'--to',c,'--plan','--json']);cannotNarrow(report,'corrupt receipt predecessor');
+  }finally{cleanup(f);}
+});
+
+test('replacement of a verified store component before use cannot redirect reads or writes',async(t)=>{
+  const f=fixture('node');const outside=mkdtempSync(join(tmpdir(),'g2-replaced-store-'));const parked=`${f.state}-parked`;
+  try {
+    await establishBaseline(f);const sentinel=join(outside,'sentinel');writeFileSync(sentinel,'untouched');let injected=false;
+    const report=await verify(f,['--from',f.a,'--to',f.b,'--plan','--json'],{beforeReceiptRead:()=>{
+      if(injected)return;injected=true;renameSync(f.state,parked);
+      try{symlinkSync(outside,f.state,process.platform==='win32'?'junction':'dir');}
+      catch(error:any){renameSync(parked,f.state);if(process.platform==='win32' && ['EPERM','EACCES','ENOTSUP'].includes(error?.code)){t.skip('directory symlink unavailable');return;}throw error;}
+    }});
+    if(!injected)return;
+    // A descriptor anchored to the original verified directory may remain safe;
+    // rejection is also valid. The replacement directory must never be consulted.
+    assert.ok(!report.receipt_id);assert.equal(readFileSync(sentinel,'utf8'),'untouched');assert.deepEqual(readdirSync(outside),['sentinel']);
+  }finally{cleanup(f);rmSync(parked,{recursive:true,force:true});rmSync(outside,{recursive:true,force:true});}
+});
+
+/** Install a normal fixture profile, then invoke the actual CLI in a separate process.
+ * The fixture copies the repository's full runner unchanged, avoiding recursion into
+ * this contract suite while exercising its real discovery, environment and cleanup. */
+async function productionFixture(f:Fixture) {
+  copyFileSync(resolve('scripts/run-tests.mjs'),join(f.dir,'scripts/run-tests.mjs'));
+  const pkg={name:'workflow-fixture',private:true,type:'module',scripts:{test:'node scripts/run-tests.mjs',build:'node scripts/gate.mjs'}};
+  put(f.dir,'package.json',JSON.stringify(pkg));put(f.dir,'scripts/gate.mjs','console.error("G2_BUILD_GATE");\n');
+  put(f.dir,'test/a.test.ts',"import { test } from 'node:test'; test('workflow',()=>console.error('G2_TEST_LOG'));\n");
+  put(f.dir,'test/b.test.ts',"import { test } from 'node:test'; test('workflow-b',()=>{});\n");
+  // The real script imports tsx by package name, as the project does.
+  symlinkSync(resolve('node_modules'),join(f.dir,'node_modules'),process.platform==='win32'?'junction':'dir');
+  put(f.dir,'.gitignore','node_modules\n');
+  const module=await import(engineFile);
+  assert.equal(typeof module.installProductionFixtureProfileForTest,'function');
+  await module.installProductionFixtureProfileForTest({cwd:f.dir,fullCommand:['npm','test'],gates:[['npm','run','build']]});
+  const head=commit(f.dir,'production runner fixture');
+  const argv=await module.productionCommandForTest({cwd:f.dir});
+  assert.ok(Array.isArray(argv)&&argv.length>0);return {argv,head};
+}
+
+test('production CLI full fallback executes the actual repository runner and gate with isolated JSON',async()=>{
+  const f=fixture('node');try {
+    mkdirSync(join(f.dir,'scripts'),{recursive:true});const {argv,head}=await productionFixture(f);
+    const child=command(f.dir,argv[0],[...argv.slice(1),'--from',head,'--to',head,'--json']);
+    assert.equal(child.status,0,child.stderr);const report=JSON.parse(child.stdout);
+    assert.equal(report.selection_strategy,'full');assert.equal(report.execution_status,'passed');assert.ok(report.receipt_id);
+    assert.match(child.stderr,/G2_TEST_LOG/);assert.match(child.stderr,/G2_BUILD_GATE/);
+    assert.ok(child.stderr.indexOf('G2_TEST_LOG')<child.stderr.indexOf('G2_BUILD_GATE'),'gate follows test runner');
+    assert.match(JSON.stringify(report),/stable.{0,80}input|input.{0,80}stable/i);
+  }finally{cleanup(f);}
+});
+
+test('production CLI propagates runner failure and cancellation without passing evidence',async()=>{
+  const f=fixture('node');try {
+    mkdirSync(join(f.dir,'scripts'),{recursive:true});const {argv}=await productionFixture(f);
+    put(f.dir,'test/a.test.ts',"import {test} from 'node:test'; test('failure',()=>{throw Error('G2_FAILURE')});\n");const failedHead=commit(f.dir,'failing workflow');
+    const failed=command(f.dir,argv[0],[...argv.slice(1),'--from',failedHead,'--to',failedHead,'--all','--json']);
+    assert.notEqual(failed.status,0);const report=JSON.parse(failed.stdout);assert.notEqual(report.verification_status,'validated');assert.ok(!report.receipt_id);assert.match(failed.stderr,/G2_FAILURE/);
+    put(f.dir,'test/a.test.ts',"import {test} from 'node:test'; test('wait',async()=>{console.error('G2_RUNNING'); await new Promise(r=>setTimeout(r,30000));});\n");const waiting=commit(f.dir,'interruptible workflow');
+    const result=await new Promise<{stdout:string;stderr:string;code:number|null;signal:NodeJS.Signals|null}>((resolveChild,reject)=>{
+      const child=spawn(argv[0],[...argv.slice(1),'--from',waiting,'--to',waiting,'--all','--json'],{cwd:f.dir,stdio:['ignore','pipe','pipe']});let stdout='',stderr='',sent=false;
+      const timeout=setTimeout(()=>{child.kill('SIGKILL');reject(new Error('runner did not report start'));},45000);
+      child.stdout.on('data',chunk=>{stdout+=chunk;});child.stderr.on('data',chunk=>{stderr+=chunk;if(!sent&&stderr.includes('G2_RUNNING')){sent=true;child.kill('SIGTERM');}});
+      child.on('error',reject);child.on('close',(code,signal)=>{clearTimeout(timeout);resolveChild({stdout,stderr,code,signal});});
+    });
+    assert.match(result.stderr,/G2_RUNNING/);assert.ok(result.signal || result.code!==0);
+    if(result.stdout.trim()){const interrupted=JSON.parse(result.stdout);assert.notEqual(interrupted.verification_status,'validated');assert.ok(!interrupted.receipt_id);}
+    const subsequent=command(f.dir,argv[0],[...argv.slice(1),'--from',waiting,'--to',waiting,'--plan','--json']);
+    assert.equal(subsequent.status,0,subsequent.stderr);cannotNarrow(JSON.parse(subsequent.stdout),'cancelled production run');
   }finally{cleanup(f);}
 });

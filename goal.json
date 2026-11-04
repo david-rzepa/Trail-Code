@@ -121,10 +121,10 @@
       "status": "done"
     },
     "design": {
-      "attempt": 10,
-      "correction_runs": 7,
+      "attempt": 11,
+      "correction_runs": 8,
       "findings": [],
-      "finished_at": "2026-11-04T17:07:02Z",
+      "finished_at": "2026-11-04T17:11:55Z",
       "fp_parts": {
         "def": "v1:sha256:3d9c6b12fd9064db5f5238ec1754c5c063841a4fe91b1288d78f2113fa7eb216",
         "inputs": {
@@ -133,19 +133,19 @@
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-design",
+      "holder": "codex:root/g1-context-design2",
       "input_fp": "v1:sha256:e5cda397667868fa90358b80afa5603d2a73c79710e213c7f764b935e0d6e1a5",
       "ok": true,
       "output": {
         "doc": {
-          "blob": "b683c036a3e28d46c81e0a54afde8f49e3d2855e",
-          "commit": "9cc2a43cba388e30e9c8d069719a346e1136be1c",
+          "blob": "189cac32eaba18fa6ae71003df76a52e9f20abd2",
+          "commit": "53ba3ec0b8b635009362b87ca9f46ab74587e89c",
           "path": ".zzzops/reviews/1/design.md"
         },
         "responses": {
-          "implement:8:1": "fixed: Specified v2 CLI selection, conditional status, model and requirements schema, supported Node/TypeScript boundaries, evidence and fail-closed G2 validation, v1 compatibility, and sparse/adversarial acceptance fixtures; recorded Dave’s approval."
+          "adversary_design:7:1": "fixed: Added a model-version registry defining singleton requirements, independently discovered triggers, admissible collectors and execution bindings, exact-set comparison and fail-closed tests for missing, substituted or omitted requirements."
         },
-        "summary": "Add an explicitly requested schema v2 with conditional impact, a versioned supported Node/TypeScript model and machine-readable context requirements. Require G2 to validate every requirement against independent evidence or use full fallback, while preserving conservative v1 behavior."
+        "summary": "Define an independently trusted, versioned model registry with complete mandatory and input-triggered requirement sets and fixed evidence bindings. G2 derives and compares the full set before allowing conditional sparse selection."
       },
       "reason": "reopened",
       "status": "done"

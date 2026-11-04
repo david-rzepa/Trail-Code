@@ -579,10 +579,10 @@
       "status": "done"
     },
     "test_design": {
-      "attempt": 9,
-      "correction_runs": 7,
+      "attempt": 10,
+      "correction_runs": 8,
       "findings": [],
-      "finished_at": "2026-11-04T02:16:39Z",
+      "finished_at": "2026-11-04T02:22:56Z",
       "fp_parts": {
         "def": "v1:sha256:7cea203fccc83b8de6cb2a28d48b939836ddc98a2cb7481b63d3f918a4f07de8",
         "inputs": {
@@ -596,7 +596,7 @@
         "test/impact-coordinator-safety.test.ts",
         "test/impact-installed-package.test.ts"
       ],
-      "holder": "codex:root/g1-regression-tests",
+      "holder": "codex:root/g1-regression-tests2",
       "input_fp": "v1:sha256:e97ad0ab41d76b6916b3678a00a26bdd7746e12a01ac35f59dd8a1e76ba5b902",
       "ok": true,
       "output": {
@@ -608,45 +608,41 @@
         "cost": {
           "changed_tests": [
             {
-              "duration_ms": 3346,
-              "id_or_scope": "populated unchanged tree and commit/tree/blob replacement regressions",
-              "observation": "failing: all four reach the CLI and expose unconditional gaps or replacement-ref contamination"
-            },
-            {
-              "duration_ms": 8477,
+              "duration_ms": 7874,
               "id_or_scope": "test/impact-installed-package.test.ts",
-              "observation": "failing: actual package packed and installed successfully, then reports unavailable grammar identity; subsequent cache-reuse assertion is not yet reached"
+              "observation": "Windows npm CLI path selection passes on this host using win32 path fixtures; offline package extraction/build succeeds but grammar identity assertion fails, so cache-read assertion remains unreached."
             }
           ],
-          "checkpoint": "1215cf0b6ac06e066a517e6f13da788542a4311e",
+          "checkpoint": "6dd00660014097efd89c66afb9d27e3257fe20d9",
           "commands": [
             {
               "cmd": "node --import tsx --test test/conservative-impact-contract.test.ts",
-              "duration_ms": 24298,
+              "duration_ms": 24254,
               "exit": 1
             },
             {
               "cmd": "node --import tsx --test test/impact-coordinator-safety.test.ts",
-              "duration_ms": 103,
+              "duration_ms": 101,
               "exit": 0
             },
             {
               "cmd": "node --import tsx --test test/impact-installed-package.test.ts",
-              "duration_ms": 8501,
+              "duration_ms": 7902,
               "exit": 1
             }
           ],
-          "summary": "Measured all three target commands at the submitted checkpoint. The package test uses npm registry installation and has a bounded 240 s subprocess timeout.",
-          "total_ms": 32902
+          "summary": "Separate target-command measurements at the submitted checkpoint. npm is run through Node with offline mode; package dependencies are linked to the lockfile-installed project dependencies. Windows behavior was path-simulated, not executed on Windows.",
+          "total_ms": 32257
         },
         "responses": {
-          "review_impl:1:4": "fixed: Added independent commit, tree and blob Git replacement tests against the original report with cache cleared, a populated unchanged-tree no-fallback regression, and a real npm pack/install test checking grammar identity and persisted cache reads on the warm run."
+          "review_tests:6:1": "fixed: Invoke the npm JS entry point through process.execPath using npm_execpath or Node-relative discovery, avoiding .cmd execution. Added Windows-style discovery path checks; not run on a Windows host.",
+          "review_tests:6:2": "fixed: Removed network npm installation; pack in npm offline mode, unpack the unmodified npm tarball into a temporary consumer, and link only the existing lockfile-installed node_modules dependencies. The isolated committed-source build avoids interfering with concurrently running tests."
         },
         "tests": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "b4e2cedaa44d22661d94433f65324b38cdd8603e",
-          "commit": "1215cf0b6ac06e066a517e6f13da788542a4311e",
-          "tree": "6d1056ef5f03e545296ee441b5c4eadd9dc58453"
+          "change": "2ab9b6ddb22f6b7e50fcc959438edcbf81499068",
+          "commit": "6dd00660014097efd89c66afb9d27e3257fe20d9",
+          "tree": "e5a9590ab586c2ecdc6c50acacf4fcd9c6ee531c"
         }
       },
       "reason": "reopened",

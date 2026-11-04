@@ -449,3 +449,41 @@ for (const kind of ["absolute", "chain", "component"] as const) {
     } finally { rmSync(outside, { recursive: true, force: true }); }
   }));
 }
+
+test("unchanged populated committed trees are complete without fabricated fallback", () => fixture(dir => {
+  file(dir, "src/value.ts", "export const value = 42;\n");
+  const a = commit(dir, "populated baseline");
+  const out = report(dir, a, a);
+  assert.deepEqual(out.changes, []);
+  assert.deepEqual(out.affected, []);
+  assert.deepEqual(out.analysis_gaps, []);
+  assert.deepEqual(out.required_fallback_scopes, []);
+  assert.equal(out.analysis_status, "complete");
+}));
+
+for (const kind of ["commit", "tree", "blob"] as const) {
+  test(`Git ${kind} replacement refs cannot rewrite pinned commit analysis`, () => fixture(dir => {
+    file(dir, "src/value.ts", "export function original() { return 1; }\n");
+    const a = commit(dir, "A");
+    const aTree = git(dir, "rev-parse", `${a}^{tree}`);
+    const aBlob = git(dir, "rev-parse", `${a}:src/value.ts`);
+    file(dir, "src/value.ts", "export function original() { return 2; }\n");
+    const b = commit(dir, "B");
+    const expected = report(dir, a, b);
+    git(dir, "checkout", "--detach", a);
+    file(dir, "src/value.ts", "export function replaced() { return 999; }\n");
+    file(dir, "evil-only.ts", "export const injected = 1;\n");
+    const evil = commit(dir, "replacement content");
+    const evilTree = git(dir, "rev-parse", `${evil}^{tree}`);
+    const evilBlob = git(dir, "rev-parse", `${evil}:src/value.ts`);
+    const old = kind === "commit" ? a : kind === "tree" ? aTree : aBlob;
+    const replacement = kind === "commit" ? evil : kind === "tree" ? evilTree : evilBlob;
+    git(dir, "replace", old, replacement);
+    // Prevent a warm extraction cache from hiding replacement-object reads.
+    rmSync(join(dir, ".cache", "trail-impact"), { recursive: true, force: true });
+    const actual = report(dir, a, b);
+    assert.equal(actual.comparison.from.commit, a);
+    assert.equal(actual.comparison.from.tree, aTree);
+    assert.deepEqual(actual, expected, `Git ${kind} replacement affected immutable endpoint analysis`);
+  }));
+}

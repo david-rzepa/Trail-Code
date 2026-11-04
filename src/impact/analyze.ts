@@ -1,10 +1,15 @@
 /** Conservative exact-endpoint impact. Unmodeled constructs always require full fallback. */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { constants, closeSync, lstatSync, mkdtempSync, mkdirSync, openSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { constants, closeSync, lstatSync, mkdtempSync, mkdirSync, openSync, readFileSync, realpathSync, renameSync, rmSync, utimesSync, readdirSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, isAbsolute, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+import { readDepthWasm } from "../graph/depth-parser.js";
+import { GENERIC_LANGS } from "../graph/generic.js";
+import { CONTAINER_LANGS } from "../graph/container.js";
+import type { Language } from "../graph/extract.js";
 import { buildGraph, tierOf } from "../graph/build.js";
 import { readGraph } from "../graph/write.js";
 import { extractorStamp, readExtractCache, writeExtractCache } from "../graph/extract-cache.js";
@@ -14,7 +19,7 @@ import { preserveCandidates, type CandidateFact } from "./facts.js";
 
 const OID = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 function git(dir: string, args: string[]): Buffer {
-  const p = spawnSync("git", ["-C", dir, ...args], { encoding: null, maxBuffer: 256 * 1024 * 1024 });
+  const p = spawnSync("git", ["--no-replace-objects", "-C", dir, ...args], { encoding: null, maxBuffer: 256 * 1024 * 1024 });
   if (p.error || p.status !== 0) throw new Error(`git ${args[0]} failed: ${p.error?.message ?? p.stderr?.toString().trim() ?? "unknown error"}`);
   return p.stdout;
 }
@@ -29,8 +34,30 @@ function endpoint(dir: string, requested: string): Endpoint {
 interface Change { kind: "added" | "removed" | "modified"; old_path: string | null; new_path: string | null; old_entities: string[]; new_entities: string[] }
 interface Affected { revision: "from" | "to"; path: string; entity: string | null; reasons: {kind: "changed" | "dependency"; detail: string}[] }
 interface Gap { revision: "from" | "to"; path: string | null; kind: string; detail: string; scope: null; source?: string; relation?: string; name?: string; candidates?: string[]; candidate_basis?: string }
+/** Hash the grammar and runtime bytes actually shipped/loaded, not an npm lock
+ * file (the latter is absent in installed packages). Missing assets are included
+ * as explicit markers, so later installation cannot reuse their old cache. */
+function grammarIdentity(): string {
+  const hash = createHash("sha256");
+  const req = createRequire(import.meta.url);
+  const add = (name: string, load: () => Uint8Array) => {
+    hash.update(JSON.stringify(name));
+    try { const bytes = load(); hash.update(JSON.stringify(bytes.length)); hash.update(bytes); }
+    catch { hash.update("<missing>"); }
+  };
+  const depth: Language[] = ["typescript","tsx","python","go","java","kotlin","swift","php","r"];
+  for (const lang of depth) add(`depth:${lang}`, () => readDepthWasm(lang));
+  const generic = new Set([...GENERIC_LANGS.map(l => l.wasm),...CONTAINER_LANGS.map(l => l.wasm),...depth]);
+  for (const lang of [...generic].sort()) add(`breadth:${lang}`, () => readFileSync(req.resolve(`tree-sitter-wasm/${lang}/tree-sitter-${lang}.wasm`)));
+  for (const lang of ["javascript","typescript","tsx","python","go","r"]) add(`tags:${lang}`, () => readFileSync(req.resolve(`tree-sitter-wasm/${lang}/tags.scm`)));
+  const queryDir = fileURLToPath(new URL("../graph/queries/",import.meta.url));
+  try { for (const name of readdirSync(queryDir).filter(n => n.endsWith(".scm")).sort()) add(`query:${name}`, () => readFileSync(join(queryDir,name))); }
+  catch { hash.update("<missing-query-dir>"); }
+  for (const module of ["web-tree-sitter", "web-tree-sitter/web-tree-sitter.wasm", "web-tree-sitter-depth", "web-tree-sitter-depth/tree-sitter.wasm"]) add(`runtime:${module}`, () => readFileSync(req.resolve(module)));
+  return hash.digest("hex");
+}
 /** Raw per-file facts only. Navigation and resolved graph caches are never read. */
-function extractionCache(repo: string, version: string): string | null {
+function extractionCache(repo: string, version: string, grammar: string): string | null {
   try {
     const stamp = extractorStamp(); if (!stamp) return null;
     const home = realpathSync(homedir());
@@ -40,9 +67,8 @@ function extractionCache(repo: string, version: string): string | null {
     const base = join(parent, "trail-impact"); mkdirSync(base, {mode:0o700,recursive:true});
     const st = lstatSync(base);
     if (!st.isDirectory() || st.isSymbolicLink() || (process.getuid && st.uid !== process.getuid()) || (st.mode & 0o077) !== 0) return null;
-    const lock = readFileSync(fileURLToPath(new URL("../../package-lock.json", import.meta.url)));
     const key = createHash("sha256").update(realpathSync(repo)).update("\0").update(stamp).update("\0").update(version)
-      .update("\0").update(process.platform).update("\0").update(process.arch).update("\0").update(process.versions.node).update(lock).digest("hex");
+      .update("\0").update(process.platform).update("\0").update(process.arch).update("\0").update(process.versions.node).update("\0").update(grammar).digest("hex");
     const out = join(base, key); mkdirSync(out, {mode:0o700,recursive:true});
     const outStat = lstatSync(out);
     if (!outStat.isDirectory() || outStat.isSymbolicLink() || (process.getuid && outStat.uid !== process.getuid()) || (outStat.mode & 0o077) !== 0) return null;
@@ -94,10 +120,13 @@ function materializeEntries(root: string, entries: Array<CommittedEntry & {bytes
     const flags = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | (constants.O_NOFOLLOW ?? 0);
     const fd = openSync(target, flags, mode === "100755" ? 0o700 : 0o600);
     try { writeFileSync(fd,bytes); } finally { closeSync(fd); }
+    // Git trees contain mode and bytes, not mtimes. Normalize staging mtimes so
+    // warm extraction caches are byte-stable across equivalent materializations.
+    utimesSync(target,0,0);
     paths.push(path);
   }
 }
-async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" | "to", gaps: Gap[], version: string): Promise<GraphV1 | null> {
+async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" | "to", gaps: Gap[], version: string, grammar: string): Promise<GraphV1 | null> {
   const temp = mkdtempSync(join(tmpdir(), "trail-impact-"));
   try {
     const root = join(temp, "tree"), out = join(temp, "graph");
@@ -117,7 +146,7 @@ async function graphFor(repo: string, endpointValue: Endpoint, revision: "from" 
     });
     if (snapshot.status !== "captured" || snapshot.commit !== endpointValue.commit || snapshot.tree !== endpointValue.tree) throw new Error("committed snapshot materialization failed");
     try {
-      const rawCache = extractionCache(repo, version);
+      const rawCache = extractionCache(repo, version, grammar);
       if (rawCache) writeExtractCache(out, readExtractCache(rawCache));
       let candidateFacts: CandidateFact[] = [];
       let undecodable: string[] = [];
@@ -192,25 +221,25 @@ export async function analyzeImpact(repo: string, fromRef: string, toRef: string
   const to = endpoint(repo, toRef);
   for (const tree of [from.tree, to.tree]) treeEntries(repo,tree);
   const changes = compare(repo, from, to);
+  const grammar = grammarIdentity();
   const gaps: Gap[] = [];
   let affected: Affected[] = [];
   if (changes.length) {
-    const oldGraph = await graphFor(repo, from, "from", gaps, version);
-    const newGraph = await graphFor(repo, to, "to", gaps, version);
+    const oldGraph = await graphFor(repo, from, "from", gaps, version, grammar);
+    const newGraph = await graphFor(repo, to, "to", gaps, version, grammar);
     affected = [...closure(oldGraph, "from", changes), ...closure(newGraph, "to", changes)];
     // Existing navigation extraction and resolution deliberately omit unresolved
     // calls and do not model all dependency kinds. They can inform impact but
     // cannot justify exclusions until completeness is demonstrated.
     for (const revision of ["from", "to"] as const) gaps.push({revision, path:null, kind:"unmodeled_dependencies", detail:"Dynamic calls, resources, registrations and unresolved dependency candidates are not comprehensively modeled", scope:null});
-  } else if (git(repo, ["ls-tree", "-r", "--name-only", from.tree]).length > 0) {
-    // Identical trees need no change closure, but unmodeled constructs still
-    // prevent us from asserting completeness of dependency analysis.
-    gaps.push({revision:"from",path:null,kind:"unmodeled_dependencies",detail:"Dependency analysis is not complete for all supported constructs",scope:null});
+  } else if (treeEntries(repo,from.tree).length > 0) {
+    // A pinned tree compared with itself has no source changes. Analyze it
+    // nonetheless: inaccessible or unsupported inputs must remain visible, and
+    // compatible per-file facts can be reused on the next comparison.
+    await graphFor(repo, from, "from", gaps, version, grammar);
   }
   affected.sort((a,b) => a.revision.localeCompare(b.revision) || a.path.localeCompare(b.path) || (a.entity ?? "").localeCompare(b.entity ?? ""));
   gaps.sort((a,b) => a.revision.localeCompare(b.revision) || (a.path ?? "").localeCompare(b.path ?? "") || a.kind.localeCompare(b.kind) || a.detail.localeCompare(b.detail));
   const stamp = extractorStamp() ?? "unavailable";
-  let grammar = "unavailable";
-  try { grammar = createHash("sha256").update(readFileSync(fileURLToPath(new URL("../../package-lock.json", import.meta.url)))).digest("hex"); } catch { /* cache reuse is disabled if the lock is absent */ }
   return { schema_version:1, analysis_identity:{ analyzer_version:version, grammar_identity:grammar, extractor_identity:stamp, resolver_identity:stamp, policy_identity:"conservative-v1", mode:"conservative" }, comparison:{from,to}, changes, affected, analysis_gaps:gaps, required_fallback_scopes:gaps.length ? [{kind:"full_profile",scope:null,reason:"Dependency analysis has unbounded gaps"}] : [], analysis_status:gaps.length ? "incomplete" : "complete" };
 }

@@ -139,8 +139,8 @@
       "status": "done"
     },
     "review_design": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [
         {
           "id": "review_design:5:1",
@@ -150,7 +150,7 @@
           "note": null,
           "response": null,
           "rounds": 1,
-          "status": "open",
+          "status": "resolved",
           "target": "design",
           "target_attempt": 7,
           "target_fp": "v1:sha256:432dc9b8adab34dc5a395a74e48cfa3a84d839a1220f85d67bc858a8207395a1",
@@ -158,11 +158,11 @@
           "upheld": false
         }
       ],
-      "finished_at": "2026-11-04T01:03:19Z",
+      "finished_at": "2026-11-04T17:31:39Z",
       "fp_parts": {
         "def": "v1:sha256:22282a4dbcb4b22e465a59c98b742f7529b2e83adf029b4f360d3550d4346ac7",
         "inputs": {
-          "doc": "v1:blob:9406acaa0a2efcacd6bd0583042ca4228edc9a46",
+          "doc": "v1:blob:b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
           "spec": "v1:sha256:6468dd53615bc925826b71181fe255129812dbd38259e8e812c2ca1f53c4632c"
         },
         "lenses": [
@@ -191,25 +191,25 @@
             "serves": "Developers, CI, and agents performing repeated unit and integration test runs during development."
           }
         },
-        "subject": "v1:sha256:432dc9b8adab34dc5a395a74e48cfa3a84d839a1220f85d67bc858a8207395a1"
+        "subject": "v1:sha256:cde01a15675dd1f01aec230a51f83e791043725b35bf7d85f09cdedcbb1db6b7"
       },
-      "holder": "codex:root/g2-commit-review",
-      "input_fp": "v1:sha256:32e7c1e12e37c46c26e65f531bfa77cece8cd0bcb2a54abe92007c2d81b93d29",
+      "holder": "codex:root/g2-normal-review",
+      "input_fp": "v1:sha256:d77365bb0453d0bea0430a2d039ab0db70bc60cf4ef2cf0695f48ef92e167b1c",
       "ok": true,
       "output": {
-        "decision": "changes_requested",
+        "decision": "approved",
         "report": {
-          "blob": "5f8e0cbeda23cdedbde2e365ee8f52f838551fa1",
-          "commit": "f5098869f452ba1097bb65d4c3f9413f82342a3c",
+          "blob": "060b92a7ed1b1d478255f21f85c4231e95bebc26",
+          "commit": "4fa2214426a26e7dee1d189f5351fee766fb311e",
           "path": ".zzzops/reviews/2/review_design.md"
         },
-        "summary": "Specify a feasible portable execution-identity mechanism rather than only its required properties."
+        "summary": "Owner-selected stable-input execution is recorded and reported honestly."
       },
       "reason": "stale",
       "reviewed": {
         "doc": {
-          "blob": "9406acaa0a2efcacd6bd0583042ca4228edc9a46",
-          "commit": "c4e4ba233324745759235aa04fe78d6cdc1d5c47"
+          "blob": "b4b9afa00f80c23347ec8ce4d77d63b647b223c5",
+          "commit": "d9af437ec8c51a19c17dc969989eb63721162a56"
         }
       },
       "status": "done"

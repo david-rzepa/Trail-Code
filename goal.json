@@ -162,42 +162,25 @@
       "status": "done"
     },
     "filter_impl": {
-      "attempt": 5,
-      "correction_runs": 4,
+      "attempt": 6,
+      "correction_runs": 5,
       "findings": [],
-      "finished_at": "2026-11-04T20:23:03Z",
+      "finished_at": "2026-11-04T21:08:40Z",
       "fp_parts": {
-        "candidates": [
-          [
-            "review_impl:5:1",
-            true
-          ],
-          [
-            "review_impl:5:2",
-            true
-          ],
-          [
-            "review_impl:5:3",
-            true
-          ],
-          [
-            "review_impl:5:4",
-            true
-          ]
-        ],
+        "candidates": [],
         "def": "v1:sha256:5fab78ee7a74554d9897b964ee764247bd55068d6c3b2a64932fad9704979c4b",
         "inputs": {
-          "code": "v1:sha256:3fc9fd59454a5c87e9b3c36b797d6b2fbbe2e379b2f2e6cd1b51c561e67860c6",
+          "code": "v1:sha256:a24f360224c7dd66bbda1a6192bc1f05da8911defb5d827ab419a3199c25483d",
           "doc": "v1:blob:324fdb329d40cf43af80eaa16978b161349ccd41",
-          "review": "v1:sha256:aa15071c63846f46950c805bc34267a8a29806335814898654d4a1dedf6969da"
+          "review": "v1:sha256:97235a34d5b22b54d325ce86901359df513ac5b6c430f06a51fd8ec20ab07187"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-multilingual-filter-impl",
-      "input_fp": "v1:sha256:32fa8c6d4e62728a5fc831d7ba844dc7ac56221f670483d7af39e7d180ccca51",
+      "holder": "codex:root/g1-multilingual-filter-impl2",
+      "input_fp": "v1:sha256:f57110f68b078f2f855faf59d808be6891082c4e97fd0e398da631ad1d445744",
       "ok": true,
       "output": {
-        "summary": "Implementation review found four material issues involving implicit Go fuzz corpus dependencies, the approved shared multilingual graph pipeline, ordinary Go standard-library imports, and regression coverage. They reopen implementation and test design. No non-material notes require verdicts.",
+        "summary": "Implementation re-review resolved the prior Go fuzz corpus, shared graph, standard-library and regression-test findings; four focused contract tests passed. No open findings or notes require verdicts.",
         "verdicts": {}
       },
       "reason": "stale",

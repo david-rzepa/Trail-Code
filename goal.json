@@ -200,45 +200,32 @@
       "status": "done"
     },
     "implement": {
-      "attempt": 8,
-      "correction_runs": 7,
-      "findings": [
-        {
-          "id": "implement:8:1",
-          "note": null,
-          "response": null,
-          "rounds": 1,
-          "status": "open",
-          "target": "design",
-          "target_attempt": 9,
-          "target_fp": "v1:sha256:254a48386c7f98312167d6ec872b18c4618cd31a0d956dff6478977cee087f47",
-          "text": "The owner approved schema v2 with explicit conditional status, versioned supported-model identity and mandatory machine-readable execution-context requirements, while retaining conservative v1 fallback. Update this design and dependent G2 design before implementation: specify exact v2 CLI/schema selection and status, tracked-source Node/TypeScript dependency model and its boundaries, mandatory runtime/runner/loader/environment requirements and their evidence, fail-closed rules for unknown or unmet conditions, validation and backward compatibility; require a concrete sparse two-target fixture plus adversarial dynamic loader, plugin, resource, fixture and import-side-effect cases. Quote the owner decision recorded on implement attempt 7. An unverified conditional report must never be consumed as unconditional completeness.",
-          "upheld": false
-        }
-      ],
-      "finished_at": "2026-11-04T17:05:06Z",
+      "attempt": 9,
+      "correction_runs": 8,
+      "findings": [],
+      "finished_at": "2026-11-04T18:07:42Z",
       "fp_parts": {
         "def": "v1:sha256:9c052bb6681347bacb0b151f833e41346029e55474cbdb9c1b683bfc63c4d2ad",
         "inputs": {
           "base": "v1:sha256:4695c47ce65d5442b73633830a3d87835993c3ca68a27c9c41a43add22b1088c",
-          "doc": "v1:blob:37ef677c92f7cb26af8f1d3d9d2b0781e6dd33ea",
-          "tests": "v1:sha256:ca6b7b7f85963f5eefbbde93978d6d9b5bc0ad26b1479f46a40fa251e6c97950"
+          "doc": "v1:blob:e4122ae859c7d550d3a4407d5341c88ad6921e3d",
+          "tests": "v1:sha256:9321a85293c7eb0a5e4600bffe5ad4bdb5fabace20bcb2ee9668a7c7d341158b"
         },
         "policy": {}
       },
-      "holder": "codex:root/g1-context-implement",
-      "input_fp": "v1:sha256:919a5606c71dd0aa8e9d7ec484f0ab74a710200a7cd55bc0111951d3d6849206",
+      "holder": "codex:root/g1-v2-implement",
+      "input_fp": "v1:sha256:3b2c2a8410ff4144746c6a9e0160621160cdf898c17f1668bc30e267beb8a686",
       "ok": true,
       "output": {
         "code": {
           "base": "6d852c61e1e73a5494de2f1f63b8c29830945bb4",
-          "change": "4047d211e0ee398e7c99d72101c2b94b0f7ffc5e",
-          "commit": "39f66120b9711535d77b3b1d9bc06e6782c94373",
-          "tree": "3e2be27a9be55f0ab8c3b12da8e9e615a9655509"
+          "change": "4d36fb8599ded121f0a5e46f8593549659912900",
+          "commit": "507003d235ecd9a5d22a91abbfcea51534345071",
+          "tree": "eac3717cf0596aea9153febcceb024044f0a5cfd"
         },
-        "summary": "Preserved the ESM runtime identity and Windows ACL cache changes at 39f6612. All three existing contract suites passed on Linux; Windows ACL behavior still requires real Windows verification. The owner-approved conditional schema requires a design and test revision before sparse execution can be implemented safely."
+        "summary": "Implemented opt-in schema v2 conditional analysis for a deliberately narrow static Node/TypeScript ESM model, with explicit machine-readable context requirements and conservative fallback; schema v1 remains conservative. The four required frozen contract suites passed (29, 11, 3, and 6 tests), as did five model tests and npm run build. A real Node test-runner regression fixture demonstrated selection of a dependent failing test while excluding an independent passing test. Identity/security tests passed three with the Windows-only ACL test skipped; Windows behavior needs host validation. Runtime context remains to be independently validated by the downstream consumer."
       },
-      "reason": "retry",
+      "reason": "stale",
       "status": "done"
     },
     "review_design": {

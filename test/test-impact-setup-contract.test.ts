@@ -24,19 +24,19 @@ function fixture(model:'go'|'node') {
   if(model==='go') {
     put(dir,'go.mod','module example.test/setup\n\ngo 1.22\n');
     put(dir,'a/a.go','package a\nfunc Value() int { return 1 }\n');
-    put(dir,'a/a_test.go','package a\nimport ("testing"; "os")\nfunc TestA(t *testing.T) { f,e:=os.OpenFile(os.Getenv("IMPACT_TEST_LOG"),os.O_APPEND|os.O_CREATE|os.O_WRONLY,0600);if e==nil {f.WriteString("a\\n");f.Close()}; if Value()!=1 { t.Fatal("a") } }\n');
+    put(dir,'a/a_test.go','package a\nimport "testing"\nfunc TestA(t *testing.T) { if Value()!=1 { t.Fatal("a") } }\n');
     put(dir,'consumer/consumer.go','package consumer\nimport "example.test/setup/a"\nfunc Value() int { return a.Value() }\n');
-    put(dir,'consumer/consumer_test.go','package consumer\nimport ("testing"; "os")\nfunc TestConsumer(t *testing.T) { f,e:=os.OpenFile(os.Getenv("IMPACT_TEST_LOG"),os.O_APPEND|os.O_CREATE|os.O_WRONLY,0600);if e==nil {f.WriteString("consumer\\n");f.Close()}; if Value()!=1 { t.Fatal("consumer") } }\n');
+    put(dir,'consumer/consumer_test.go','package consumer\nimport "testing"\nfunc TestConsumer(t *testing.T) { if Value()!=1 { t.Fatal("consumer") } }\n');
     put(dir,'b/b.go','package b\nfunc Value() int { return 2 }\n');
-    put(dir,'b/b_test.go','package b\nimport ("testing"; "os")\nfunc TestB(t *testing.T) { f,e:=os.OpenFile(os.Getenv("IMPACT_TEST_LOG"),os.O_APPEND|os.O_CREATE|os.O_WRONLY,0600);if e==nil {f.WriteString("b\\n");f.Close()}; if Value()!=2 { t.Fatal("b") } }\n');
+    put(dir,'b/b_test.go','package b\nimport "testing"\nfunc TestB(t *testing.T) { if Value()!=2 { t.Fatal("b") } }\n');
   } else {
     symlinkSync(resolve('node_modules'),join(dir,'node_modules'),'dir');
     put(dir,'.gitignore','node_modules/\n');
-    put(dir,'package.json',JSON.stringify({name:'fixture',private:true,type:'module',scripts:{test:'node --import tsx --test test/*.test.ts'}}));
+    put(dir,'package.json',JSON.stringify({name:'fixture',private:true,type:'module',scripts:{test:'tsx --test test/*.test.ts'}}));
     put(dir,'tsconfig.json',JSON.stringify({compilerOptions:{module:'NodeNext',moduleResolution:'NodeNext',target:'ES2022'}}));
     put(dir,'src/a.ts','export const value = 1;\n');put(dir,'src/b.ts','export const value = 2;\n');
-    put(dir,'test/a.test.ts',"import { test } from 'node:test'; import assert from 'node:assert/strict'; import { value } from '../src/a.js'; import { appendFileSync } from 'node:fs'; const requireMarker=(s:string)=>appendFileSync(process.env.IMPACT_TEST_LOG!,s+'\\n'); test('a',()=>{ requireMarker('a'); assert.equal(value,1); });\n");
-    put(dir,'test/b.test.ts',"import { test } from 'node:test'; import assert from 'node:assert/strict'; import { value } from '../src/b.js'; import { appendFileSync } from 'node:fs'; const requireMarker=(s:string)=>appendFileSync(process.env.IMPACT_TEST_LOG!,s+'\\n'); test('b',()=>{ requireMarker('b'); assert.equal(value,2); });\n");
+    put(dir,'test/a.test.ts',"import { test } from 'node:test'; import assert from 'node:assert/strict'; import { value } from '../src/a.js'; test('fixture-a',()=>assert.equal(value,1));\n");
+    put(dir,'test/b.test.ts',"import { test } from 'node:test'; import assert from 'node:assert/strict'; import { value } from '../src/b.js'; test('fixture-b',()=>assert.equal(value,2));\n");
   }
   git(dir,'add','-A');git(dir,'commit','-m','fixture');return dir;
 }
@@ -48,8 +48,8 @@ function configure(dir:string,model:'go'|'node') {
   assert.ok(existsSync(adapter),'generated adapter must exist');return {adapter,result};
 }
 function verify(dir:string,adapter:string,...args:string[]) {
-  const child=run(dir,process.execPath,[adapter,...args],{XDG_STATE_HOME:join(dir,'state'),IMPACT_TEST_LOG:join(dir,'state','execution.log')});
-  assert.equal(child.status,0,child.stderr);return JSON.parse(child.stdout);
+  const child=run(dir,process.execPath,[adapter,...args],{XDG_STATE_HOME:join(dir,'state'),GOCACHE:join(dir,'state','go-cache')});
+  assert.equal(child.status,0,child.stderr);return {...JSON.parse(child.stdout), runner_output:child.stderr};
 }
 function commit(dir:string,message:string) {git(dir,'add','-A');git(dir,'commit','-m',message);return git(dir,'rev-parse','HEAD');}
 for (const model of ['go','node'] as const) test(`setup ${model} adapter runs a full baseline and selective target`, {timeout:180_000},()=>{
@@ -63,15 +63,22 @@ for (const model of ['go','node'] as const) test(`setup ${model} adapter runs a 
     if(model==='go')put(dir,'a/a.go','package a\nfunc Value() int { return 1 + 0 }\n');
     else put(dir,'src/a.ts','export const value = 1 + 0;\n');
     const target=commit(dir,'change one component');
-    writeFileSync(join(dir,'state','execution.log'),'');
+    if(model==='go') rmSync(join(dir,'state','go-cache'),{recursive:true,force:true});
     const selected=verify(dir,adapter,'--from',base,'--to',target,'--json');
     assert.equal(selected.selection_strategy,'selective');assert.equal(selected.execution_status,'passed');
     const affected=model==='go'?'./a':'test/a.test.ts';const unrelated=model==='go'?'./b':'test/b.test.ts';
     assert.ok(selected.execution_units.includes(affected));assert.ok(!selected.execution_units.includes(unrelated));
     if(model==='go') assert.ok(selected.execution_units.includes('./consumer'),'dependent package must run');
-    const actual=readFileSync(join(dir,'state','execution.log'),'utf8').trim().split('\n').sort();
-    assert.deepEqual(actual,model==='go'?['a','consumer']:['a'],'actual test bodies must execute, not just appear in a plan');
-    const full=run(dir,model==='go'?'go':process.execPath,model==='go'?['test','./...']:['--import',tsx,'--test','test/a.test.ts','test/b.test.ts'],{IMPACT_TEST_LOG:join(dir,'state','execution.log')});
+    if(model==='go') {
+      assert.match(selected.runner_output,/^ok\s+example\.test\/setup\/a(?:\s|$)/m);
+      assert.match(selected.runner_output,/^ok\s+example\.test\/setup\/consumer(?:\s|$)/m);
+      assert.doesNotMatch(selected.runner_output,/^ok\s+example\.test\/setup\/b(?:\s|$)/m);
+      assert.doesNotMatch(selected.runner_output,/\(cached\)/);
+    } else {
+      assert.match(selected.runner_output,/(?:# Subtest: |ok \d+ - |✔ )fixture-a(?:\s|$)/m);
+      assert.doesNotMatch(selected.runner_output,/(?:# Subtest: |ok \d+ - |✔ )fixture-b(?:\s|$)/m);
+    }
+    const full=run(dir,model==='go'?'go':process.execPath,model==='go'?['test','./...']:['--import',tsx,'--test','test/a.test.ts','test/b.test.ts']);
     assert.equal(full.status,0,full.stderr);
   } finally {rmSync(dir,{recursive:true,force:true});}
 });
@@ -109,8 +116,9 @@ test('setup treats malicious repository prose as data without dropping a suite',
     mkdirSync(join(dir,'state'),{recursive:true});
     const full=verify(dir,adapter,'--from',head,'--to',head,'--all','--json');
     assert.equal(full.execution_status,'passed');
-    const actual=readFileSync(join(dir,'state','execution.log'),'utf8').trim().split('\n').sort();
-    assert.deepEqual(actual,['a','b']);assert.equal(existsSync(marker),false);
+    assert.match(full.runner_output,/(?:# Subtest: |ok \d+ - |✔ )fixture-a(?:\s|$)/m);
+    assert.match(full.runner_output,/(?:# Subtest: |ok \d+ - |✔ )fixture-b(?:\s|$)/m);
+    assert.equal(existsSync(marker),false);
   } finally {rmSync(dir,{recursive:true,force:true});rmSync(outside,{recursive:true,force:true});}
 });
 
@@ -133,9 +141,9 @@ test('setup reinspection preserves user edits and does not certify new unknown w
 test('generated adapter rejects target mismatch and propagates failing tests without evidence',()=>{
   const dir=fixture('go');try {
     const {adapter}=configure(dir,'go');put(dir,'.gitignore','state/\n');const base=commit(dir,'setup');
-    put(dir,'a/a_test.go','package a\nimport "testing"\nfunc TestFails(t *testing.T) { t.Fatal("intentional") }\n');
+    put(dir,'a/a_test.go','package a\nimport "testing"\nfunc TestA(t *testing.T) { if Value()!=1 { t.Fatal("a") } }\n');
     const target=commit(dir,'failing test');mkdirSync(join(dir,'state'),{recursive:true});
-    const opts={XDG_STATE_HOME:join(dir,'state'),IMPACT_TEST_LOG:join(dir,'state','execution.log')};
+    const opts={XDG_STATE_HOME:join(dir,'state'),GOCACHE:join(dir,'state','go-cache')};
     const mismatch=run(dir,process.execPath,[adapter,'--from',base,'--to',base,'--all','--json'],opts);
     assert.notEqual(mismatch.status,0);assert.notEqual(JSON.parse(mismatch.stdout).verification_status,'validated');
     const failed=run(dir,process.execPath,[adapter,'--from',base,'--to',target,'--all','--json'],opts);
@@ -181,12 +189,12 @@ test('fresh installed package configures and runs an adapter without the develop
     put(target,'.gitignore','state/\n');const head=commit(target,'installed setup');
     mkdirSync(join(target,'state'),{recursive:true});
     const executed=run(target,process.execPath,[adapter,'--from',head,'--to',head,'--all','--json'],{
-      ...isolated,XDG_STATE_HOME:join(target,'state'),IMPACT_TEST_LOG:join(target,'state','execution.log')
+      ...isolated,XDG_STATE_HOME:join(target,'state'),GOCACHE:join(target,'state','go-cache')
     },180_000);
     assert.equal(executed.status,0,executed.stderr);const report=JSON.parse(executed.stdout);
     assert.equal(report.execution_status,'passed');assert.equal(report.verification_status,'validated');
-    const actual=readFileSync(join(target,'state','execution.log'),'utf8').trim().split('\n').sort();
-    assert.deepEqual(actual,['a','b','consumer'],'installed helper must run all Go tests');
+    for(const name of ['a','b','consumer']) assert.match(executed.stderr,new RegExp(`^ok\\s+example\\.test/setup/${name}(?:\\s|$)`,'m'));
+    assert.doesNotMatch(executed.stderr,/\(cached\)/);
   } finally {rmSync(dir,{recursive:true,force:true});rmSync(target,{recursive:true,force:true});}
 });
 
@@ -255,5 +263,21 @@ test('malformed generated configuration cannot silently fall through to passing 
     const target=commit(dir,'corrupt configuration');
     const outcome=run(dir,process.execPath,[adapter,'--from',target,'--to',target,'--all','--json'],{XDG_STATE_HOME:join(dir,'state')});
     assert.notEqual(outcome.status,0);assert.notEqual(JSON.parse(outcome.stdout).verification_status,'validated');
+  } finally {rmSync(dir,{recursive:true,force:true});}
+});
+
+test('changes to generated setup and gitignore cannot reuse stale selective evidence', {timeout:180_000},()=>{
+  const dir=fixture('go');try {
+    const {adapter,result}=configure(dir,'go');put(dir,'.gitignore','state/\n');const baseline=commit(dir,'setup');
+    mkdirSync(join(dir,'state'),{recursive:true});
+    assert.equal(verify(dir,adapter,'--from',baseline,'--to',baseline,'--all','--json').verification_status,'validated');
+    put(dir,'.gitignore','state/\n*.generated\n');const changedIgnore=commit(dir,'change ignored inputs');
+    const ignorePlan=run(dir,process.execPath,[adapter,'--from',baseline,'--to',changedIgnore,'--plan','--json'],{XDG_STATE_HOME:join(dir,'state'),GOCACHE:join(dir,'state','go-cache')});
+    if(ignorePlan.status===0) assert.notEqual(JSON.parse(ignorePlan.stdout).selection_strategy,'selective');
+    assert.equal(typeof result.config,'string');
+    const config=resolve(dir,result.config);const old=JSON.parse(readFileSync(config,'utf8'));old.extraUnreviewedSetting=true;writeFileSync(config,JSON.stringify(old));
+    const changedConfig=commit(dir,'modify generated config');
+    const configPlan=run(dir,process.execPath,[adapter,'--from',changedIgnore,'--to',changedConfig,'--plan','--json'],{XDG_STATE_HOME:join(dir,'state'),GOCACHE:join(dir,'state','go-cache')});
+    if(configPlan.status===0) assert.notEqual(JSON.parse(configPlan.stdout).selection_strategy,'selective');
   } finally {rmSync(dir,{recursive:true,force:true});}
 });

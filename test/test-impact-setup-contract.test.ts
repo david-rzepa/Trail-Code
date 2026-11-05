@@ -141,7 +141,7 @@ test('setup reinspection preserves user edits and does not certify new unknown w
 test('generated adapter rejects target mismatch and propagates failing tests without evidence',()=>{
   const dir=fixture('go');try {
     const {adapter}=configure(dir,'go');put(dir,'.gitignore','state/\n');const base=commit(dir,'setup');
-    put(dir,'a/a_test.go','package a\nimport "testing"\nfunc TestA(t *testing.T) { if Value()!=1 { t.Fatal("a") } }\n');
+    put(dir,'a/a_test.go','package a\nimport "testing"\nfunc TestFails(t *testing.T) { t.Fatal("intentional") }\n');
     const target=commit(dir,'failing test');mkdirSync(join(dir,'state'),{recursive:true});
     const opts={XDG_STATE_HOME:join(dir,'state'),GOCACHE:join(dir,'state','go-cache')};
     const mismatch=run(dir,process.execPath,[adapter,'--from',base,'--to',base,'--all','--json'],opts);
@@ -231,7 +231,8 @@ test('Trail-code setup preserves and executes the original npm test fallback', {
     const {adapter}=configure(dir,'node');assert.equal(JSON.parse(readFileSync(join(dir,'package.json'),'utf8')).scripts.test,original);
     put(dir,'.gitignore',readFileSync(join(dir,'.gitignore'),'utf8')+'\nstate/\n');
     git(dir,'config','user.name','Fixture');git(dir,'config','user.email','fixture@example.invalid');const head=commit(dir,'setup');
-    const env={XDG_STATE_HOME:join(dir,'state')};
+    const env={HOME:join(dir,'state','home'),USERPROFILE:join(dir,'state','home'),XDG_CONFIG_HOME:join(dir,'state','config'),XDG_STATE_HOME:join(dir,'state'),GIT_CONFIG_GLOBAL:'/dev/null',GIT_CONFIG_COUNT:'0'};
+    mkdirSync(env.HOME,{recursive:true});mkdirSync(env.XDG_CONFIG_HOME,{recursive:true});
     const planned=run(dir,process.execPath,[adapter,'--from',head,'--to',head,'--all','--plan','--json'],env);
     assert.equal(planned.status,0,planned.stderr);const plan=JSON.parse(planned.stdout);
     assert.deepEqual(plan.workflow.full,['npm','test']);assert.notEqual(plan.verification_status,'validated');
